@@ -11,33 +11,7 @@ interface NavigationProps {
 
 export const Navigation = ({ cartItemsCount, onCartClick }: NavigationProps) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [isVisible, setIsVisible] = useState(true);
-  const [lastScrollY, setLastScrollY] = useState(0);
   const location = useLocation();
-
-  useEffect(() => {
-    const controlNavbar = () => {
-      const currentScrollY = window.scrollY;
-      
-      if (currentScrollY > 100) {
-        setIsScrolled(true);
-      } else {
-        setIsScrolled(false);
-      }
-
-      if (currentScrollY > lastScrollY && currentScrollY > 100) {
-        setIsVisible(false);
-      } else {
-        setIsVisible(true);
-      }
-
-      setLastScrollY(currentScrollY);
-    };
-
-    window.addEventListener('scroll', controlNavbar);
-    return () => window.removeEventListener('scroll', controlNavbar);
-  }, [lastScrollY]);
 
   const navItems = [
     { path: "/", label: "Home" },
@@ -46,44 +20,29 @@ export const Navigation = ({ cartItemsCount, onCartClick }: NavigationProps) => 
   ];
 
   return (
-    <nav className={`fixed top-6 left-1/2 transform -translate-x-1/2 z-50 transition-all duration-300 ease-in-out font-lora ${
-      isVisible ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0'
-    }`}>
-      <div className={`bg-white/95 backdrop-blur-lg border border-orange-200/50 shadow-xl transition-all duration-300 ${
-        isScrolled 
-          ? 'rounded-full px-8 py-3 mx-4' 
-          : 'rounded-3xl px-12 py-6 mx-2'
-      }`}>
-        <div className="flex items-center justify-between">
+    <nav className="bg-white shadow-lg sticky top-0 z-50 font-lora">
+      <div className="container mx-auto px-8">
+        <div className="flex items-center justify-between h-20">
           {/* Logo */}
-          <Link to="/" className={`flex items-center transition-all duration-300 ${
-            isScrolled ? 'scale-90' : 'scale-100'
-          }`}>
-            <div className="w-12 h-12 bg-gradient-to-r from-orange-400 to-red-500 rounded-full flex items-center justify-center mr-4 shadow-lg">
+          <Link to="/" className="flex items-center space-x-4">
+            <div className="w-12 h-12 bg-gradient-to-r from-orange-400 to-red-500 rounded-full flex items-center justify-center shadow-lg">
               <span className="text-white font-bold text-xl font-playfair">HK</span>
             </div>
-            {!isScrolled && (
-              <div className="flex flex-col">
-                <h1 className="text-2xl font-bold text-gray-800 leading-tight font-playfair">Healthy Kitchen</h1>
-                <p className="text-sm text-gray-600 leading-tight font-lora">Delicious & Nutritious</p>
-              </div>
-            )}
-            {isScrolled && (
-              <span className="text-xl font-bold text-gray-800 ml-2 font-playfair">Healthy Kitchen</span>
-            )}
+            <div className="flex flex-col">
+              <h1 className="text-2xl font-bold text-gray-800 leading-tight font-playfair">Healthy Kitchen</h1>
+              <p className="text-sm text-gray-600 leading-tight font-lora">Delicious & Nutritious</p>
+            </div>
           </Link>
 
           {/* Desktop Menu */}
-          <div className={`hidden md:flex items-center transition-all duration-300 ${
-            isScrolled ? 'space-x-6' : 'space-x-10'
-          }`}>
+          <div className="hidden md:flex items-center space-x-12">
             {navItems.map((item) => (
               <Link 
                 key={item.path}
                 to={item.path}
                 className={`text-lg font-medium transition-colors font-lora ${
                   location.pathname === item.path 
-                    ? 'text-orange-600' 
+                    ? 'text-orange-600 border-b-2 border-orange-600 pb-1' 
                     : 'text-gray-700 hover:text-orange-600'
                 }`}
               >
@@ -93,14 +52,15 @@ export const Navigation = ({ cartItemsCount, onCartClick }: NavigationProps) => 
           </div>
 
           {/* Cart & Mobile Menu */}
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-6">
             <Link to="/cart">
               <Button
                 variant="outline"
-                size={isScrolled ? "default" : "lg"}
-                className="relative border-orange-200 hover:bg-orange-50 rounded-full font-lora"
+                size="lg"
+                className="relative border-orange-200 hover:bg-orange-50 rounded-full font-lora px-6 py-3"
               >
-                <ShoppingCart className="w-5 h-5" />
+                <ShoppingCart className="w-5 h-5 mr-2" />
+                Cart
                 {cartItemsCount > 0 && (
                   <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-6 h-6 flex items-center justify-center font-bold">
                     {cartItemsCount}
@@ -123,8 +83,8 @@ export const Navigation = ({ cartItemsCount, onCartClick }: NavigationProps) => 
 
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
-          <div className="md:hidden mt-6 pt-6 border-t border-orange-100">
-            <div className="flex flex-col space-y-4">
+          <div className="md:hidden pb-6 border-t border-gray-100">
+            <div className="flex flex-col space-y-4 pt-6">
               {navItems.map((item) => (
                 <Link 
                   key={item.path}
