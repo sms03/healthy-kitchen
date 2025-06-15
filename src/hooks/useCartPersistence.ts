@@ -44,7 +44,7 @@ export const useCartPersistence = () => {
       if (error) throw error;
 
       const formattedItems = cartItems?.map(item => ({
-        id: item.recipes.id,
+        id: parseInt(item.recipes.id), // Convert string UUID to number for frontend compatibility
         name: item.recipes.name,
         price: item.recipes.price,
         quantity: item.quantity,
@@ -78,7 +78,7 @@ export const useCartPersistence = () => {
       // Then insert current cart items
       const cartData = items.map(item => ({
         user_id: user.id,
-        recipe_id: item.id,
+        recipe_id: item.id.toString(), // Convert number ID to string for Supabase
         quantity: item.quantity
       }));
 
