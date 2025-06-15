@@ -18,6 +18,11 @@ export default {
 			}
 		},
 		extend: {
+			fontFamily: {
+				'lora': ['Lora', 'serif'],
+				'playfair': ['Playfair', 'serif'],
+				'sans': ['Lora', 'sans-serif'],
+			},
 			colors: {
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
