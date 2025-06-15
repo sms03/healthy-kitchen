@@ -2,6 +2,9 @@
 import { useState } from "react";
 import { DishCard } from "@/components/DishCard";
 import { Button } from "@/components/ui/button";
+import { useCategories } from "@/hooks/useCategories";
+import { useRecipes } from "@/hooks/useRecipes";
+import { Loader2 } from "lucide-react";
 
 interface MenuSectionProps {
   onAddToCart: (dish: any) => void;
@@ -9,81 +12,55 @@ interface MenuSectionProps {
 
 export const MenuSection = ({ onAddToCart }: MenuSectionProps) => {
   const [activeCategory, setActiveCategory] = useState("all");
+  
+  const { data: categories, isLoading: categoriesLoading } = useCategories();
+  const { data: recipes, isLoading: recipesLoading } = useRecipes();
 
-  const categories = [
+  if (categoriesLoading || recipesLoading) {
+    return (
+      <section id="menu" className="py-20 bg-gradient-to-br from-gray-50 to-orange-50">
+        <div className="container mx-auto px-4">
+          <div className="flex items-center justify-center min-h-[400px]">
+            <Loader2 className="w-8 h-8 animate-spin text-orange-600" />
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  // Create categories with emojis for display
+  const categoryOptions = [
     { id: "all", name: "All Items", emoji: "🍽️" },
-    { id: "bakery", name: "Bakery", emoji: "🧁" },
-    { id: "veg", name: "Vegetarian", emoji: "🥗" },
-    { id: "nonveg", name: "Non-Veg", emoji: "🍛" },
-    { id: "healthy", name: "Healthy Specials", emoji: "🥑" }
+    ...(categories?.map(cat => ({
+      id: cat.id,
+      name: cat.name,
+      emoji: cat.name === "Bakery" ? "🧁" : 
+             cat.name === "Veg" ? "🥗" : 
+             cat.name === "Non-Veg" ? "🍛" : 
+             cat.name === "Healthy Specials" ? "🥑" : "🍽️"
+    })) || [])
   ];
 
-  const menuItems = [
-    {
-      id: 1,
-      name: "Chocolate Cupcakes",
-      description: "Rich, moist chocolate cupcakes with creamy frosting",
-      price: 150,
-      category: "bakery",
-      image: "🧁",
-      rating: 4.8,
-      prepTime: "30 mins"
-    },
-    {
-      id: 2,
-      name: "Fresh Garden Salad",
-      description: "Crisp vegetables with homemade dressing",
-      price: 180,
-      category: "veg",
-      image: "🥗",
-      rating: 4.6,
-      prepTime: "15 mins"
-    },
-    {
-      id: 3,
-      name: "Grilled Chicken Bowl",
-      description: "Tender grilled chicken with quinoa and vegetables",
-      price: 320,
-      category: "nonveg",
-      image: "🍛",
-      rating: 4.9,
-      prepTime: "45 mins"
-    },
-    {
-      id: 4,
-      name: "Avocado Toast",
-      description: "Multigrain bread topped with fresh avocado and seeds",
-      price: 200,
-      category: "healthy",
-      image: "🥑",
-      rating: 4.7,
-      prepTime: "10 mins"
-    },
-    {
-      id: 5,
-      name: "Red Velvet Cake",
-      description: "Classic red velvet with cream cheese frosting",
-      price: 400,
-      category: "bakery",
-      image: "🎂",
-      rating: 4.9,
-      prepTime: "60 mins"
-    },
-    {
-      id: 6,
-      name: "Paneer Tikka Bowl",
-      description: "Marinated cottage cheese with aromatic spices",
-      price: 280,
-      category: "veg",
-      image: "🍲",
-      rating: 4.5,
-      prepTime: "35 mins"
-    }
-  ];
+  // Filter recipes by category
+  const filteredRecipes = activeCategory === "all" 
+    ? recipes || []
+    : recipes?.filter(recipe => recipe.category_id === activeCategory) || [];
 
-  const filteredItems = activeCategory === "all" 
-    ? menuItems 
-    : menuItems.filter(item => item.category === activeCategory);
+  // Convert recipe to dish format for compatibility with existing DishCard
+  const convertRecipeToDish = (recipe: any) => ({
+    id: recipe.id,
+    name: recipe.name,
+    description: recipe.description || "",
+    price: recipe.price,
+    image: recipe.name === "Fresh Croissant" ? "🥐" :
+           recipe.name === "Chocolate Muffin" ? "🧁" :
+           recipe.name === "Vegetable Biryani" ? "🍛" :
+           recipe.name === "Paneer Butter Masala" ? "🍲" :
+           recipe.name === "Chicken Tikka Masala" ? "🍛" :
+           recipe.name === "Quinoa Salad Bowl" ? "🥗" : "🍽️",
+    rating: 4.5 + Math.random() * 0.4, // Random rating between 4.5-4.9
+    prepTime: recipe.preparation_time ? `${recipe.preparation_time} mins` : "30 mins"
+  });
 
   return (
     <section id="menu" className="py-20 bg-gradient-to-br from-gray-50 to-orange-50">
@@ -99,7 +76,7 @@ export const MenuSection = ({ onAddToCart }: MenuSectionProps) => {
 
         {/* Category Filter */}
         <div className="flex flex-wrap justify-center gap-4 mb-12">
-          {categories.map((category) => (
+          {categoryOptions.map((category) => (
             <Button
               key={category.id}
               variant={activeCategory === category.id ? "default" : "outline"}
@@ -118,14 +95,20 @@ export const MenuSection = ({ onAddToCart }: MenuSectionProps) => {
 
         {/* Menu Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredItems.map((dish) => (
+          {filteredRecipes.map((recipe) => (
             <DishCard 
-              key={dish.id} 
-              dish={dish} 
+              key={recipe.id} 
+              dish={convertRecipeToDish(recipe)} 
               onAddToCart={onAddToCart}
             />
           ))}
         </div>
+
+        {filteredRecipes.length === 0 && (
+          <div className="text-center py-12">
+            <p className="text-gray-500 text-lg">No items found in this category.</p>
+          </div>
+        )}
       </div>
     </section>
   );
