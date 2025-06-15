@@ -46,20 +46,25 @@ export const MenuSection = ({ onAddToCart }: MenuSectionProps) => {
     : recipes?.filter(recipe => recipe.category_id === activeCategory) || [];
 
   // Convert recipe to dish format for compatibility with existing DishCard
-  const convertRecipeToDish = (recipe: any) => ({
-    id: recipe.id,
-    name: recipe.name,
-    description: recipe.description || "",
-    price: recipe.price,
-    image: recipe.name.includes("Egg Bhurji") ? "🍳" :
-           recipe.name.includes("Egg Masala") ? "🥚" :
-           recipe.name.includes("Chicken Masala") ? "🍛" :
-           recipe.name.includes("Chicken Handi") ? "🍗" :
-           recipe.name.includes("Mutton Masala") ? "🍖" :
-           recipe.name.includes("Mutton Handi") ? "🥩" : "🍽️",
-    rating: 4.5 + Math.random() * 0.4, // Random rating between 4.5-4.9
-    prepTime: recipe.preparation_time ? `${recipe.preparation_time} mins` : "30 mins"
-  });
+  const convertRecipeToDish = (recipe: any) => {
+    // Ensure ID is a number, not a string
+    const numericId = typeof recipe.id === 'string' ? parseInt(recipe.id, 10) : recipe.id;
+    
+    return {
+      id: numericId,
+      name: recipe.name || "Unknown Item",
+      description: recipe.description || "",
+      price: typeof recipe.price === 'string' ? parseFloat(recipe.price) : (recipe.price || 0),
+      image: recipe.name?.includes("Egg Bhurji") ? "🍳" :
+             recipe.name?.includes("Egg Masala") ? "🥚" :
+             recipe.name?.includes("Chicken Masala") ? "🍛" :
+             recipe.name?.includes("Chicken Handi") ? "🍗" :
+             recipe.name?.includes("Mutton Masala") ? "🍖" :
+             recipe.name?.includes("Mutton Handi") ? "🥩" : "🍽️",
+      rating: 4.5 + Math.random() * 0.4, // Random rating between 4.5-4.9
+      prepTime: recipe.preparation_time ? `${recipe.preparation_time} mins` : "30 mins"
+    };
+  };
 
   return (
     <section id="menu" className="py-20 bg-gradient-to-br from-gray-50 to-orange-50">
@@ -94,13 +99,16 @@ export const MenuSection = ({ onAddToCart }: MenuSectionProps) => {
 
         {/* Menu Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredRecipes.map((recipe) => (
-            <DishCard 
-              key={recipe.id} 
-              dish={convertRecipeToDish(recipe)} 
-              onAddToCart={onAddToCart}
-            />
-          ))}
+          {filteredRecipes.map((recipe) => {
+            const dish = convertRecipeToDish(recipe);
+            return (
+              <DishCard 
+                key={`recipe-${recipe.id}`}
+                dish={dish} 
+                onAddToCart={onAddToCart}
+              />
+            );
+          })}
         </div>
 
         {filteredRecipes.length === 0 && (

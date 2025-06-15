@@ -7,13 +7,16 @@ import { useToast } from '@/hooks/use-toast';
 
 export const useCartPersistence = () => {
   const { user } = useAuth();
-  const { items, setItems } = useCart();
+  const { items, setItems, clearCart } = useCart();
   const { toast } = useToast();
 
   // Load cart from database when user logs in
   useEffect(() => {
     if (user) {
       loadCartFromDatabase();
+    } else {
+      // Clear cart when user signs out
+      clearCart();
     }
   }, [user]);
 
@@ -21,6 +24,9 @@ export const useCartPersistence = () => {
   useEffect(() => {
     if (user && items.length > 0) {
       saveCartToDatabase();
+    } else if (user && items.length === 0) {
+      // Clear cart from database when cart is empty
+      clearCartFromDatabase();
     }
   }, [items, user]);
 
@@ -46,13 +52,14 @@ export const useCartPersistence = () => {
       const formattedItems = cartItems
         ?.filter(item => item.recipes && item.recipes.id) // Filter out invalid items
         ?.map(item => {
-          const recipeId = parseInt(item.recipes.id);
+          // Convert string ID to number for consistency
+          const recipeId = typeof item.recipes.id === 'string' ? parseInt(item.recipes.id, 10) : item.recipes.id;
           if (isNaN(recipeId)) return null; // Skip invalid IDs
           
           return {
             id: recipeId,
             name: item.recipes.name || 'Unknown Item',
-            price: item.recipes.price || 0,
+            price: typeof item.recipes.price === 'string' ? parseFloat(item.recipes.price) : (item.recipes.price || 0),
             quantity: item.quantity || 1,
             image: item.recipes.image_url || '🍽️'
           };
