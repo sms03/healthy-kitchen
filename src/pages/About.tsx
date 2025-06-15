@@ -76,8 +76,8 @@ const About = () => {
                   <div className="w-80 h-80 mx-auto bg-gradient-to-br from-orange-200 via-red-200 to-pink-200 rounded-full flex items-center justify-center transition-all duration-500 hover:scale-105">
                     <span className="text-8xl">👩‍🍳</span>
                   </div>
-                  <div className="absolute -bottom-4 -right-4 w-24 h-24 bg-orange-400 rounded-full opacity-20 animate-pulse"></div>
-                  <div className="absolute -top-4 -left-4 w-16 h-16 bg-red-400 rounded-full opacity-20 animate-pulse delay-500"></div>
+                  <div className="absolute -bottom-4 -right-4 w-24 h-24 bg-orange-400/20 rounded-full animate-pulse"></div>
+                  <div className="absolute -top-4 -left-4 w-16 h-16 bg-red-400/20 rounded-full animate-pulse delay-500"></div>
                 </div>
               </div>
             </div>

@@ -85,7 +85,7 @@ export const Navigation = ({ cartItemsCount, onCartClick }: NavigationProps) => 
             ))}
           </div>
 
-          {/* Cart & Auth */}
+          {/* Cart and Auth */}
           <div className="flex items-center space-x-3">
             <Link to="/cart">
               <Button
