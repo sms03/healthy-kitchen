@@ -33,9 +33,8 @@ export const Cart = ({ isOpen, onClose, items, onRemoveItem, onUpdateQuantity }:
           </SheetTitle>
         </SheetHeader>
 
-        <div className="flex flex-col h-full">
-          {/* Cart Items */}
-          <div className="flex-1 overflow-y-auto py-6">
+        <div className="flex flex-col h-full">          {/* Cart Items */}
+          <div className="flex-1 overflow-y-auto py-6 scrollbar-custom">
             {items.length === 0 ? (
               <div className="text-center py-12">
                 <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
