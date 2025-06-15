@@ -91,8 +91,12 @@ export const Navigation = ({ cartItemsCount, onCartClick }: NavigationProps) => 
               <Button
                 variant="outline"
                 size="icon"
-                className={`relative border-orange-200 hover:bg-orange-50 rounded-full font-lora transition-all duration-300 ${
+                className={`relative rounded-full font-lora transition-all duration-300 ${
                   isScrolled ? 'w-10 h-10' : 'w-12 h-12'
+                } ${
+                  location.pathname === '/cart'
+                    ? 'bg-gradient-to-r from-orange-500 to-red-600 border-orange-500 text-white hover:from-orange-600 hover:to-red-700'
+                    : 'border-orange-200 hover:bg-orange-50'
                 }`}
               >
                 <ShoppingCart className={`transition-all duration-300 ${
@@ -115,8 +119,12 @@ export const Navigation = ({ cartItemsCount, onCartClick }: NavigationProps) => 
                   <Button
                     variant="outline"
                     size="icon"
-                    className={`border-orange-200 hover:bg-orange-50 rounded-full font-lora transition-all duration-300 ${
+                    className={`rounded-full font-lora transition-all duration-300 ${
                       isScrolled ? 'w-10 h-10' : 'w-12 h-12'
+                    } ${
+                      location.pathname === '/profile'
+                        ? 'bg-gradient-to-r from-orange-500 to-red-600 border-orange-500 text-white hover:from-orange-600 hover:to-red-700'
+                        : 'border-orange-200 hover:bg-orange-50'
                     }`}
                   >
                     <User className={`transition-all duration-300 ${
