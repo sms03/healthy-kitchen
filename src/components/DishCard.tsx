@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Star, Clock, Plus, Minus } from "lucide-react";
+import { Clock, Plus, Minus } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
 import { useRecipeServings } from "@/hooks/useRecipeServings";
 
@@ -116,12 +116,8 @@ export const DishCard = ({ dish, onAddToCart }: DishCardProps) => {
             {dish.description}
           </p>
 
-          {/* Rating and Prep Time */}
-          <div className="flex items-center justify-between text-sm text-gray-500">
-            <div className="flex items-center space-x-1">
-              <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-              <span>{dish.rating}</span>
-            </div>
+          {/* Prep Time Only */}
+          <div className="flex items-center justify-center text-sm text-gray-500">
             <div className="flex items-center space-x-1">
               <Clock className="w-4 h-4" />
               <span>{dish.prepTime}</span>
