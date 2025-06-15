@@ -1,15 +1,9 @@
 
 import { Button } from "@/components/ui/button";
 import { Play, ArrowDown } from "lucide-react";
+import { Link } from "react-router-dom";
 
 export const Hero = () => {
-  const scrollToMenu = () => {
-    const menuSection = document.getElementById('menu');
-    if (menuSection) {
-      menuSection.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
-
   return (
     <section id="home" className="pt-20 pb-16 relative overflow-hidden">
       {/* Background Elements */}
@@ -33,23 +27,26 @@ export const Hero = () => {
             </div>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-              <Button 
-                size="lg" 
-                onClick={scrollToMenu}
-                className="bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white px-8 py-6 text-lg"
-              >
-                Order Now
-                <ArrowDown className="ml-2 w-5 h-5" />
-              </Button>
+              <Link to="/menu">
+                <Button 
+                  size="lg" 
+                  className="bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white px-8 py-6 text-lg"
+                >
+                  Order Now
+                  <ArrowDown className="ml-2 w-5 h-5" />
+                </Button>
+              </Link>
               
-              <Button 
-                variant="outline" 
-                size="lg"
-                className="border-orange-300 text-orange-600 hover:bg-orange-50 px-8 py-6 text-lg"
-              >
-                <Play className="mr-2 w-5 h-5" />
-                Watch Videos
-              </Button>
+              <Link to="/recipes">
+                <Button 
+                  variant="outline" 
+                  size="lg"
+                  className="border-orange-300 text-orange-600 hover:bg-orange-50 px-8 py-6 text-lg"
+                >
+                  <Play className="mr-2 w-5 h-5" />
+                  Watch Recipes
+                </Button>
+              </Link>
             </div>
 
             {/* YouTube Channels */}

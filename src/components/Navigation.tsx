@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { ShoppingCart, Menu, X } from "lucide-react";
+import { Link, useLocation } from "react-router-dom";
 
 interface NavigationProps {
   cartItemsCount: number;
@@ -13,6 +14,7 @@ export const Navigation = ({ cartItemsCount, onCartClick }: NavigationProps) => 
   const [isScrolled, setIsScrolled] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
+  const location = useLocation();
 
   useEffect(() => {
     const controlNavbar = () => {
@@ -37,13 +39,13 @@ export const Navigation = ({ cartItemsCount, onCartClick }: NavigationProps) => 
     return () => window.removeEventListener('scroll', controlNavbar);
   }, [lastScrollY]);
 
-  const scrollToSection = (sectionId: string) => {
-    const element = document.getElementById(sectionId);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
-    setIsMobileMenuOpen(false);
-  };
+  const navItems = [
+    { path: "/", label: "Home" },
+    { path: "/about", label: "About" },
+    { path: "/menu", label: "Menu" },
+    { path: "/recipes", label: "Recipes" },
+    { path: "/contact", label: "Contact" },
+  ];
 
   return (
     <nav className={`fixed top-4 left-1/2 transform -translate-x-1/2 z-50 transition-all duration-300 ease-in-out ${
@@ -56,7 +58,7 @@ export const Navigation = ({ cartItemsCount, onCartClick }: NavigationProps) => 
       }`}>
         <div className="flex items-center justify-between">
           {/* Logo */}
-          <div className={`flex items-center transition-all duration-300 ${
+          <Link to="/" className={`flex items-center transition-all duration-300 ${
             isScrolled ? 'scale-90' : 'scale-100'
           }`}>
             <div className="w-10 h-10 bg-gradient-to-r from-orange-400 to-red-500 rounded-full flex items-center justify-center mr-3">
@@ -71,59 +73,43 @@ export const Navigation = ({ cartItemsCount, onCartClick }: NavigationProps) => 
             {isScrolled && (
               <span className="text-lg font-bold text-gray-800 ml-1">Healthy Kitchen</span>
             )}
-          </div>
+          </Link>
 
           {/* Desktop Menu */}
           <div className={`hidden md:flex items-center transition-all duration-300 ${
             isScrolled ? 'space-x-4' : 'space-x-6'
           }`}>
-            <button 
-              onClick={() => scrollToSection('home')}
-              className="text-gray-700 hover:text-orange-600 transition-colors text-sm font-medium"
-            >
-              Home
-            </button>
-            <button 
-              onClick={() => scrollToSection('about')}
-              className="text-gray-700 hover:text-orange-600 transition-colors text-sm font-medium"
-            >
-              About
-            </button>
-            <button 
-              onClick={() => scrollToSection('menu')}
-              className="text-gray-700 hover:text-orange-600 transition-colors text-sm font-medium"
-            >
-              Menu
-            </button>
-            <button 
-              onClick={() => scrollToSection('recipes')}
-              className="text-gray-700 hover:text-orange-600 transition-colors text-sm font-medium"
-            >
-              Recipes
-            </button>
-            <button 
-              onClick={() => scrollToSection('contact')}
-              className="text-gray-700 hover:text-orange-600 transition-colors text-sm font-medium"
-            >
-              Contact
-            </button>
+            {navItems.map((item) => (
+              <Link 
+                key={item.path}
+                to={item.path}
+                className={`text-sm font-medium transition-colors ${
+                  location.pathname === item.path 
+                    ? 'text-orange-600' 
+                    : 'text-gray-700 hover:text-orange-600'
+                }`}
+              >
+                {item.label}
+              </Link>
+            ))}
           </div>
 
           {/* Cart & Mobile Menu */}
           <div className="flex items-center space-x-3">
-            <Button
-              variant="outline"
-              size={isScrolled ? "sm" : "sm"}
-              onClick={onCartClick}
-              className="relative border-orange-200 hover:bg-orange-50 rounded-full"
-            >
-              <ShoppingCart className="w-4 h-4" />
-              {cartItemsCount > 0 && (
-                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                  {cartItemsCount}
-                </span>
-              )}
-            </Button>
+            <Link to="/cart">
+              <Button
+                variant="outline"
+                size={isScrolled ? "sm" : "sm"}
+                className="relative border-orange-200 hover:bg-orange-50 rounded-full"
+              >
+                <ShoppingCart className="w-4 h-4" />
+                {cartItemsCount > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                    {cartItemsCount}
+                  </span>
+                )}
+              </Button>
+            </Link>
 
             {/* Mobile Menu Button */}
             <Button
@@ -141,36 +127,20 @@ export const Navigation = ({ cartItemsCount, onCartClick }: NavigationProps) => 
         {isMobileMenuOpen && (
           <div className="md:hidden mt-4 pt-4 border-t border-orange-100">
             <div className="flex flex-col space-y-2">
-              <button 
-                onClick={() => scrollToSection('home')}
-                className="text-left text-gray-700 hover:text-orange-600 transition-colors py-2 text-sm"
-              >
-                Home
-              </button>
-              <button 
-                onClick={() => scrollToSection('about')}
-                className="text-left text-gray-700 hover:text-orange-600 transition-colors py-2 text-sm"
-              >
-                About
-              </button>
-              <button 
-                onClick={() => scrollToSection('menu')}
-                className="text-left text-gray-700 hover:text-orange-600 transition-colors py-2 text-sm"
-              >
-                Menu
-              </button>
-              <button 
-                onClick={() => scrollToSection('recipes')}
-                className="text-left text-gray-700 hover:text-orange-600 transition-colors py-2 text-sm"
-              >
-                Recipes
-              </button>
-              <button 
-                onClick={() => scrollToSection('contact')}
-                className="text-left text-gray-700 hover:text-orange-600 transition-colors py-2 text-sm"
-              >
-                Contact
-              </button>
+              {navItems.map((item) => (
+                <Link 
+                  key={item.path}
+                  to={item.path}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className={`text-left py-2 text-sm transition-colors ${
+                    location.pathname === item.path 
+                      ? 'text-orange-600 font-medium' 
+                      : 'text-gray-700 hover:text-orange-600'
+                  }`}
+                >
+                  {item.label}
+                </Link>
+              ))}
             </div>
           </div>
         )}
