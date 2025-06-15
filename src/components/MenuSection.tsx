@@ -32,6 +32,13 @@ export const MenuSection = ({ onAddToCart }: MenuSectionProps) => {
     );
   }
 
+  // Define the specific dishes we want to show
+  const targetDishes = [
+    'Egg Bhurji', 'Egg Masala', 
+    'Chicken Masala', 'Chicken Handi', 
+    'Mutton Masala', 'Mutton Handi'
+  ];
+
   // Create categories with emojis for display
   const categoryOptions = [
     { id: "all", name: "All Items", emoji: "🍽️" },
@@ -44,10 +51,11 @@ export const MenuSection = ({ onAddToCart }: MenuSectionProps) => {
     })) || [])
   ];
 
-  // Filter recipes by category
-  const filteredRecipes = activeCategory === "all" 
-    ? recipes || []
-    : recipes?.filter(recipe => recipe.category_id === activeCategory) || [];
+  // Filter to only show the 6 specific dishes
+  const filteredRecipes = recipes?.filter(recipe => 
+    targetDishes.includes(recipe.name) &&
+    (activeCategory === "all" || recipe.category_id === activeCategory)
+  ) || [];
 
   // Convert recipe to dish format for compatibility with existing DishCard
   const convertRecipeToDish = (recipe: any) => {

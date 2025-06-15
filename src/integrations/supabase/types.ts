@@ -304,6 +304,44 @@ export type Database = {
         }
         Relationships: []
       }
+      recipe_servings: {
+        Row: {
+          additional_price: number | null
+          created_at: string
+          id: string
+          price_multiplier: number
+          recipe_id: string
+          serving_description: string | null
+          serving_name: string
+        }
+        Insert: {
+          additional_price?: number | null
+          created_at?: string
+          id?: string
+          price_multiplier?: number
+          recipe_id: string
+          serving_description?: string | null
+          serving_name: string
+        }
+        Update: {
+          additional_price?: number | null
+          created_at?: string
+          id?: string
+          price_multiplier?: number
+          recipe_id?: string
+          serving_description?: string | null
+          serving_name?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "recipe_servings_recipe_id_fkey"
+            columns: ["recipe_id"]
+            isOneToOne: false
+            referencedRelation: "recipes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       recipes: {
         Row: {
           category_id: string | null

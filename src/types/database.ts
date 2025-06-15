@@ -24,6 +24,20 @@ export interface Recipe {
   updated_at: string;
 }
 
+export interface RecipeServing {
+  id: string;
+  recipe_id: string;
+  serving_name: string;
+  serving_description: string | null;
+  price_multiplier: number;
+  additional_price: number | null;
+  created_at: string;
+}
+
 export interface RecipeWithCategory extends Recipe {
   category?: Category;
+}
+
+export interface RecipeWithServings extends Recipe {
+  servings?: RecipeServing[];
 }
