@@ -1,9 +1,9 @@
-
 import { useState } from "react";
 import { DishCard } from "@/components/DishCard";
 import { Button } from "@/components/ui/button";
 import { useCategories } from "@/hooks/useCategories";
 import { useRecipes } from "@/hooks/useRecipes";
+import { useCart } from "@/contexts/CartContext";
 import { Loader2 } from "lucide-react";
 import { Navigation } from "@/components/Navigation";
 import { Footer } from "@/components/Footer";
@@ -11,47 +11,17 @@ import { Cart } from "@/components/Cart";
 
 const Menu = () => {
   const [activeCategory, setActiveCategory] = useState("all");
-  const [cartItems, setCartItems] = useState([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
   
   const { data: categories, isLoading: categoriesLoading } = useCategories();
   const { data: recipes, isLoading: recipesLoading } = useRecipes();
-
-  const addToCart = (dish) => {
-    setCartItems(prev => {
-      const existing = prev.find(item => item.id === dish.id);
-      if (existing) {
-        return prev.map(item => 
-          item.id === dish.id 
-            ? { ...item, quantity: item.quantity + 1 }
-            : item
-        );
-      }
-      return [...prev, { ...dish, quantity: 1 }];
-    });
-  };
-
-  const removeFromCart = (dishId) => {
-    setCartItems(prev => prev.filter(item => item.id !== dishId));
-  };
-
-  const updateQuantity = (dishId, quantity) => {
-    if (quantity <= 0) {
-      removeFromCart(dishId);
-      return;
-    }
-    setCartItems(prev => 
-      prev.map(item => 
-        item.id === dishId ? { ...item, quantity } : item
-      )
-    );
-  };
+  const { items: cartItems, addToCart, removeFromCart, updateQuantity, getCartItemsCount } = useCart();
 
   if (categoriesLoading || recipesLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-orange-50 via-red-50 to-pink-50">
         <Navigation 
-          cartItemsCount={cartItems.reduce((sum, item) => sum + item.quantity, 0)}
+          cartItemsCount={getCartItemsCount()}
           onCartClick={() => setIsCartOpen(true)}
         />
         <div className="container mx-auto px-4 pt-32">
@@ -100,7 +70,7 @@ const Menu = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-red-50 to-pink-50">
       <Navigation 
-        cartItemsCount={cartItems.reduce((sum, item) => sum + item.quantity, 0)}
+        cartItemsCount={getCartItemsCount()}
         onCartClick={() => setIsCartOpen(true)}
       />
       

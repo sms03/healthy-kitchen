@@ -1,41 +1,17 @@
 
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Minus, Plus, Trash2, ShoppingBag, ArrowLeft } from "lucide-react";
 import { Navigation } from "@/components/Navigation";
 import { Footer } from "@/components/Footer";
+import { useCart } from "@/contexts/CartContext";
 import { Link } from "react-router-dom";
 
-interface CartItem {
-  id: number;
-  name: string;
-  price: number;
-  quantity: number;
-  image: string;
-}
-
 const Cart = () => {
-  const [cartItems, setCartItems] = useState<CartItem[]>([]);
-
-  const removeFromCart = (dishId: number) => {
-    setCartItems(prev => prev.filter(item => item.id !== dishId));
-  };
-
-  const updateQuantity = (dishId: number, quantity: number) => {
-    if (quantity <= 0) {
-      removeFromCart(dishId);
-      return;
-    }
-    setCartItems(prev => 
-      prev.map(item => 
-        item.id === dishId ? { ...item, quantity } : item
-      )
-    );
-  };
-
-  const total = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-  const itemCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+  const { items: cartItems, removeFromCart, updateQuantity, getCartItemsCount, getCartTotal } = useCart();
+  
+  const total = getCartTotal();
+  const itemCount = getCartItemsCount();
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-red-50 to-pink-50">
