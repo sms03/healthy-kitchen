@@ -1,6 +1,7 @@
 
 import { Navigation } from "@/components/Navigation";
 import { Footer } from "@/components/Footer";
+import { Youtube } from "lucide-react";
 
 const About = () => {
   return (
@@ -48,15 +49,25 @@ const About = () => {
 
                   <div className="bg-gradient-to-r from-red-50 to-pink-50 p-6 rounded-xl transition-all duration-300 hover:shadow-lg">
                     <h3 className="text-xl font-semibold text-gray-800 mb-3">YouTube Channels</h3>
-                    <div className="space-y-2">
-                      <div className="flex items-center text-gray-700">
-                        <span className="text-red-500 mr-2">📺</span>
-                        Sharvari's Healthy Kitchen Hindi
-                      </div>
-                      <div className="flex items-center text-gray-700">
-                        <span className="text-red-500 mr-2">📺</span>
-                        Sharvari's Healthy Kitchen Marathi
-                      </div>
+                    <div className="space-y-3">
+                      <a 
+                        href="https://www.youtube.com/@SHK-Hindi" 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="flex items-center text-gray-700 hover:text-red-600 transition-colors duration-300 group"
+                      >
+                        <Youtube className="text-red-500 mr-3 w-5 h-5 group-hover:scale-110 transition-transform" />
+                        <span className="group-hover:underline">Sharvari's Healthy Kitchen Hindi</span>
+                      </a>
+                      <a 
+                        href="https://www.youtube.com/@SHK-Marathi" 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="flex items-center text-gray-700 hover:text-red-600 transition-colors duration-300 group"
+                      >
+                        <Youtube className="text-red-500 mr-3 w-5 h-5 group-hover:scale-110 transition-transform" />
+                        <span className="group-hover:underline">Sharvari's Healthy Kitchen Marathi</span>
+                      </a>
                     </div>
                   </div>
                 </div>

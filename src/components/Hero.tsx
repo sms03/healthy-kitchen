@@ -1,6 +1,6 @@
 
 import { Button } from "@/components/ui/button";
-import { Play, ArrowDown, Clock, Award, Heart } from "lucide-react";
+import { Play, ArrowDown, Clock, Award, Heart, Youtube } from "lucide-react";
 import { Link } from "react-router-dom";
 
 export const Hero = () => {
@@ -83,15 +83,25 @@ export const Hero = () => {
             </div>
 
             {/* YouTube Channels */}
-            <div className="flex flex-col sm:flex-row gap-4 text-sm text-gray-600 font-lora">
-              <div className="flex items-center">
-                <div className="w-2 h-2 bg-red-500 rounded-full mr-2"></div>
-                Sharvari's Healthy Kitchen Hindi
-              </div>
-              <div className="flex items-center">
-                <div className="w-2 h-2 bg-orange-500 rounded-full mr-2"></div>
-                Sharvari's Healthy Kitchen Marathi
-              </div>
+            <div className="flex flex-col sm:flex-row gap-4 text-sm font-lora">
+              <a 
+                href="https://www.youtube.com/@SHK-Hindi" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="flex items-center text-gray-600 hover:text-red-600 transition-colors duration-300 group"
+              >
+                <Youtube className="w-4 h-4 text-red-500 mr-2 group-hover:scale-110 transition-transform" />
+                <span className="group-hover:underline">Sharvari's Healthy Kitchen Hindi</span>
+              </a>
+              <a 
+                href="https://www.youtube.com/@SHK-Marathi" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="flex items-center text-gray-600 hover:text-red-600 transition-colors duration-300 group"
+              >
+                <Youtube className="w-4 h-4 text-orange-500 mr-2 group-hover:scale-110 transition-transform" />
+                <span className="group-hover:underline">Sharvari's Healthy Kitchen Marathi</span>
+              </a>
             </div>
           </div>
 
