@@ -14,7 +14,7 @@ const Cart = () => {
   const { items: cartItems, removeFromCart, updateQuantity, getCartItemsCount, getCartTotal } = useCart();
   const cartItemsRef = useRef<HTMLDivElement>(null);
   const summaryRef = useRef<HTMLDivElement>(null);
-  const { staggerAnimation, fadeInLeft, fadeInRight, cartItemAnimation } = useGSAPAnimations();
+  const { staggerAnimation, fadeInLeft, fadeInRight, cartItemAnimation, quantityUpdateAnimation } = useGSAPAnimations();
   
   const total = getCartTotal();
   const itemCount = getCartItemsCount();
@@ -32,7 +32,7 @@ const Cart = () => {
     const itemElement = document.querySelector(`[data-item-id="${itemId}"]`);
     if (itemElement) {
       cartItemAnimation(itemElement, false);
-      setTimeout(() => removeFromCart(itemId), 300);
+      setTimeout(() => removeFromCart(itemId), 250);
     } else {
       removeFromCart(itemId);
     }
@@ -40,9 +40,9 @@ const Cart = () => {
 
   const handleUpdateQuantity = (itemId: number, newQuantity: number) => {
     updateQuantity(itemId, newQuantity);
-    const itemElement = document.querySelector(`[data-item-id="${itemId}"]`);
-    if (itemElement) {
-      cartItemAnimation(itemElement, true);
+    const quantityElement = document.querySelector(`[data-quantity-id="${itemId}"]`);
+    if (quantityElement) {
+      quantityUpdateAnimation(quantityElement);
     }
   };
 
@@ -110,7 +110,12 @@ const Cart = () => {
                               <Minus className="w-4 h-4" />
                             </Button>
                             
-                            <span className="w-12 text-center font-semibold text-lg">{item.quantity}</span>
+                            <span 
+                              data-quantity-id={item.id}
+                              className="w-12 text-center font-semibold text-lg transition-all duration-200"
+                            >
+                              {item.quantity}
+                            </span>
                             
                             <Button
                               variant="outline"
