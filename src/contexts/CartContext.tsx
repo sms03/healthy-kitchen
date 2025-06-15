@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, ReactNode, useRef } from 'react';
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface CartItem {
   id: number;
@@ -38,22 +39,18 @@ interface CartProviderProps {
 export const CartProvider = ({ children }: CartProviderProps) => {
   const [items, setItems] = useState<CartItem[]>([]);
   const { toast } = useToast();
-  const hasShownAuthToast = useRef(false);
+  const { user } = useAuth();
 
   const addToCart = (dish: any) => {
-    // Check if user is authenticated by checking if there's a valid session
-    const hasSession = localStorage.getItem('supabase.auth.token') !== null;
-    
-    if (!hasSession) {
-      // Only show toast once per session
-      if (!hasShownAuthToast.current) {
-        hasShownAuthToast.current = true;
-        toast({
-          title: "Sign In Required",
-          description: "Please sign in to add items to your cart",
-          variant: "destructive"
-        });
-      }
+    // Check if user is authenticated
+    if (!user) {
+      // Only show toast if user actually tried to add something to cart
+      // Don't show on page load or tab switches
+      toast({
+        title: "Sign In Required",
+        description: "Please sign in to add items to your cart",
+        variant: "destructive"
+      });
       return;
     }
 
