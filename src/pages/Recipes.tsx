@@ -58,18 +58,6 @@ const Recipes = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  // Redirect if not authenticated
-  useEffect(() => {
-    if (!loading && !user) {
-      toast({
-        title: "Authentication Required",
-        description: "Please sign in to view recipes",
-        variant: "destructive"
-      });
-      navigate('/auth');
-    }
-  }, [user, loading, navigate, toast]);
-
   const { data: recipes, isLoading } = useQuery({
     queryKey: ['personalRecipes'],
     queryFn: async () => {
@@ -116,9 +104,103 @@ const Recipes = () => {
     );
   }
 
-  // Don't render if not authenticated (will redirect)
+  // Show blurry preview for unauthenticated users
   if (!user) {
-    return null;
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-orange-50 via-red-50 to-pink-50">
+        <Navigation cartItemsCount={0} onCartClick={() => {}} />
+        
+        <main className="pt-32 pb-16 relative">
+          {/* Auth overlay */}
+          <div className="absolute inset-0 z-40 bg-black/20 backdrop-blur-sm flex items-center justify-center">
+            <div className="bg-white/95 backdrop-blur-md rounded-2xl p-8 shadow-2xl max-w-md mx-4 text-center">
+              <Lock className="w-16 h-16 text-orange-500 mx-auto mb-4" />
+              <h2 className="text-2xl font-bold text-gray-800 mb-4">
+                Unlock <span className="text-gradient bg-gradient-to-r from-orange-500 to-red-600 bg-clip-text text-transparent">Premium</span> Recipes
+              </h2>
+              <p className="text-gray-600 mb-6">
+                Sign in to access our collection of exclusive family recipes and cooking secrets
+              </p>
+              <div className="space-y-3">
+                <Button 
+                  onClick={() => navigate('/auth')}
+                  className="w-full bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700"
+                >
+                  Sign In to View Recipes
+                </Button>
+                <p className="text-sm text-gray-500">
+                  Don't have an account? Sign up for free!
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Blurred content */}
+          <section className="py-20 bg-gradient-to-br from-orange-50 to-red-50 blur-sm">
+            <div className="container mx-auto px-4">
+              <div className="text-center mb-12">
+                <h1 className="text-4xl font-bold text-gray-800 mb-4">
+                  My <span className="text-gradient bg-gradient-to-r from-orange-500 to-red-600 bg-clip-text text-transparent">Personal</span> Recipes
+                </h1>
+                <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+                  Discover my collection of cherished family recipes and culinary secrets passed down through generations
+                </p>
+              </div>
+
+              {/* Filter Buttons */}
+              <div className="flex flex-wrap justify-center gap-4 mb-12">
+                {filterOptions.map((filter) => (
+                  <Button
+                    key={filter.id}
+                    variant="outline"
+                    className="px-6 py-3 rounded-full border-orange-200 text-gray-700"
+                  >
+                    <span className="mr-2">{filter.emoji}</span>
+                    {filter.name}
+                  </Button>
+                ))}
+              </div>
+
+              {/* Sample recipes grid */}
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {[1, 2, 3, 4, 5, 6].map((index) => (
+                  <Card key={index} className="bg-white/80 backdrop-blur-sm border-orange-100">
+                    <CardContent className="p-6">
+                      <div className="w-full h-48 bg-gradient-to-br from-orange-100 to-red-100 rounded-xl mb-4 flex items-center justify-center relative">
+                        <ChefHat className="w-16 h-16 text-orange-500" />
+                        <div className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full">
+                          <Lock className="w-4 h-4" />
+                        </div>
+                      </div>
+                      <div className="space-y-3">
+                        <h3 className="text-xl font-semibold text-gray-800">
+                          Premium Recipe #{index}
+                        </h3>
+                        <p className="text-gray-600 text-sm">
+                          Exclusive family recipe with detailed instructions and chef tips
+                        </p>
+                        <div className="flex items-center justify-between text-sm text-gray-500">
+                          <div className="flex items-center space-x-1">
+                            <Clock className="w-4 h-4" />
+                            <span>30m prep</span>
+                          </div>
+                          <div className="flex items-center space-x-1">
+                            <Users className="w-4 h-4" />
+                            <span>Serves 4</span>
+                          </div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </div>
+          </section>
+        </main>
+        
+        <Footer />
+      </div>
+    );
   }
 
   if (isLoading) {
