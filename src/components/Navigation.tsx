@@ -1,8 +1,10 @@
 
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { ShoppingCart, Menu, X } from "lucide-react";
+import { ShoppingCart, Menu, X, User } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
+import { useCartPersistence } from "@/hooks/useCartPersistence";
 
 interface NavigationProps {
   cartItemsCount: number;
@@ -13,6 +15,10 @@ export const Navigation = ({ cartItemsCount, onCartClick }: NavigationProps) => 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const location = useLocation();
+  const { user, loading } = useAuth();
+
+  // Initialize cart persistence
+  useCartPersistence();
 
   const navItems = [
     { path: "/", label: "Home" },
@@ -79,7 +85,7 @@ export const Navigation = ({ cartItemsCount, onCartClick }: NavigationProps) => 
             ))}
           </div>
 
-          {/* Cart & Mobile Menu */}
+          {/* Cart & Auth */}
           <div className="flex items-center space-x-4">
             <Link to="/cart">
               <Button
@@ -100,6 +106,33 @@ export const Navigation = ({ cartItemsCount, onCartClick }: NavigationProps) => 
                 )}
               </Button>
             </Link>
+
+            {/* Auth Button */}
+            {!loading && (
+              user ? (
+                <Link to="/profile">
+                  <Button
+                    variant="outline"
+                    size={isScrolled ? "default" : "lg"}
+                    className="border-orange-200 hover:bg-orange-50 rounded-full font-lora transition-all duration-300 text-base"
+                  >
+                    <User className={`mr-2 transition-all duration-300 ${
+                      isScrolled ? 'w-4 h-4' : 'w-5 h-5'
+                    }`} />
+                    Profile
+                  </Button>
+                </Link>
+              ) : (
+                <Link to="/auth">
+                  <Button
+                    size={isScrolled ? "default" : "lg"}
+                    className="bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 rounded-full font-lora transition-all duration-300 text-base"
+                  >
+                    Sign In
+                  </Button>
+                </Link>
+              )
+            )}
 
             {/* Mobile Menu Button */}
             <Button
@@ -131,6 +164,15 @@ export const Navigation = ({ cartItemsCount, onCartClick }: NavigationProps) => 
                   {item.label}
                 </Link>
               ))}
+              {!loading && !user && (
+                <Link 
+                  to="/auth"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="text-left py-3 px-4 transition-all duration-300 font-lora rounded-lg bg-gradient-to-r from-orange-500 to-red-600 text-white font-semibold"
+                >
+                  Sign In
+                </Link>
+              )}
             </div>
           </div>
         )}

@@ -12,11 +12,13 @@ interface CartItem {
 
 interface CartContextType {
   items: CartItem[];
+  setItems: React.Dispatch<React.SetStateAction<CartItem[]>>;
   addToCart: (dish: any) => void;
   removeFromCart: (dishId: number) => void;
   updateQuantity: (dishId: number, quantity: number) => void;
   getCartItemsCount: () => number;
   getCartTotal: () => number;
+  clearCart: () => void;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -100,14 +102,24 @@ export const CartProvider = ({ children }: CartProviderProps) => {
     return items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
   };
 
+  const clearCart = () => {
+    setItems([]);
+    toast({
+      title: "Cart Cleared",
+      description: "All items have been removed from your cart",
+    });
+  };
+
   return (
     <CartContext.Provider value={{
       items,
+      setItems,
       addToCart,
       removeFromCart,
       updateQuantity,
       getCartItemsCount,
-      getCartTotal
+      getCartTotal,
+      clearCart
     }}>
       {children}
     </CartContext.Provider>

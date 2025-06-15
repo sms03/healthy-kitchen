@@ -9,6 +9,80 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      addresses: {
+        Row: {
+          address_line1: string
+          address_line2: string | null
+          city: string
+          created_at: string
+          id: string
+          is_default: boolean | null
+          postal_code: string
+          state: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          address_line1: string
+          address_line2?: string | null
+          city: string
+          created_at?: string
+          id?: string
+          is_default?: boolean | null
+          postal_code: string
+          state: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          address_line1?: string
+          address_line2?: string | null
+          city?: string
+          created_at?: string
+          id?: string
+          is_default?: boolean | null
+          postal_code?: string
+          state?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      cart_items: {
+        Row: {
+          created_at: string
+          id: string
+          quantity: number
+          recipe_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          quantity: number
+          recipe_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          quantity?: number
+          recipe_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cart_items_recipe_id_fkey"
+            columns: ["recipe_id"]
+            isOneToOne: false
+            referencedRelation: "recipes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       categories: {
         Row: {
           created_at: string
@@ -38,6 +112,101 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      order_items: {
+        Row: {
+          created_at: string
+          id: string
+          order_id: string
+          quantity: number
+          recipe_id: string
+          total_price: number
+          unit_price: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          order_id: string
+          quantity: number
+          recipe_id: string
+          total_price: number
+          unit_price: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          order_id?: string
+          quantity?: number
+          recipe_id?: string
+          total_price?: number
+          unit_price?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "order_items_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "order_items_recipe_id_fkey"
+            columns: ["recipe_id"]
+            isOneToOne: false
+            referencedRelation: "recipes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      orders: {
+        Row: {
+          address_id: string | null
+          created_at: string
+          delivery_fee: number | null
+          discount_amount: number | null
+          id: string
+          special_instructions: string | null
+          status: Database["public"]["Enums"]["order_status"] | null
+          subscription_discount: number | null
+          total_amount: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          address_id?: string | null
+          created_at?: string
+          delivery_fee?: number | null
+          discount_amount?: number | null
+          id?: string
+          special_instructions?: string | null
+          status?: Database["public"]["Enums"]["order_status"] | null
+          subscription_discount?: number | null
+          total_amount: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          address_id?: string | null
+          created_at?: string
+          delivery_fee?: number | null
+          discount_amount?: number | null
+          id?: string
+          special_instructions?: string | null
+          status?: Database["public"]["Enums"]["order_status"] | null
+          subscription_discount?: number | null
+          total_amount?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "orders_address_id_fkey"
+            columns: ["address_id"]
+            isOneToOne: false
+            referencedRelation: "addresses"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       personal_recipes: {
         Row: {
@@ -96,21 +265,42 @@ export type Database = {
           full_name: string | null
           id: string
           phone: string | null
+          profile_image_url: string | null
+          subscription_end_date: string | null
+          subscription_start_date: string | null
+          subscription_tier:
+            | Database["public"]["Enums"]["subscription_tier"]
+            | null
           updated_at: string
+          username: string | null
         }
         Insert: {
           created_at?: string
           full_name?: string | null
           id: string
           phone?: string | null
+          profile_image_url?: string | null
+          subscription_end_date?: string | null
+          subscription_start_date?: string | null
+          subscription_tier?:
+            | Database["public"]["Enums"]["subscription_tier"]
+            | null
           updated_at?: string
+          username?: string | null
         }
         Update: {
           created_at?: string
           full_name?: string | null
           id?: string
           phone?: string | null
+          profile_image_url?: string | null
+          subscription_end_date?: string | null
+          subscription_start_date?: string | null
+          subscription_tier?:
+            | Database["public"]["Enums"]["subscription_tier"]
+            | null
           updated_at?: string
+          username?: string | null
         }
         Relationships: []
       }
@@ -167,6 +357,33 @@ export type Database = {
           },
         ]
       }
+      subscription_history: {
+        Row: {
+          changed_at: string
+          changed_by: string | null
+          id: string
+          new_tier: Database["public"]["Enums"]["subscription_tier"]
+          old_tier: Database["public"]["Enums"]["subscription_tier"] | null
+          user_id: string
+        }
+        Insert: {
+          changed_at?: string
+          changed_by?: string | null
+          id?: string
+          new_tier: Database["public"]["Enums"]["subscription_tier"]
+          old_tier?: Database["public"]["Enums"]["subscription_tier"] | null
+          user_id: string
+        }
+        Update: {
+          changed_at?: string
+          changed_by?: string | null
+          id?: string
+          new_tier?: Database["public"]["Enums"]["subscription_tier"]
+          old_tier?: Database["public"]["Enums"]["subscription_tier"] | null
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -183,6 +400,7 @@ export type Database = {
         | "delivered"
         | "cancelled"
       payment_status: "pending" | "completed" | "failed" | "refunded"
+      subscription_tier: "free" | "pro" | "pro_plus"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -307,6 +525,7 @@ export const Constants = {
         "cancelled",
       ],
       payment_status: ["pending", "completed", "failed", "refunded"],
+      subscription_tier: ["free", "pro", "pro_plus"],
     },
   },
 } as const
