@@ -90,13 +90,14 @@ export const Navigation = ({ cartItemsCount, onCartClick }: NavigationProps) => 
             <Link to="/cart">
               <Button
                 variant="outline"
-                size={isScrolled ? "default" : "lg"}
-                className="relative border-orange-200 hover:bg-orange-50 rounded-full font-lora transition-all duration-300 text-base"
+                size="icon"
+                className={`relative border-orange-200 hover:bg-orange-50 rounded-full font-lora transition-all duration-300 ${
+                  isScrolled ? 'w-10 h-10' : 'w-12 h-12'
+                }`}
               >
-                <ShoppingCart className={`mr-2 transition-all duration-300 ${
+                <ShoppingCart className={`transition-all duration-300 ${
                   isScrolled ? 'w-4 h-4' : 'w-5 h-5'
                 }`} />
-                Cart
                 {cartItemsCount > 0 && (
                   <span className={`absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full flex items-center justify-center font-bold transition-all duration-300 ${
                     isScrolled ? 'w-5 h-5' : 'w-6 h-6'
@@ -113,13 +114,14 @@ export const Navigation = ({ cartItemsCount, onCartClick }: NavigationProps) => 
                 <Link to="/profile">
                   <Button
                     variant="outline"
-                    size={isScrolled ? "default" : "lg"}
-                    className="border-orange-200 hover:bg-orange-50 rounded-full font-lora transition-all duration-300 text-base"
+                    size="icon"
+                    className={`border-orange-200 hover:bg-orange-50 rounded-full font-lora transition-all duration-300 ${
+                      isScrolled ? 'w-10 h-10' : 'w-12 h-12'
+                    }`}
                   >
-                    <User className={`mr-2 transition-all duration-300 ${
+                    <User className={`transition-all duration-300 ${
                       isScrolled ? 'w-4 h-4' : 'w-5 h-5'
                     }`} />
-                    Profile
                   </Button>
                 </Link>
               ) : (
