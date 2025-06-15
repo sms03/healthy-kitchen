@@ -4,6 +4,7 @@ import { useToast } from "@/hooks/use-toast";
 
 interface CartItem {
   id: number;
+  originalId?: string; // Add originalId to interface for database operations
   name: string;
   price: number;
   quantity: number;
@@ -71,6 +72,7 @@ export const CartProvider = ({ children }: CartProviderProps) => {
       });
       return [...prev, { 
         id: dish.id,
+        originalId: dish.originalId, // Include originalId when adding to cart
         name: dish.name || 'Unknown Item',
         price: dish.price || 0,
         quantity: 1,
