@@ -14,7 +14,7 @@ const Cart = () => {
   const { items: cartItems, removeFromCart, updateQuantity, getCartItemsCount, getCartTotal } = useCart();
   const cartItemsRef = useRef<HTMLDivElement>(null);
   const summaryRef = useRef<HTMLDivElement>(null);
-  const { staggerAnimation, fadeInLeft, fadeInRight, cartItemAnimation, quantityUpdateAnimation } = useGSAPAnimations();
+  const { staggerAnimation, fadeInRight } = useGSAPAnimations();
   
   const total = getCartTotal();
   const itemCount = getCartItemsCount();
@@ -26,24 +26,14 @@ const Cart = () => {
     if (summaryRef.current) {
       fadeInRight(summaryRef.current, 0.3);
     }
-  }, [cartItems, staggerAnimation, fadeInLeft, fadeInRight]);
+  }, [cartItems, staggerAnimation, fadeInRight]);
 
   const handleRemoveItem = (itemId: number) => {
-    const itemElement = document.querySelector(`[data-item-id="${itemId}"]`);
-    if (itemElement) {
-      cartItemAnimation(itemElement, false);
-      setTimeout(() => removeFromCart(itemId), 250);
-    } else {
-      removeFromCart(itemId);
-    }
+    removeFromCart(itemId);
   };
 
   const handleUpdateQuantity = (itemId: number, newQuantity: number) => {
     updateQuantity(itemId, newQuantity);
-    const quantityElement = document.querySelector(`[data-quantity-id="${itemId}"]`);
-    if (quantityElement) {
-      quantityUpdateAnimation(quantityElement);
-    }
   };
 
   return (
