@@ -1,7 +1,6 @@
 
 import { useState } from "react";
 import { DishCard } from "@/components/DishCard";
-import { Button } from "@/components/ui/button";
 import { useCategories } from "@/hooks/useCategories";
 import { useRecipes } from "@/hooks/useRecipes";
 import { useCart } from "@/contexts/CartContext";
@@ -11,6 +10,7 @@ import { Loader2 } from "lucide-react";
 import { Navigation } from "@/components/Navigation";
 import { Footer } from "@/components/Footer";
 import { Cart } from "@/components/Cart";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 
 const Menu = () => {
   const [activeCategory, setActiveCategory] = useState("all");
@@ -122,44 +122,43 @@ const Menu = () => {
               </p>
             </div>
 
-            {/* Category Filter */}
-            <div className="flex flex-wrap justify-center gap-4 mb-12">
-              {categoryOptions.map((category) => (
-                <Button
-                  key={category.id}
-                  variant={activeCategory === category.id ? "default" : "outline"}
-                  onClick={() => setActiveCategory(category.id)}
-                  className={`px-6 py-3 rounded-full transition-all duration-500 hover:scale-105 ${
-                    activeCategory === category.id
-                      ? "bg-gradient-to-r from-orange-500 to-red-600 text-white shadow-lg"
-                      : "border-orange-200 text-gray-700 hover:bg-orange-50"
-                  }`}
-                >
-                  <span className="mr-2">{category.emoji}</span>
-                  {category.name}
-                </Button>
-              ))}
-            </div>
+            {/* Category Filter using Tabs */}
+            <Tabs value={activeCategory} onValueChange={setActiveCategory} className="w-full mb-12">
+              <TabsList className="grid w-full grid-cols-2 lg:grid-cols-4 h-auto p-2 bg-white/80 backdrop-blur-sm border border-orange-100 rounded-2xl">
+                {categoryOptions.map((category) => (
+                  <TabsTrigger
+                    key={category.id}
+                    value={category.id}
+                    className="px-6 py-3 rounded-xl text-base font-medium transition-all duration-300 data-[state=active]:bg-gradient-to-r data-[state=active]:from-orange-500 data-[state=active]:to-red-600 data-[state=active]:text-white data-[state=active]:shadow-lg hover:bg-orange-50 text-gray-700"
+                  >
+                    <span className="mr-2">{category.emoji}</span>
+                    {category.name}
+                  </TabsTrigger>
+                ))}
+              </TabsList>
 
-            {/* Menu Grid */}
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {filteredRecipes.map((recipe) => {
-                const dish = convertRecipeToDish(recipe);
-                return (
-                  <DishCard 
-                    key={`recipe-${recipe.id}`}
-                    dish={dish} 
-                    onAddToCart={handleAddToCart}
-                  />
-                );
-              })}
-            </div>
+              {/* Menu Grid */}
+              <TabsContent value={activeCategory} className="mt-8">
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                  {filteredRecipes.map((recipe) => {
+                    const dish = convertRecipeToDish(recipe);
+                    return (
+                      <DishCard 
+                        key={`recipe-${recipe.id}`}
+                        dish={dish} 
+                        onAddToCart={handleAddToCart}
+                      />
+                    );
+                  })}
+                </div>
 
-            {filteredRecipes.length === 0 && (
-              <div className="text-center py-12">
-                <p className="text-gray-500 text-lg">No items found in this category.</p>
-              </div>
-            )}
+                {filteredRecipes.length === 0 && (
+                  <div className="text-center py-12">
+                    <p className="text-gray-500 text-lg">No items found in this category.</p>
+                  </div>
+                )}
+              </TabsContent>
+            </Tabs>
           </div>
         </section>
       </main>

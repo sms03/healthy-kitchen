@@ -2,7 +2,6 @@
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Clock, Users, ChefHat, Lock, Loader2, Youtube, Play } from "lucide-react";
 import { Navigation } from "@/components/Navigation";
@@ -10,6 +9,8 @@ import { Footer } from "@/components/Footer";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { Button } from "@/components/ui/button";
 
 interface PersonalRecipe {
   id: string;
@@ -233,145 +234,144 @@ const Recipes = () => {
               </p>
             </div>
 
-            {/* Filter Buttons */}
-            <div className="flex flex-wrap justify-center gap-4 mb-12">
-              {filterOptions.map((filter) => (
-                <Button
-                  key={filter.id}
-                  variant={activeFilter === filter.id ? "default" : "outline"}
-                  onClick={() => setActiveFilter(filter.id)}
-                  className={`px-6 py-3 rounded-full transition-all duration-300 ${
-                    activeFilter === filter.id
-                      ? "bg-gradient-to-r from-orange-500 to-red-600 text-white shadow-lg"
-                      : "border-orange-200 text-gray-700 hover:bg-orange-50"
-                  }`}
-                >
-                  <span className="mr-2">{filter.emoji}</span>
-                  {filter.name}
-                </Button>
-              ))}
-            </div>
+            {/* Filter using Tabs */}
+            <Tabs value={activeFilter} onValueChange={setActiveFilter} className="w-full mb-12">
+              <TabsList className="grid w-full grid-cols-2 lg:grid-cols-5 h-auto p-2 bg-white/80 backdrop-blur-sm border border-orange-100 rounded-2xl">
+                {filterOptions.map((filter) => (
+                  <TabsTrigger
+                    key={filter.id}
+                    value={filter.id}
+                    className="px-6 py-3 rounded-xl text-base font-medium transition-all duration-300 data-[state=active]:bg-gradient-to-r data-[state=active]:from-orange-500 data-[state=active]:to-red-600 data-[state=active]:text-white data-[state=active]:shadow-lg hover:bg-orange-50 text-gray-700"
+                  >
+                    <span className="mr-2">{filter.emoji}</span>
+                    {filter.name}
+                  </TabsTrigger>
+                ))}
+              </TabsList>
 
-            {/* Recipes Grid */}
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {filteredRecipes.map((recipe) => {
-                const youtubeData = recipeYouTubeData[recipe.title as keyof typeof recipeYouTubeData];
-                return (
-                  <Card key={recipe.id} className="group hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 bg-white/80 backdrop-blur-sm border-orange-100">
-                    <CardContent className="p-6">
-                      {/* YouTube Video Preview */}
-                      {youtubeData && (
-                        <div className="relative mb-4 rounded-xl overflow-hidden">
-                          <img 
-                            src={youtubeData.thumbnail} 
-                            alt={recipe.title}
-                            className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
-                          />
-                          <div className="absolute inset-0 bg-black/20 flex items-center justify-center group-hover:bg-black/40 transition-colors cursor-pointer"
-                               onClick={() => window.open(`https://youtube.com/watch?v=${youtubeData.videoId}`, '_blank')}>
-                            <div className="bg-red-600 rounded-full p-3 group-hover:scale-110 transition-transform">
-                              <Play className="w-6 h-6 text-white fill-white" />
+              {/* Recipes Grid */}
+              <TabsContent value={activeFilter} className="mt-8">
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                  {filteredRecipes.map((recipe) => {
+                    const youtubeData = recipeYouTubeData[recipe.title as keyof typeof recipeYouTubeData];
+                    return (
+                      <Card key={recipe.id} className="group hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 bg-white/80 backdrop-blur-sm border-orange-100">
+                        <CardContent className="p-6">
+                          {/* YouTube Video Preview */}
+                          {youtubeData && (
+                            <div className="relative mb-4 rounded-xl overflow-hidden">
+                              <img 
+                                src={youtubeData.thumbnail} 
+                                alt={recipe.title}
+                                className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+                              />
+                              <div className="absolute inset-0 bg-black/20 flex items-center justify-center group-hover:bg-black/40 transition-colors cursor-pointer"
+                                   onClick={() => window.open(`https://youtube.com/watch?v=${youtubeData.videoId}`, '_blank')}>
+                                <div className="bg-red-600 rounded-full p-3 group-hover:scale-110 transition-transform">
+                                  <Play className="w-6 h-6 text-white fill-white" />
+                                </div>
+                              </div>
+                              <div className="absolute top-2 right-2 bg-red-600 text-white px-2 py-1 rounded-full text-xs flex items-center">
+                                <Youtube className="w-3 h-3 mr-1" />
+                                Watch
+                              </div>
+                              {recipe.is_secret && (
+                                <div className="absolute top-2 left-2 bg-red-500 text-white p-1 rounded-full">
+                                  <Lock className="w-4 h-4" />
+                                </div>
+                              )}
                             </div>
+                          )}
+
+                          {/* Recipe without video */}
+                          {!youtubeData && (
+                            <div className="w-full h-48 bg-gradient-to-br from-orange-100 to-red-100 rounded-xl mb-4 flex items-center justify-center text-6xl group-hover:scale-105 transition-transform duration-300 relative">
+                              {recipe.is_secret && (
+                                <div className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full">
+                                  <Lock className="w-4 h-4" />
+                                </div>
+                              )}
+                              <ChefHat className="w-16 h-16 text-orange-500" />
+                            </div>
+                          )}
+
+                          {/* Recipe Info */}
+                          <div className="space-y-3">
+                            <div className="flex items-start justify-between">
+                              <h3 className="text-xl font-semibold text-gray-800 group-hover:text-orange-600 transition-colors">
+                                {recipe.title}
+                                {recipe.is_secret && <span className="ml-2 text-red-500">🔒</span>}
+                              </h3>
+                              {recipe.difficulty && (
+                                <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                                  recipe.difficulty === 'Easy' ? 'bg-green-100 text-green-800' :
+                                  recipe.difficulty === 'Medium' ? 'bg-yellow-100 text-yellow-800' :
+                                  'bg-red-100 text-red-800'
+                                }`}>
+                                  {recipe.difficulty}
+                                </span>
+                              )}
+                            </div>
+
+                            {recipe.description && (
+                              <p className="text-gray-600 text-sm leading-relaxed">
+                                {recipe.description}
+                              </p>
+                            )}
+
+                            {/* YouTube Channel Info */}
+                            {youtubeData && (
+                              <div className="flex items-center text-sm text-red-600 font-medium">
+                                <Youtube className="w-4 h-4 mr-1" />
+                                {youtubeData.channelName}
+                              </div>
+                            )}
+
+                            {/* Recipe Stats */}
+                            <div className="flex items-center justify-between text-sm text-gray-500">
+                              {recipe.prep_time && (
+                                <div className="flex items-center space-x-1">
+                                  <Clock className="w-4 h-4" />
+                                  <span>{recipe.prep_time}m prep</span>
+                                </div>
+                              )}
+                              {recipe.servings && (
+                                <div className="flex items-center space-x-1">
+                                  <Users className="w-4 h-4" />
+                                  <span>Serves {recipe.servings}</span>
+                                </div>
+                              )}
+                            </div>
+
+                            {/* Category */}
+                            {recipe.category && (
+                              <div className="text-xs text-orange-600 font-medium">
+                                {recipe.category}
+                              </div>
+                            )}
+
+                            {/* View Recipe Button */}
+                            <Button 
+                              onClick={() => setSelectedRecipe(recipe)}
+                              className="w-full mt-4 bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white"
+                            >
+                              {recipe.is_secret ? "View Secret Recipe" : "View Recipe"}
+                            </Button>
                           </div>
-                          <div className="absolute top-2 right-2 bg-red-600 text-white px-2 py-1 rounded-full text-xs flex items-center">
-                            <Youtube className="w-3 h-3 mr-1" />
-                            Watch
-                          </div>
-                          {recipe.is_secret && (
-                            <div className="absolute top-2 left-2 bg-red-500 text-white p-1 rounded-full">
-                              <Lock className="w-4 h-4" />
-                            </div>
-                          )}
-                        </div>
-                      )}
+                        </CardContent>
+                      </Card>
+                    );
+                  })}
+                </div>
 
-                      {/* Recipe without video */}
-                      {!youtubeData && (
-                        <div className="w-full h-48 bg-gradient-to-br from-orange-100 to-red-100 rounded-xl mb-4 flex items-center justify-center text-6xl group-hover:scale-105 transition-transform duration-300 relative">
-                          {recipe.is_secret && (
-                            <div className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full">
-                              <Lock className="w-4 h-4" />
-                            </div>
-                          )}
-                          <ChefHat className="w-16 h-16 text-orange-500" />
-                        </div>
-                      )}
-
-                      {/* Recipe Info */}
-                      <div className="space-y-3">
-                        <div className="flex items-start justify-between">
-                          <h3 className="text-xl font-semibold text-gray-800 group-hover:text-orange-600 transition-colors">
-                            {recipe.title}
-                            {recipe.is_secret && <span className="ml-2 text-red-500">🔒</span>}
-                          </h3>
-                          {recipe.difficulty && (
-                            <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                              recipe.difficulty === 'Easy' ? 'bg-green-100 text-green-800' :
-                              recipe.difficulty === 'Medium' ? 'bg-yellow-100 text-yellow-800' :
-                              'bg-red-100 text-red-800'
-                            }`}>
-                              {recipe.difficulty}
-                            </span>
-                          )}
-                        </div>
-
-                        {recipe.description && (
-                          <p className="text-gray-600 text-sm leading-relaxed">
-                            {recipe.description}
-                          </p>
-                        )}
-
-                        {/* YouTube Channel Info */}
-                        {youtubeData && (
-                          <div className="flex items-center text-sm text-red-600 font-medium">
-                            <Youtube className="w-4 h-4 mr-1" />
-                            {youtubeData.channelName}
-                          </div>
-                        )}
-
-                        {/* Recipe Stats */}
-                        <div className="flex items-center justify-between text-sm text-gray-500">
-                          {recipe.prep_time && (
-                            <div className="flex items-center space-x-1">
-                              <Clock className="w-4 h-4" />
-                              <span>{recipe.prep_time}m prep</span>
-                            </div>
-                          )}
-                          {recipe.servings && (
-                            <div className="flex items-center space-x-1">
-                              <Users className="w-4 h-4" />
-                              <span>Serves {recipe.servings}</span>
-                            </div>
-                          )}
-                        </div>
-
-                        {/* Category */}
-                        {recipe.category && (
-                          <div className="text-xs text-orange-600 font-medium">
-                            {recipe.category}
-                          </div>
-                        )}
-
-                        {/* View Recipe Button */}
-                        <Button 
-                          onClick={() => setSelectedRecipe(recipe)}
-                          className="w-full mt-4 bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white"
-                        >
-                          {recipe.is_secret ? "View Secret Recipe" : "View Recipe"}
-                        </Button>
-                      </div>
-                    </CardContent>
-                  </Card>
-                );
-              })}
-            </div>
-
-            {filteredRecipes.length === 0 && (
-              <div className="text-center py-12">
-                <p className="text-gray-500 text-lg">No recipes found in this category.</p>
-                <p className="text-gray-400 text-sm mt-2">Check back soon for new recipes!</p>
-              </div>
-            )}
+                {filteredRecipes.length === 0 && (
+                  <div className="text-center py-12">
+                    <p className="text-gray-500 text-lg">No recipes found in this category.</p>
+                    <p className="text-gray-400 text-sm mt-2">Check back soon for new recipes!</p>
+                  </div>
+                )}
+              </TabsContent>
+            </Tabs>
           </div>
         </section>
       </main>
