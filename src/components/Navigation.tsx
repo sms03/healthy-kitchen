@@ -67,9 +67,7 @@ export const Navigation = ({ cartItemsCount, onCartClick }: NavigationProps) => 
               <Link 
                 key={item.path}
                 to={item.path}
-                className={`font-medium transition-all duration-300 font-lora px-4 py-2 rounded-full border-2 ${
-                  isScrolled ? 'text-base' : 'text-lg'
-                } ${
+                className={`font-medium transition-all duration-300 font-lora px-4 py-2 rounded-full border-2 text-base ${
                   location.pathname === item.path 
                     ? 'text-white bg-gradient-to-r from-orange-500 to-red-600 border-orange-500 shadow-md' 
                     : 'text-gray-700 hover:text-orange-600 border-gray-200 hover:border-orange-300 hover:bg-orange-50'
@@ -86,7 +84,7 @@ export const Navigation = ({ cartItemsCount, onCartClick }: NavigationProps) => 
               <Button
                 variant="outline"
                 size={isScrolled ? "default" : "lg"}
-                className="relative border-orange-200 hover:bg-orange-50 rounded-full font-lora transition-all duration-300"
+                className="relative border-orange-200 hover:bg-orange-50 rounded-full font-lora transition-all duration-300 text-base"
               >
                 <ShoppingCart className={`mr-2 transition-all duration-300 ${
                   isScrolled ? 'w-4 h-4' : 'w-5 h-5'
@@ -123,7 +121,7 @@ export const Navigation = ({ cartItemsCount, onCartClick }: NavigationProps) => 
                   key={item.path}
                   to={item.path}
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className={`text-left py-3 px-4 text-lg transition-all duration-300 font-lora rounded-lg border-2 ${
+                  className={`text-left py-3 px-4 transition-all duration-300 font-lora rounded-lg border-2 text-base ${
                     location.pathname === item.path 
                       ? 'text-white bg-gradient-to-r from-orange-500 to-red-600 border-orange-500 shadow-md font-semibold' 
                       : 'text-gray-700 hover:text-orange-600 border-gray-200 hover:border-orange-300 hover:bg-orange-50'

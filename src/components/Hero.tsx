@@ -31,8 +31,8 @@ export const Hero = () => {
     <section ref={heroRef} id="home" className="pt-32 pb-16 relative overflow-hidden font-lora">
       {/* Background Elements */}
       <div className="absolute inset-0 bg-gradient-to-br from-orange-100 via-red-50 to-pink-100"></div>
-      <div className="floating-element absolute top-20 left-10 w-32 h-32 bg-orange-200 rounded-full opacity-20 animate-pulse"></div>
-      <div className="floating-element absolute bottom-20 right-10 w-24 h-24 bg-red-200 rounded-full opacity-20 animate-pulse delay-1000"></div>
+      <div className="floating-element absolute top-20 left-10 w-32 h-32 bg-orange-200/30 rounded-full animate-pulse"></div>
+      <div className="floating-element absolute bottom-20 right-10 w-24 h-24 bg-red-200/30 rounded-full animate-pulse delay-1000"></div>
       
       <div className="container mx-auto px-4 relative z-10">
         <div className="grid lg:grid-cols-2 gap-12 items-center min-h-[80vh]">
@@ -161,8 +161,8 @@ export const Hero = () => {
             </div>
 
             {/* Floating Elements */}
-            <div className="floating-element absolute -top-4 -right-4 w-16 h-16 bg-orange-400 rounded-full opacity-20 animate-bounce"></div>
-            <div className="floating-element absolute -bottom-4 -left-4 w-12 h-12 bg-red-400 rounded-full opacity-20 animate-bounce delay-500"></div>
+            <div className="floating-element absolute -top-4 -right-4 w-16 h-16 bg-orange-400/30 rounded-full animate-bounce"></div>
+            <div className="floating-element absolute -bottom-4 -left-4 w-12 h-12 bg-red-400/30 rounded-full animate-bounce delay-500"></div>
             
             {/* Special Badge */}
             <div className="absolute top-4 left-4 bg-gradient-to-r from-red-500 to-orange-500 text-white px-3 py-1 rounded-full text-sm font-semibold shadow-lg">
