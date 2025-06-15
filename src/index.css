@@ -101,3 +101,126 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Custom Scrollbar Styles */
+@layer base {
+  /* Webkit Scrollbar (Chrome, Safari, Edge) */
+  ::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: linear-gradient(180deg, #f8fffe 0%, #f1f8f4 100%);
+    border-radius: 10px;
+    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #10b981 0%, #059669 50%, #047857 100%);
+    border-radius: 10px;
+    border: 2px solid #f8fffe;
+    box-shadow: 0 2px 4px rgba(16, 185, 129, 0.2);
+    transition: all 0.3s ease;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, #059669 0%, #047857 50%, #065f46 100%);
+    box-shadow: 0 4px 8px rgba(16, 185, 129, 0.3);
+    transform: scale(1.05);
+  }
+
+  ::-webkit-scrollbar-thumb:active {
+    background: linear-gradient(135deg, #047857 0%, #065f46 100%);
+  }
+
+  ::-webkit-scrollbar-corner {
+    background: #f8fffe;
+  }
+
+  /* Firefox Scrollbar */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: #ec713c #f1f8f4;
+  }
+
+  /* Custom scrollbar for specific containers */
+  .custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: #10b981 #f1f8f4;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: rgba(241, 248, 244, 0.5);
+    border-radius: 6px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    border-radius: 6px;
+    border: 1px solid rgba(248, 255, 254, 0.5);
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  }
+
+  /* Dark mode scrollbar */
+  .dark ::-webkit-scrollbar-track {
+    background: linear-gradient(180deg, #1f2937 0%, #111827 100%);
+    box-shadow: inset 0 0 6px rgba(255, 255, 255, 0.1);
+  }
+
+  .dark ::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #10b981 0%, #059669 50%, #047857 100%);
+    border: 2px solid #1f2937;
+    box-shadow: 0 2px 4px rgba(16, 185, 129, 0.3);
+  }
+
+  .dark ::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, #34d399 0%, #10b981 50%, #059669 100%);
+    box-shadow: 0 4px 8px rgba(52, 211, 153, 0.4);
+  }
+
+  .dark ::-webkit-scrollbar-corner {
+    background: #1f2937;
+  }
+
+  .dark * {
+    scrollbar-color: #10b981 #1f2937;
+  }
+}
+
+/* Smooth Scrolling Behavior */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Enhanced scrolling for better UX */
+  body {
+    overflow-x: hidden;
+    scrollbar-gutter: stable;
+  }
+
+  /* Custom scroll animations */
+  @keyframes fadeInScroll {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Scroll-triggered animations */
+  .scroll-fade-in {
+    animation: fadeInScroll 0.6s ease-out;
+  }
+}
