@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { ShoppingCart, Menu, X, User } from "lucide-react";
+import { ShoppingCart, Menu, X, User, Loader2 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCartPersistence } from "@/hooks/useCartPersistence";
@@ -15,7 +15,7 @@ export const Navigation = ({ cartItemsCount, onCartClick }: NavigationProps) => 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const location = useLocation();
-  const { user, loading } = useAuth();
+  const { user, loading, signingOut } = useAuth();
 
   // Initialize cart persistence
   useCartPersistence();
@@ -110,7 +110,7 @@ export const Navigation = ({ cartItemsCount, onCartClick }: NavigationProps) => 
 
             {/* Auth Button */}
             {!loading && (
-              user ? (
+              user && !signingOut ? (
                 <Link to="/profile">
                   <Button
                     variant="outline"
@@ -124,6 +124,15 @@ export const Navigation = ({ cartItemsCount, onCartClick }: NavigationProps) => 
                     }`} />
                   </Button>
                 </Link>
+              ) : signingOut ? (
+                <Button
+                  size={isScrolled ? "default" : "lg"}
+                  disabled
+                  className="bg-gradient-to-r from-gray-400 to-gray-500 rounded-full font-lora transition-all duration-300 text-base"
+                >
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  Signing Out...
+                </Button>
               ) : (
                 <Link to="/auth">
                   <Button
@@ -166,7 +175,7 @@ export const Navigation = ({ cartItemsCount, onCartClick }: NavigationProps) => 
                   {item.label}
                 </Link>
               ))}
-              {!loading && !user && (
+              {!loading && !user && !signingOut && (
                 <Link 
                   to="/auth"
                   onClick={() => setIsMobileMenuOpen(false)}

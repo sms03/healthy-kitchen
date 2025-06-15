@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from "@/integrations/supabase/client";
@@ -7,6 +8,7 @@ interface AuthContextType {
   user: User | null;
   session: Session | null;
   loading: boolean;
+  signingOut: boolean;
   signUp: (email: string, password: string, username: string, fullName: string) => Promise<{ error: any }>;
   signIn: (email: string, password: string) => Promise<{ error: any }>;
   signOut: () => Promise<void>;
@@ -31,6 +33,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
+  const [signingOut, setSigningOut] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -40,6 +43,11 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         setSession(session);
         setUser(session?.user ?? null);
         setLoading(false);
+        
+        // Reset signing out state when auth state changes
+        if (event === 'SIGNED_OUT') {
+          setSigningOut(false);
+        }
       }
     );
 
@@ -127,6 +135,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const signOut = async () => {
     try {
       console.log('Starting sign out process...');
+      setSigningOut(true);
       
       // Clear local state first
       setSession(null);
@@ -145,14 +154,17 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       }
       
       toast({
-        title: "Signed Out",
-        description: "You have been successfully signed out."
+        title: "Signing Out...",
+        description: "Please wait while we sign you out.",
       });
       
       console.log('Redirecting to home page...');
       
-      // Force redirect to home page
-      window.location.replace('/');
+      // Small delay for animation
+      setTimeout(() => {
+        // Force redirect to home page
+        window.location.replace('/');
+      }, 1000);
       
     } catch (error: any) {
       console.error('Sign out error:', error);
@@ -161,6 +173,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       setSession(null);
       setUser(null);
       localStorage.removeItem('supabase.auth.token');
+      setSigningOut(false);
       
       toast({
         title: "Signed Out",
@@ -210,6 +223,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       user,
       session,
       loading,
+      signingOut,
       signUp,
       signIn,
       signOut,
