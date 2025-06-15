@@ -1,27 +1,10 @@
 
-import { useEffect, useRef } from "react";
 import { Navigation } from "@/components/Navigation";
 import { Footer } from "@/components/Footer";
-import { AnimatedPageWrapper } from "@/components/AnimatedPageWrapper";
-import { useGSAPAnimations } from "@/hooks/useGSAPAnimations";
 
 const About = () => {
-  const contentRef = useRef<HTMLDivElement>(null);
-  const imageRef = useRef<HTMLDivElement>(null);
-  const { fadeInLeft, fadeInRight, staggerAnimation } = useGSAPAnimations();
-
-  useEffect(() => {
-    if (contentRef.current) {
-      fadeInLeft(contentRef.current, 0.2);
-    }
-    if (imageRef.current) {
-      fadeInRight(imageRef.current, 0.4);
-    }
-    staggerAnimation(".feature-item", 0.1);
-  }, [fadeInLeft, fadeInRight, staggerAnimation]);
-
   return (
-    <AnimatedPageWrapper className="min-h-screen bg-gradient-to-br from-orange-50 via-red-50 to-pink-50">
+    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-red-50 to-pink-50">
       <Navigation cartItemsCount={0} onCartClick={() => {}} />
       
       <main className="pt-32 pb-16">
@@ -33,7 +16,7 @@ const About = () => {
               </h1>
               
               <div className="grid md:grid-cols-2 gap-12 items-center">
-                <div ref={contentRef} className="space-y-6 text-left opacity-0">
+                <div className="space-y-6 text-left">
                   <p className="text-lg text-gray-600 leading-relaxed">
                     Passionate bakery chef and culinary expert specializing in vegetarian, non-vegetarian, 
                     and innovative healthy recipes. With years of experience and a love for creating 
@@ -41,15 +24,15 @@ const About = () => {
                   </p>
                   
                   <div className="space-y-4">
-                    <div className="feature-item flex items-center space-x-3 opacity-0">
+                    <div className="flex items-center space-x-3">
                       <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
                       <span className="text-gray-700">Expert in Traditional & Modern Baking</span>
                     </div>
-                    <div className="feature-item flex items-center space-x-3 opacity-0">
+                    <div className="flex items-center space-x-3">
                       <div className="w-2 h-2 bg-red-500 rounded-full"></div>
                       <span className="text-gray-700">Specialist in Healthy Recipe Innovation</span>
                     </div>
-                    <div className="feature-item flex items-center space-x-3 opacity-0">
+                    <div className="flex items-center space-x-3">
                       <div className="w-2 h-2 bg-pink-500 rounded-full"></div>
                       <span className="text-gray-700">YouTube Content Creator</span>
                     </div>
@@ -78,7 +61,7 @@ const About = () => {
                   </div>
                 </div>
                 
-                <div ref={imageRef} className="relative opacity-0">
+                <div className="relative">
                   <div className="w-80 h-80 mx-auto bg-gradient-to-br from-orange-200 via-red-200 to-pink-200 rounded-full flex items-center justify-center transition-all duration-500 hover:scale-105">
                     <span className="text-8xl">👩‍🍳</span>
                   </div>
@@ -92,7 +75,7 @@ const About = () => {
       </main>
       
       <Footer />
-    </AnimatedPageWrapper>
+    </div>
   );
 };
 
