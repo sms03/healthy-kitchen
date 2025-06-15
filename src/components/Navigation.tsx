@@ -56,17 +56,20 @@ export const Navigation = ({ cartItemsCount, onCartClick }: NavigationProps) => 
       }`}>
         <div className="flex items-center justify-between">
           {/* Logo */}
-          <div className={`flex items-center space-x-2 transition-all duration-300 ${
+          <div className={`flex items-center transition-all duration-300 ${
             isScrolled ? 'scale-90' : 'scale-100'
           }`}>
-            <div className="w-8 h-8 bg-gradient-to-r from-orange-400 to-red-500 rounded-full flex items-center justify-center">
-              <span className="text-white font-bold text-sm">S</span>
+            <div className="w-10 h-10 bg-gradient-to-r from-orange-400 to-red-500 rounded-full flex items-center justify-center mr-3">
+              <span className="text-white font-bold text-lg">HK</span>
             </div>
             {!isScrolled && (
-              <div>
-                <h1 className="text-lg font-bold text-gray-800">Sharvari Salunkhe</h1>
-                <p className="text-xs text-gray-600">Culinary Expert</p>
+              <div className="flex flex-col">
+                <h1 className="text-xl font-bold text-gray-800 leading-tight">Healthy Kitchen</h1>
+                <p className="text-xs text-gray-600 leading-tight">Delicious & Nutritious</p>
               </div>
+            )}
+            {isScrolled && (
+              <span className="text-lg font-bold text-gray-800 ml-1">Healthy Kitchen</span>
             )}
           </div>
 
@@ -91,6 +94,12 @@ export const Navigation = ({ cartItemsCount, onCartClick }: NavigationProps) => 
               className="text-gray-700 hover:text-orange-600 transition-colors text-sm font-medium"
             >
               Menu
+            </button>
+            <button 
+              onClick={() => scrollToSection('recipes')}
+              className="text-gray-700 hover:text-orange-600 transition-colors text-sm font-medium"
+            >
+              Recipes
             </button>
             <button 
               onClick={() => scrollToSection('contact')}
@@ -149,6 +158,12 @@ export const Navigation = ({ cartItemsCount, onCartClick }: NavigationProps) => 
                 className="text-left text-gray-700 hover:text-orange-600 transition-colors py-2 text-sm"
               >
                 Menu
+              </button>
+              <button 
+                onClick={() => scrollToSection('recipes')}
+                className="text-left text-gray-700 hover:text-orange-600 transition-colors py-2 text-sm"
+              >
+                Recipes
               </button>
               <button 
                 onClick={() => scrollToSection('contact')}

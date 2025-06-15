@@ -9,45 +9,6 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      addresses: {
-        Row: {
-          address_line1: string
-          address_line2: string | null
-          city: string
-          created_at: string
-          id: string
-          is_default: boolean | null
-          postal_code: string
-          state: string
-          updated_at: string
-          user_id: string
-        }
-        Insert: {
-          address_line1: string
-          address_line2?: string | null
-          city: string
-          created_at?: string
-          id?: string
-          is_default?: boolean | null
-          postal_code: string
-          state: string
-          updated_at?: string
-          user_id: string
-        }
-        Update: {
-          address_line1?: string
-          address_line2?: string | null
-          city?: string
-          created_at?: string
-          id?: string
-          is_default?: boolean | null
-          postal_code?: string
-          state?: string
-          updated_at?: string
-          user_id?: string
-        }
-        Relationships: []
-      }
       categories: {
         Row: {
           created_at: string
@@ -78,135 +39,56 @@ export type Database = {
         }
         Relationships: []
       }
-      order_items: {
+      personal_recipes: {
         Row: {
+          category: string | null
+          cook_time: number | null
           created_at: string
+          description: string | null
+          difficulty: string | null
           id: string
-          order_id: string
-          quantity: number
-          recipe_id: string
-          total_price: number
-          unit_price: number
-        }
-        Insert: {
-          created_at?: string
-          id?: string
-          order_id: string
-          quantity: number
-          recipe_id: string
-          total_price: number
-          unit_price: number
-        }
-        Update: {
-          created_at?: string
-          id?: string
-          order_id?: string
-          quantity?: number
-          recipe_id?: string
-          total_price?: number
-          unit_price?: number
-        }
-        Relationships: [
-          {
-            foreignKeyName: "order_items_order_id_fkey"
-            columns: ["order_id"]
-            isOneToOne: false
-            referencedRelation: "orders"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "order_items_recipe_id_fkey"
-            columns: ["recipe_id"]
-            isOneToOne: false
-            referencedRelation: "recipes"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      orders: {
-        Row: {
-          address_id: string | null
-          created_at: string
-          delivery_fee: number | null
-          id: string
-          special_instructions: string | null
-          status: Database["public"]["Enums"]["order_status"] | null
-          total_amount: number
-          updated_at: string
-          user_id: string
-        }
-        Insert: {
-          address_id?: string | null
-          created_at?: string
-          delivery_fee?: number | null
-          id?: string
-          special_instructions?: string | null
-          status?: Database["public"]["Enums"]["order_status"] | null
-          total_amount: number
-          updated_at?: string
-          user_id: string
-        }
-        Update: {
-          address_id?: string | null
-          created_at?: string
-          delivery_fee?: number | null
-          id?: string
-          special_instructions?: string | null
-          status?: Database["public"]["Enums"]["order_status"] | null
-          total_amount?: number
-          updated_at?: string
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "orders_address_id_fkey"
-            columns: ["address_id"]
-            isOneToOne: false
-            referencedRelation: "addresses"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      payments: {
-        Row: {
-          amount: number
-          created_at: string
-          id: string
-          order_id: string
-          payment_method: string | null
-          payment_status: Database["public"]["Enums"]["payment_status"] | null
-          transaction_id: string | null
+          image_url: string | null
+          ingredients: string[]
+          instructions: string
+          is_secret: boolean | null
+          prep_time: number | null
+          servings: number | null
+          title: string
           updated_at: string
         }
         Insert: {
-          amount: number
+          category?: string | null
+          cook_time?: number | null
           created_at?: string
+          description?: string | null
+          difficulty?: string | null
           id?: string
-          order_id: string
-          payment_method?: string | null
-          payment_status?: Database["public"]["Enums"]["payment_status"] | null
-          transaction_id?: string | null
+          image_url?: string | null
+          ingredients: string[]
+          instructions: string
+          is_secret?: boolean | null
+          prep_time?: number | null
+          servings?: number | null
+          title: string
           updated_at?: string
         }
         Update: {
-          amount?: number
+          category?: string | null
+          cook_time?: number | null
           created_at?: string
+          description?: string | null
+          difficulty?: string | null
           id?: string
-          order_id?: string
-          payment_method?: string | null
-          payment_status?: Database["public"]["Enums"]["payment_status"] | null
-          transaction_id?: string | null
+          image_url?: string | null
+          ingredients?: string[]
+          instructions?: string
+          is_secret?: boolean | null
+          prep_time?: number | null
+          servings?: number | null
+          title?: string
           updated_at?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "payments_order_id_fkey"
-            columns: ["order_id"]
-            isOneToOne: false
-            referencedRelation: "orders"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       profiles: {
         Row: {

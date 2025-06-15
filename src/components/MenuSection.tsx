@@ -34,10 +34,9 @@ export const MenuSection = ({ onAddToCart }: MenuSectionProps) => {
     ...(categories?.map(cat => ({
       id: cat.id,
       name: cat.name,
-      emoji: cat.name === "Bakery" ? "🧁" : 
-             cat.name === "Veg" ? "🥗" : 
-             cat.name === "Non-Veg" ? "🍛" : 
-             cat.name === "Healthy Specials" ? "🥑" : "🍽️"
+      emoji: cat.name === "Egg Dishes" ? "🥚" : 
+             cat.name === "Chicken Dishes" ? "🍗" : 
+             cat.name === "Mutton Dishes" ? "🍖" : "🍽️"
     })) || [])
   ];
 
@@ -52,12 +51,12 @@ export const MenuSection = ({ onAddToCart }: MenuSectionProps) => {
     name: recipe.name,
     description: recipe.description || "",
     price: recipe.price,
-    image: recipe.name === "Fresh Croissant" ? "🥐" :
-           recipe.name === "Chocolate Muffin" ? "🧁" :
-           recipe.name === "Vegetable Biryani" ? "🍛" :
-           recipe.name === "Paneer Butter Masala" ? "🍲" :
-           recipe.name === "Chicken Tikka Masala" ? "🍛" :
-           recipe.name === "Quinoa Salad Bowl" ? "🥗" : "🍽️",
+    image: recipe.name.includes("Egg Bhurji") ? "🍳" :
+           recipe.name.includes("Egg Masala") ? "🥚" :
+           recipe.name.includes("Chicken Masala") ? "🍛" :
+           recipe.name.includes("Chicken Handi") ? "🍗" :
+           recipe.name.includes("Mutton Masala") ? "🍖" :
+           recipe.name.includes("Mutton Handi") ? "🥩" : "🍽️",
     rating: 4.5 + Math.random() * 0.4, // Random rating between 4.5-4.9
     prepTime: recipe.preparation_time ? `${recipe.preparation_time} mins` : "30 mins"
   });
@@ -67,10 +66,10 @@ export const MenuSection = ({ onAddToCart }: MenuSectionProps) => {
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="text-4xl font-bold text-gray-800 mb-4">
-            Our <span className="text-gradient bg-gradient-to-r from-orange-500 to-red-600 bg-clip-text text-transparent">Delicious</span> Menu
+            Our <span className="text-gradient bg-gradient-to-r from-orange-500 to-red-600 bg-clip-text text-transparent">Signature</span> Menu
           </h2>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Explore our carefully crafted selection of dishes, from traditional favorites to healthy innovations
+            Carefully crafted dishes with authentic flavors, made fresh daily for your enjoyment
           </p>
         </div>
 

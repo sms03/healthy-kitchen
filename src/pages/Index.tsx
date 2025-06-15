@@ -7,6 +7,7 @@ import { Contact } from "@/components/Contact";
 import { Cart } from "@/components/Cart";
 import { Navigation } from "@/components/Navigation";
 import { Footer } from "@/components/Footer";
+import { PersonalRecipes } from "@/components/PersonalRecipes";
 
 const Index = () => {
   const [cartItems, setCartItems] = useState([]);
@@ -53,6 +54,7 @@ const Index = () => {
         <Hero />
         <About />
         <MenuSection onAddToCart={addToCart} />
+        <PersonalRecipes />
         <Contact />
       </main>
       
