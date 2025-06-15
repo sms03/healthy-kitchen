@@ -43,13 +43,21 @@ export const useCartPersistence = () => {
 
       if (error) throw error;
 
-      const formattedItems = cartItems?.map(item => ({
-        id: parseInt(item.recipes.id), // Convert string UUID to number for frontend compatibility
-        name: item.recipes.name,
-        price: item.recipes.price,
-        quantity: item.quantity,
-        image: item.recipes.image_url || '/placeholder.svg'
-      })) || [];
+      const formattedItems = cartItems
+        ?.filter(item => item.recipes && item.recipes.id) // Filter out invalid items
+        ?.map(item => {
+          const recipeId = parseInt(item.recipes.id);
+          if (isNaN(recipeId)) return null; // Skip invalid IDs
+          
+          return {
+            id: recipeId,
+            name: item.recipes.name || 'Unknown Item',
+            price: item.recipes.price || 0,
+            quantity: item.quantity || 1,
+            image: item.recipes.image_url || '🍽️'
+          };
+        })
+        ?.filter(Boolean) || []; // Remove null items
 
       // Update cart context with loaded items
       if (formattedItems.length > 0) {
@@ -68,6 +76,18 @@ export const useCartPersistence = () => {
   const saveCartToDatabase = async () => {
     if (!user || items.length === 0) return;
 
+    // Filter out items with invalid IDs before saving
+    const validItems = items.filter(item => 
+      typeof item.id === 'number' && 
+      !isNaN(item.id) && 
+      item.id > 0
+    );
+
+    if (validItems.length === 0) {
+      console.warn('No valid items to save to cart');
+      return;
+    }
+
     try {
       // First, clear existing cart items
       await supabase
@@ -75,10 +95,10 @@ export const useCartPersistence = () => {
         .delete()
         .eq('user_id', user.id);
 
-      // Then insert current cart items
-      const cartData = items.map(item => ({
+      // Then insert current valid cart items
+      const cartData = validItems.map(item => ({
         user_id: user.id,
-        recipe_id: item.id.toString(), // Convert number ID to string for Supabase
+        recipe_id: item.id.toString(),
         quantity: item.quantity
       }));
 

@@ -13,6 +13,13 @@ const Cart = () => {
   const total = getCartTotal();
   const itemCount = getCartItemsCount();
 
+  // Filter out any items with invalid IDs for rendering
+  const validCartItems = cartItems.filter(item => 
+    typeof item.id === 'number' && 
+    !isNaN(item.id) && 
+    item.id > 0
+  );
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-red-50 to-pink-50">
       <Navigation cartItemsCount={itemCount} onCartClick={() => {}} />
@@ -32,7 +39,7 @@ const Cart = () => {
               </h1>
             </div>
 
-            {cartItems.length === 0 ? (
+            {validCartItems.length === 0 ? (
               <Card className="bg-white/80 backdrop-blur-sm border-orange-100 shadow-xl">
                 <CardContent className="text-center py-16">
                   <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
@@ -51,8 +58,8 @@ const Cart = () => {
               <div className="grid lg:grid-cols-3 gap-8">
                 {/* Cart Items */}
                 <div className="lg:col-span-2 space-y-4">
-                  {cartItems.map((item) => (
-                    <Card key={item.id} className="bg-white/80 backdrop-blur-sm border-orange-100 shadow-lg transition-all duration-300 hover:shadow-xl">
+                  {validCartItems.map((item) => (
+                    <Card key={`cart-item-${item.id}`} className="bg-white/80 backdrop-blur-sm border-orange-100 shadow-lg transition-all duration-300 hover:shadow-xl">
                       <CardContent className="p-6">
                         <div className="flex items-center space-x-4">
                           {/* Item Image */}

@@ -40,6 +40,17 @@ export const CartProvider = ({ children }: CartProviderProps) => {
   const { toast } = useToast();
 
   const addToCart = (dish: any) => {
+    // Validate dish has valid ID
+    if (!dish || typeof dish.id !== 'number' || isNaN(dish.id)) {
+      console.error('Invalid dish data:', dish);
+      toast({
+        title: "Error",
+        description: "Invalid item data",
+        variant: "destructive"
+      });
+      return;
+    }
+
     setItems(prev => {
       const existing = prev.find(item => item.id === dish.id);
       if (existing) {
@@ -58,11 +69,23 @@ export const CartProvider = ({ children }: CartProviderProps) => {
         title: "Added to Cart",
         description: `${dish.name} has been added to your cart`,
       });
-      return [...prev, { ...dish, quantity: 1 }];
+      return [...prev, { 
+        id: dish.id,
+        name: dish.name || 'Unknown Item',
+        price: dish.price || 0,
+        quantity: 1,
+        image: dish.image || '🍽️'
+      }];
     });
   };
 
   const removeFromCart = (dishId: number) => {
+    // Validate dishId
+    if (typeof dishId !== 'number' || isNaN(dishId)) {
+      console.error('Invalid dish ID:', dishId);
+      return;
+    }
+
     setItems(prev => {
       const item = prev.find(item => item.id === dishId);
       if (item) {
@@ -71,15 +94,22 @@ export const CartProvider = ({ children }: CartProviderProps) => {
           description: `${item.name} has been removed from your cart`,
         });
       }
-      return prev.filter(item => item.id !== dishId);
+      return prev.filter(item => item.id === dishId);
     });
   };
 
   const updateQuantity = (dishId: number, quantity: number) => {
+    // Validate inputs
+    if (typeof dishId !== 'number' || isNaN(dishId) || typeof quantity !== 'number' || isNaN(quantity)) {
+      console.error('Invalid update quantity params:', { dishId, quantity });
+      return;
+    }
+
     if (quantity <= 0) {
       removeFromCart(dishId);
       return;
     }
+    
     setItems(prev => {
       const item = prev.find(item => item.id === dishId);
       if (item) {
@@ -95,11 +125,18 @@ export const CartProvider = ({ children }: CartProviderProps) => {
   };
 
   const getCartItemsCount = () => {
-    return items.reduce((sum, item) => sum + item.quantity, 0);
+    return items
+      .filter(item => typeof item.quantity === 'number' && !isNaN(item.quantity))
+      .reduce((sum, item) => sum + item.quantity, 0);
   };
 
   const getCartTotal = () => {
-    return items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    return items
+      .filter(item => 
+        typeof item.price === 'number' && !isNaN(item.price) &&
+        typeof item.quantity === 'number' && !isNaN(item.quantity)
+      )
+      .reduce((sum, item) => sum + (item.price * item.quantity), 0);
   };
 
   const clearCart = () => {
