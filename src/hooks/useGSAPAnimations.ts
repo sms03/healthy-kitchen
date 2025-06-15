@@ -58,18 +58,28 @@ export const useGSAPAnimations = () => {
   };
 
   const pageTransition = (element: string | Element) => {
-    // Smooth page transition
     const tl = gsap.timeline();
     tl.fromTo(element,
       { opacity: 0, y: 20 },
-      { 
-        opacity: 1, 
-        y: 0,
-        duration: 0.6, 
-        ease: "power2.out"
-      }
+      { opacity: 1, y: 0, duration: 0.8, ease: "power2.out" }
     );
     return tl;
+  };
+
+  const cartItemAnimation = (element: string | Element, isAdding = true) => {
+    if (isAdding) {
+      gsap.fromTo(element,
+        { scale: 0.8, opacity: 0 },
+        { scale: 1, opacity: 1, duration: 0.5, ease: "back.out(1.7)" }
+      );
+    } else {
+      gsap.to(element, {
+        scale: 0.8,
+        opacity: 0,
+        duration: 0.3,
+        ease: "power2.in"
+      });
+    }
   };
 
   const hoverScale = (element: string | Element) => {
@@ -113,6 +123,7 @@ export const useGSAPAnimations = () => {
     scaleIn,
     staggerAnimation,
     pageTransition,
+    cartItemAnimation,
     hoverScale,
     hoverReset,
     scrollTriggerAnimation

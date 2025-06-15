@@ -1,5 +1,4 @@
 
-import { useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Star, Clock, Plus, Minus } from "lucide-react";
@@ -78,7 +77,7 @@ export const DishCard = ({ dish, onAddToCart }: DishCardProps) => {
           {quantity === 0 ? (
             <Button
               onClick={handleIncrease}
-              className="w-full bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white py-3 rounded-lg transition-all duration-300"
+              className="w-full bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white py-3 rounded-lg transition-all duration-300 transform hover:scale-105"
             >
               <Plus className="w-4 h-4 mr-2" />
               Add to Cart
@@ -89,7 +88,7 @@ export const DishCard = ({ dish, onAddToCart }: DishCardProps) => {
                 onClick={handleDecrease}
                 variant="outline"
                 size="sm"
-                className="w-10 h-10 p-0 rounded-full border-orange-200 hover:bg-orange-50 transition-colors duration-200"
+                className="w-10 h-10 p-0 rounded-full border-orange-200 hover:bg-orange-50"
               >
                 <Minus className="w-4 h-4" />
               </Button>
@@ -102,7 +101,7 @@ export const DishCard = ({ dish, onAddToCart }: DishCardProps) => {
                 onClick={handleIncrease}
                 variant="outline"
                 size="sm"
-                className="w-10 h-10 p-0 rounded-full border-orange-200 hover:bg-orange-50 transition-colors duration-200"
+                className="w-10 h-10 p-0 rounded-full border-orange-200 hover:bg-orange-50"
               >
                 <Plus className="w-4 h-4" />
               </Button>

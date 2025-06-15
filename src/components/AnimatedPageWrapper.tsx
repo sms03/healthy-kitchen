@@ -18,11 +18,7 @@ export const AnimatedPageWrapper = ({ children, className = "" }: AnimatedPageWr
   }, [pageTransition]);
 
   return (
-    <div 
-      ref={pageRef} 
-      className={`${className} opacity-0`}
-      style={{ willChange: 'transform, opacity' }}
-    >
+    <div ref={pageRef} className={className}>
       {children}
     </div>
   );
