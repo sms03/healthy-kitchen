@@ -15,8 +15,8 @@ export const useCartPersistence = () => {
     if (user) {
       loadCartFromDatabase();
     } else {
-      // Clear cart when user signs out
-      clearCart();
+      // Clear cart silently when user signs out to avoid showing toast
+      clearCart(true);
     }
   }, [user]);
 

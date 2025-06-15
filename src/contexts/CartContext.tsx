@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useState, ReactNode, useRef } from 'react';
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
@@ -19,7 +20,7 @@ interface CartContextType {
   updateQuantity: (dishId: number, quantity: number) => void;
   getCartItemsCount: () => number;
   getCartTotal: () => number;
-  clearCart: () => void;
+  clearCart: (silent?: boolean) => void;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -155,12 +156,14 @@ export const CartProvider = ({ children }: CartProviderProps) => {
       .reduce((sum, item) => sum + (item.price * item.quantity), 0);
   };
 
-  const clearCart = () => {
+  const clearCart = (silent = false) => {
     setItems([]);
-    toast({
-      title: "Cart Cleared",
-      description: "All items have been removed from your cart",
-    });
+    if (!silent) {
+      toast({
+        title: "Cart Cleared",
+        description: "All items have been removed from your cart",
+      });
+    }
   };
 
   return (
