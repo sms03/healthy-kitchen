@@ -62,17 +62,17 @@ export const Navigation = ({ cartItemsCount, onCartClick }: NavigationProps) => 
           </Link>
 
           {/* Desktop Menu */}
-          <div className="hidden md:flex items-center space-x-8">
+          <div className="hidden md:flex items-center space-x-6">
             {navItems.map((item) => (
               <Link 
                 key={item.path}
                 to={item.path}
-                className={`font-medium transition-colors font-lora ${
+                className={`font-medium transition-all duration-300 font-lora px-4 py-2 rounded-full border-2 ${
                   isScrolled ? 'text-base' : 'text-lg'
                 } ${
                   location.pathname === item.path 
-                    ? 'text-orange-600 border-b-2 border-orange-600 pb-1' 
-                    : 'text-gray-700 hover:text-orange-600'
+                    ? 'text-white bg-gradient-to-r from-orange-500 to-red-600 border-orange-500 shadow-md' 
+                    : 'text-gray-700 hover:text-orange-600 border-gray-200 hover:border-orange-300 hover:bg-orange-50'
                 }`}
               >
                 {item.label}
@@ -123,10 +123,10 @@ export const Navigation = ({ cartItemsCount, onCartClick }: NavigationProps) => 
                   key={item.path}
                   to={item.path}
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className={`text-left py-2 text-lg transition-colors font-lora ${
+                  className={`text-left py-3 px-4 text-lg transition-all duration-300 font-lora rounded-lg border-2 ${
                     location.pathname === item.path 
-                      ? 'text-orange-600 font-semibold' 
-                      : 'text-gray-700 hover:text-orange-600'
+                      ? 'text-white bg-gradient-to-r from-orange-500 to-red-600 border-orange-500 shadow-md font-semibold' 
+                      : 'text-gray-700 hover:text-orange-600 border-gray-200 hover:border-orange-300 hover:bg-orange-50'
                   }`}
                 >
                   {item.label}
