@@ -1,4 +1,5 @@
 
+import { useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Minus, Plus, Trash2, ShoppingBag, ArrowLeft } from "lucide-react";
@@ -6,15 +7,47 @@ import { Navigation } from "@/components/Navigation";
 import { Footer } from "@/components/Footer";
 import { useCart } from "@/contexts/CartContext";
 import { Link } from "react-router-dom";
+import { AnimatedPageWrapper } from "@/components/AnimatedPageWrapper";
+import { useGSAPAnimations } from "@/hooks/useGSAPAnimations";
 
 const Cart = () => {
   const { items: cartItems, removeFromCart, updateQuantity, getCartItemsCount, getCartTotal } = useCart();
+  const cartItemsRef = useRef<HTMLDivElement>(null);
+  const summaryRef = useRef<HTMLDivElement>(null);
+  const { staggerAnimation, fadeInLeft, fadeInRight, cartItemAnimation } = useGSAPAnimations();
   
   const total = getCartTotal();
   const itemCount = getCartItemsCount();
 
+  useEffect(() => {
+    if (cartItemsRef.current && cartItems.length > 0) {
+      staggerAnimation(".cart-item", 0.1);
+    }
+    if (summaryRef.current) {
+      fadeInRight(summaryRef.current, 0.3);
+    }
+  }, [cartItems, staggerAnimation, fadeInLeft, fadeInRight]);
+
+  const handleRemoveItem = (itemId: string) => {
+    const itemElement = document.querySelector(`[data-item-id="${itemId}"]`);
+    if (itemElement) {
+      cartItemAnimation(itemElement, false);
+      setTimeout(() => removeFromCart(itemId), 300);
+    } else {
+      removeFromCart(itemId);
+    }
+  };
+
+  const handleUpdateQuantity = (itemId: string, newQuantity: number) => {
+    updateQuantity(itemId, newQuantity);
+    const itemElement = document.querySelector(`[data-item-id="${itemId}"]`);
+    if (itemElement) {
+      cartItemAnimation(itemElement, true);
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-red-50 to-pink-50">
+    <AnimatedPageWrapper className="min-h-screen bg-gradient-to-br from-orange-50 via-red-50 to-pink-50">
       <Navigation cartItemsCount={itemCount} onCartClick={() => {}} />
       
       <main className="pt-32 pb-16">
@@ -22,7 +55,7 @@ const Cart = () => {
           <div className="container mx-auto px-4 max-w-4xl">
             <div className="flex items-center mb-8">
               <Link to="/menu" className="mr-4">
-                <Button variant="outline" size="sm" className="rounded-full">
+                <Button variant="outline" size="sm" className="rounded-full transition-all duration-300 hover:scale-105">
                   <ArrowLeft className="w-4 h-4 mr-2" />
                   Back to Menu
                 </Button>
@@ -41,7 +74,7 @@ const Cart = () => {
                   <h2 className="text-2xl font-semibold text-gray-700 mb-3">Your cart is empty</h2>
                   <p className="text-gray-500 mb-6">Add some delicious items to get started!</p>
                   <Link to="/menu">
-                    <Button className="bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white">
+                    <Button className="bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white transition-all duration-300 hover:scale-105">
                       Browse Menu
                     </Button>
                   </Link>
@@ -50,13 +83,13 @@ const Cart = () => {
             ) : (
               <div className="grid lg:grid-cols-3 gap-8">
                 {/* Cart Items */}
-                <div className="lg:col-span-2 space-y-4">
+                <div ref={cartItemsRef} className="lg:col-span-2 space-y-4">
                   {cartItems.map((item) => (
-                    <Card key={item.id} className="bg-white/80 backdrop-blur-sm border-orange-100 shadow-lg">
+                    <Card key={item.id} data-item-id={item.id} className="cart-item bg-white/80 backdrop-blur-sm border-orange-100 shadow-lg opacity-0 transition-all duration-300 hover:shadow-xl">
                       <CardContent className="p-6">
                         <div className="flex items-center space-x-4">
                           {/* Item Image */}
-                          <div className="w-20 h-20 bg-gradient-to-br from-orange-100 to-red-100 rounded-lg flex items-center justify-center text-3xl">
+                          <div className="w-20 h-20 bg-gradient-to-br from-orange-100 to-red-100 rounded-lg flex items-center justify-center text-3xl transition-transform duration-300 hover:scale-110">
                             {item.image}
                           </div>
 
@@ -71,8 +104,8 @@ const Cart = () => {
                             <Button
                               variant="outline"
                               size="sm"
-                              onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                              className="w-10 h-10 p-0 rounded-full"
+                              onClick={() => handleUpdateQuantity(item.id, item.quantity - 1)}
+                              className="w-10 h-10 p-0 rounded-full transition-all duration-300 hover:scale-110"
                             >
                               <Minus className="w-4 h-4" />
                             </Button>
@@ -82,8 +115,8 @@ const Cart = () => {
                             <Button
                               variant="outline"
                               size="sm"
-                              onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                              className="w-10 h-10 p-0 rounded-full"
+                              onClick={() => handleUpdateQuantity(item.id, item.quantity + 1)}
+                              className="w-10 h-10 p-0 rounded-full transition-all duration-300 hover:scale-110"
                             >
                               <Plus className="w-4 h-4" />
                             </Button>
@@ -93,8 +126,8 @@ const Cart = () => {
                           <Button
                             variant="ghost"
                             size="sm"
-                            onClick={() => removeFromCart(item.id)}
-                            className="text-red-500 hover:text-red-700 hover:bg-red-50 rounded-full p-2"
+                            onClick={() => handleRemoveItem(item.id)}
+                            className="text-red-500 hover:text-red-700 hover:bg-red-50 rounded-full p-2 transition-all duration-300 hover:scale-110"
                           >
                             <Trash2 className="w-5 h-5" />
                           </Button>
@@ -106,7 +139,7 @@ const Cart = () => {
 
                 {/* Order Summary */}
                 <div className="lg:col-span-1">
-                  <Card className="bg-white/80 backdrop-blur-sm border-orange-100 shadow-xl sticky top-32">
+                  <Card ref={summaryRef} className="bg-white/80 backdrop-blur-sm border-orange-100 shadow-xl sticky top-32 opacity-0">
                     <CardContent className="p-6">
                       <h3 className="text-xl font-semibold text-gray-800 mb-6">Order Summary</h3>
                       
@@ -126,7 +159,7 @@ const Cart = () => {
                         </div>
                       </div>
                       
-                      <Button className="w-full bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white py-3 text-lg">
+                      <Button className="w-full bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white py-3 text-lg transition-all duration-300 hover:scale-105">
                         Proceed to Checkout
                       </Button>
                       
@@ -143,7 +176,7 @@ const Cart = () => {
       </main>
       
       <Footer />
-    </div>
+    </AnimatedPageWrapper>
   );
 };
 

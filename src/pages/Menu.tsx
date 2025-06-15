@@ -1,4 +1,5 @@
-import { useState } from "react";
+
+import { useState, useEffect, useRef } from "react";
 import { DishCard } from "@/components/DishCard";
 import { Button } from "@/components/ui/button";
 import { useCategories } from "@/hooks/useCategories";
@@ -8,18 +9,37 @@ import { Loader2 } from "lucide-react";
 import { Navigation } from "@/components/Navigation";
 import { Footer } from "@/components/Footer";
 import { Cart } from "@/components/Cart";
+import { AnimatedPageWrapper } from "@/components/AnimatedPageWrapper";
+import { useGSAPAnimations } from "@/hooks/useGSAPAnimations";
 
 const Menu = () => {
   const [activeCategory, setActiveCategory] = useState("all");
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const menuGridRef = useRef<HTMLDivElement>(null);
+  const categoryRef = useRef<HTMLDivElement>(null);
   
   const { data: categories, isLoading: categoriesLoading } = useCategories();
   const { data: recipes, isLoading: recipesLoading } = useRecipes();
   const { items: cartItems, addToCart, removeFromCart, updateQuantity, getCartItemsCount } = useCart();
+  const { staggerAnimation, fadeInUp, scrollTriggerAnimation } = useGSAPAnimations();
+
+  useEffect(() => {
+    if (categoryRef.current) {
+      fadeInUp(categoryRef.current, 0.2);
+    }
+  }, [fadeInUp]);
+
+  useEffect(() => {
+    if (menuGridRef.current && !categoriesLoading && !recipesLoading) {
+      // Animate menu items when they load or when category changes
+      staggerAnimation(".dish-card", 0.1);
+      scrollTriggerAnimation(".dish-card");
+    }
+  }, [activeCategory, categoriesLoading, recipesLoading, staggerAnimation, scrollTriggerAnimation]);
 
   if (categoriesLoading || recipesLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-orange-50 via-red-50 to-pink-50">
+      <AnimatedPageWrapper className="min-h-screen bg-gradient-to-br from-orange-50 via-red-50 to-pink-50">
         <Navigation 
           cartItemsCount={getCartItemsCount()}
           onCartClick={() => setIsCartOpen(true)}
@@ -30,7 +50,7 @@ const Menu = () => {
           </div>
         </div>
         <Footer />
-      </div>
+      </AnimatedPageWrapper>
     );
   }
 
@@ -67,8 +87,18 @@ const Menu = () => {
     prepTime: recipe.preparation_time ? `${recipe.preparation_time} mins` : "30 mins"
   });
 
+  const handleCategoryChange = (categoryId: string) => {
+    setActiveCategory(categoryId);
+    // Trigger animation for new items
+    setTimeout(() => {
+      if (menuGridRef.current) {
+        staggerAnimation(".dish-card", 0.05);
+      }
+    }, 100);
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-red-50 to-pink-50">
+    <AnimatedPageWrapper className="min-h-screen bg-gradient-to-br from-orange-50 via-red-50 to-pink-50">
       <Navigation 
         cartItemsCount={getCartItemsCount()}
         onCartClick={() => setIsCartOpen(true)}
@@ -87,13 +117,13 @@ const Menu = () => {
             </div>
 
             {/* Category Filter */}
-            <div className="flex flex-wrap justify-center gap-4 mb-12">
+            <div ref={categoryRef} className="flex flex-wrap justify-center gap-4 mb-12 opacity-0">
               {categoryOptions.map((category) => (
                 <Button
                   key={category.id}
                   variant={activeCategory === category.id ? "default" : "outline"}
-                  onClick={() => setActiveCategory(category.id)}
-                  className={`px-6 py-3 rounded-full transition-all duration-300 ${
+                  onClick={() => handleCategoryChange(category.id)}
+                  className={`px-6 py-3 rounded-full transition-all duration-500 hover:scale-105 ${
                     activeCategory === category.id
                       ? "bg-gradient-to-r from-orange-500 to-red-600 text-white shadow-lg"
                       : "border-orange-200 text-gray-700 hover:bg-orange-50"
@@ -106,13 +136,14 @@ const Menu = () => {
             </div>
 
             {/* Menu Grid */}
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div ref={menuGridRef} className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
               {filteredRecipes.map((recipe) => (
-                <DishCard 
-                  key={recipe.id} 
-                  dish={convertRecipeToDish(recipe)} 
-                  onAddToCart={addToCart}
-                />
+                <div key={recipe.id} className="dish-card opacity-0">
+                  <DishCard 
+                    dish={convertRecipeToDish(recipe)} 
+                    onAddToCart={addToCart}
+                  />
+                </div>
               ))}
             </div>
 
@@ -134,7 +165,7 @@ const Menu = () => {
         onRemoveItem={removeFromCart}
         onUpdateQuantity={updateQuantity}
       />
-    </div>
+    </AnimatedPageWrapper>
   );
 };
 
