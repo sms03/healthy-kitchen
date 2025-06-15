@@ -18,20 +18,6 @@
 - 🔍 **Smart Search** - Filter by ingredients, diet, and preferences
 - 📱 **Responsive Design** - Works on all devices
 
-## 🚀 Quick Start
-
-```bash
-# Clone the repository
-git clone https://github.com/your-username/healthy-kitchen.git
-
-# Install dependencies
-npm install
-
-# Start development server
-npm run dev
-```
-
-Open [http://localhost:5173](http://localhost:5173) to view the application.
 
 ## 🛠️ Tech Stack
 
