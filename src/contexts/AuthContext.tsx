@@ -2,7 +2,6 @@ import React, { createContext, useContext, useState, useEffect, ReactNode } from
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { useNavigate } from "react-router-dom";
 
 interface AuthContextType {
   user: User | null;
@@ -127,35 +126,49 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const signOut = async () => {
     try {
-      // Clear local state immediately
+      console.log('Starting sign out process...');
+      
+      // Clear local state first
       setSession(null);
       setUser(null);
       
-      // Clear any stored session data
+      // Clear localStorage
       localStorage.removeItem('supabase.auth.token');
       
-      // Attempt to sign out from Supabase
-      await supabase.auth.signOut({ scope: 'local' });
+      // Try to sign out from Supabase - don't throw error if session doesn't exist
+      try {
+        await supabase.auth.signOut();
+        console.log('Supabase signOut completed');
+      } catch (supabaseError) {
+        console.log('Supabase signOut failed (expected if session already expired):', supabaseError);
+        // Don't throw - we still want to complete the local cleanup
+      }
       
       toast({
         title: "Signed Out",
         description: "You have been successfully signed out."
       });
       
-      // Redirect to home page
-      window.location.href = '/';
+      console.log('Redirecting to home page...');
+      
+      // Force redirect to home page
+      window.location.replace('/');
       
     } catch (error: any) {
-      // Even if there's an error, we've cleared local state
-      console.log('Sign out completed with local cleanup');
+      console.error('Sign out error:', error);
+      
+      // Even if there's an error, clear local state and redirect
+      setSession(null);
+      setUser(null);
+      localStorage.removeItem('supabase.auth.token');
       
       toast({
         title: "Signed Out",
-        description: "You have been successfully signed out."
+        description: "You have been signed out."
       });
       
-      // Still redirect to home page
-      window.location.href = '/';
+      // Still redirect even if there was an error
+      window.location.replace('/');
     }
   };
 
