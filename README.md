@@ -6,8 +6,30 @@
   ![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
   ![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
   ![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white)
-  ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
-  ![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)
+  ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)  ![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)
+</div>
+
+## 📸 Screenshots
+
+<div align="center">
+  
+### 🏠 Home Page
+*Experience authentic flavors crafted by expert chef Sharvari Salunkhe*
+
+![Home Page](public/screenshots/home-page.png)
+
+### 🍽️ Menu Page  
+*Browse our carefully crafted signature menu with authentic dishes*
+
+![Menu Page](public/screenshots/menu-page.png)
+
+**Key Features Showcased:**
+- 🍳 **Signature Dishes**: Egg Bhurji, Egg Masala, Chicken Masala with authentic recipes
+- 🎨 **Modern UI**: Clean, intuitive design with beautiful card layouts  
+- 📊 **Detailed Info**: Pricing, cooking time, and portion information
+- 🔄 **Category Filters**: Easy navigation between Egg, Chicken, and Mutton dishes
+- 📱 **Responsive Cards**: Optimized display for all screen sizes
+
 </div>
 
 ## ✨ Features
