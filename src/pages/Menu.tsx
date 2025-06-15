@@ -58,11 +58,22 @@ const Menu = () => {
 
   // Convert recipe to dish format for compatibility with existing DishCard
   const convertRecipeToDish = (recipe: any) => {
-    // Ensure ID is a number, not a string
-    const numericId = typeof recipe.id === 'string' ? parseInt(recipe.id, 10) : recipe.id;
+    // Create a hash from the UUID string to get a consistent numeric ID
+    const stringToHash = (str: string) => {
+      let hash = 0;
+      for (let i = 0; i < str.length; i++) {
+        const char = str.charCodeAt(i);
+        hash = ((hash << 5) - hash) + char;
+        hash = hash & hash; // Convert to 32-bit integer
+      }
+      return Math.abs(hash);
+    };
+
+    const numericId = stringToHash(recipe.id);
     
     return {
       id: numericId,
+      originalId: recipe.id, // Keep original UUID for database operations
       name: recipe.name || "Unknown Item",
       description: recipe.description || "",
       price: typeof recipe.price === 'string' ? parseFloat(recipe.price) : (recipe.price || 0),

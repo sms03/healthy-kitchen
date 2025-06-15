@@ -50,21 +50,31 @@ export const useCartPersistence = () => {
       if (error) throw error;
 
       const formattedItems = cartItems
-        ?.filter(item => item.recipes && item.recipes.id) // Filter out invalid items
+        ?.filter(item => item.recipes && item.recipes.id)
         ?.map(item => {
-          // Convert string ID to number for consistency
-          const recipeId = typeof item.recipes.id === 'string' ? parseInt(item.recipes.id, 10) : item.recipes.id;
-          if (isNaN(recipeId)) return null; // Skip invalid IDs
+          // Create a hash from the UUID string to get a consistent numeric ID
+          const stringToHash = (str: string) => {
+            let hash = 0;
+            for (let i = 0; i < str.length; i++) {
+              const char = str.charCodeAt(i);
+              hash = ((hash << 5) - hash) + char;
+              hash = hash & hash;
+            }
+            return Math.abs(hash);
+          };
+
+          const numericId = stringToHash(item.recipes.id);
           
           return {
-            id: recipeId,
+            id: numericId,
+            originalId: item.recipes.id, // Keep original UUID
             name: item.recipes.name || 'Unknown Item',
             price: typeof item.recipes.price === 'string' ? parseFloat(item.recipes.price) : (item.recipes.price || 0),
             quantity: item.quantity || 1,
             image: item.recipes.image_url || '🍽️'
           };
         })
-        ?.filter(Boolean) || []; // Remove null items
+        ?.filter(Boolean) || [];
 
       // Update cart context with loaded items
       if (formattedItems.length > 0) {
@@ -87,7 +97,8 @@ export const useCartPersistence = () => {
     const validItems = items.filter(item => 
       typeof item.id === 'number' && 
       !isNaN(item.id) && 
-      item.id > 0
+      item.id > 0 &&
+      item.originalId // Must have original UUID
     );
 
     if (validItems.length === 0) {
@@ -102,10 +113,10 @@ export const useCartPersistence = () => {
         .delete()
         .eq('user_id', user.id);
 
-      // Then insert current valid cart items
+      // Then insert current valid cart items using original UUID
       const cartData = validItems.map(item => ({
         user_id: user.id,
-        recipe_id: item.id.toString(),
+        recipe_id: item.originalId, // Use original UUID for database
         quantity: item.quantity
       }));
 
