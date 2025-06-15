@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
@@ -29,11 +29,11 @@ export const DishCard = ({ dish, onAddToCart }: DishCardProps) => {
   const { data: servings, isLoading: servingsLoading } = useRecipeServings(dish.originalId);
   
   // Set default serving when servings are loaded
-  useState(() => {
+  useEffect(() => {
     if (servings && servings.length > 0 && !selectedServing) {
       setSelectedServing(servings[0].id);
     }
-  }, [servings]);
+  }, [servings, selectedServing]);
 
   // Find the current serving option
   const currentServing = servings?.find(s => s.id === selectedServing) || servings?.[0];
