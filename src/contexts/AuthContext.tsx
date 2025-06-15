@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useEffect, ReactNode } from
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { useNavigate } from "react-router-dom";
 
 interface AuthContextType {
   user: User | null;
@@ -125,23 +126,37 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   };
 
   const signOut = async () => {
-    // Always clear local state first
-    setSession(null);
-    setUser(null);
-    
     try {
-      // Attempt to sign out from Supabase, but don't fail if it doesn't work
-      await supabase.auth.signOut();
-    } catch (error) {
-      // Silently handle any errors - we've already cleared local state
-      console.log('Sign out attempt completed');
+      // Clear local state immediately
+      setSession(null);
+      setUser(null);
+      
+      // Clear any stored session data
+      localStorage.removeItem('supabase.auth.token');
+      
+      // Attempt to sign out from Supabase
+      await supabase.auth.signOut({ scope: 'local' });
+      
+      toast({
+        title: "Signed Out",
+        description: "You have been successfully signed out."
+      });
+      
+      // Redirect to home page
+      window.location.href = '/';
+      
+    } catch (error: any) {
+      // Even if there's an error, we've cleared local state
+      console.log('Sign out completed with local cleanup');
+      
+      toast({
+        title: "Signed Out",
+        description: "You have been successfully signed out."
+      });
+      
+      // Still redirect to home page
+      window.location.href = '/';
     }
-    
-    // Always show success message since we've cleared the local session
-    toast({
-      title: "Signed Out",
-      description: "You have been successfully signed out."
-    });
   };
 
   const updateProfile = async (updates: { full_name?: string; username?: string; profile_image_url?: string }) => {
