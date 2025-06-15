@@ -127,13 +127,35 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const signOut = async () => {
     try {
+      // Check if there's an active session before attempting to sign out
+      if (!session) {
+        // No active session, just clear local state
+        setSession(null);
+        setUser(null);
+        toast({
+          title: "Signed Out",
+          description: "You have been successfully signed out."
+        });
+        return;
+      }
+
       const { error } = await supabase.auth.signOut();
       if (error) {
-        toast({
-          title: "Sign Out Error",
-          description: error.message,
-          variant: "destructive"
-        });
+        // If error is about session not found, still clear local state
+        if (error.message.includes('session_not_found') || error.message.includes('Session not found')) {
+          setSession(null);
+          setUser(null);
+          toast({
+            title: "Signed Out",
+            description: "You have been successfully signed out."
+          });
+        } else {
+          toast({
+            title: "Sign Out Error",
+            description: error.message,
+            variant: "destructive"
+          });
+        }
       } else {
         toast({
           title: "Signed Out",
@@ -141,10 +163,12 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         });
       }
     } catch (error: any) {
+      // Clear local state even if there's an error
+      setSession(null);
+      setUser(null);
       toast({
-        title: "Sign Out Error",
-        description: error.message,
-        variant: "destructive"
+        title: "Signed Out",
+        description: "You have been successfully signed out."
       });
     }
   };
