@@ -18,6 +18,7 @@ export const Navigation = ({ cartItemsCount, onCartClick }: NavigationProps) => 
     { path: "/", label: "Home" },
     { path: "/menu", label: "Menu" },
     { path: "/recipes", label: "Recipes" },
+    { path: "/pricing", label: "Pricing" },
   ];
 
   useEffect(() => {
