@@ -90,12 +90,48 @@ export default {
 						height: '0'
 					}
 				}
-			},
-			animation: {
+			},			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
 				'accordion-up': 'accordion-up 0.2s ease-out'
 			}
 		}
 	},
-	plugins: [require("tailwindcss-animate")],
+	plugins: [
+		require("tailwindcss-animate"),
+		// Custom scrollbar plugin
+		function({ addUtilities }: any) {
+			const newUtilities = {
+				'.scrollbar-thin': {
+					'scrollbar-width': 'thin',
+					'scrollbar-color': '#10b981 #f1f8f4',
+				},
+				'.scrollbar-custom': {
+					'&::-webkit-scrollbar': {
+						width: '8px',
+						height: '8px',
+					},
+					'&::-webkit-scrollbar-track': {
+						background: 'rgba(241, 248, 244, 0.5)',
+						'border-radius': '6px',
+					},
+					'&::-webkit-scrollbar-thumb': {
+						background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+						'border-radius': '6px',
+						border: '1px solid rgba(248, 255, 254, 0.5)',
+					},
+					'&::-webkit-scrollbar-thumb:hover': {
+						background: 'linear-gradient(135deg, #059669 0%, #047857 100%)',
+					},
+				},
+				'.scrollbar-none': {
+					'-ms-overflow-style': 'none',
+					'scrollbar-width': 'none',
+					'&::-webkit-scrollbar': {
+						display: 'none',
+					},
+				},
+			}
+			addUtilities(newUtilities)
+		}
+	],
 } satisfies Config;
