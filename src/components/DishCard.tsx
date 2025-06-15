@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Star, Clock, Plus, Minus } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
-import { useGSAPAnimations } from "@/hooks/useGSAPAnimations";
 
 interface DishCardProps {
   dish: {
@@ -21,10 +20,6 @@ interface DishCardProps {
 
 export const DishCard = ({ dish, onAddToCart }: DishCardProps) => {
   const { items, updateQuantity } = useCart();
-  const { addToCartButtonAnimation, quantityUpdateAnimation, cartItemAnimation } = useGSAPAnimations();
-  const cardRef = useRef<HTMLDivElement>(null);
-  const quantityRef = useRef<HTMLSpanElement>(null);
-  const addButtonRef = useRef<HTMLButtonElement>(null);
   
   // Find if this dish is already in cart
   const cartItem = items.find(item => item.id === dish.id);
@@ -33,42 +28,19 @@ export const DishCard = ({ dish, onAddToCart }: DishCardProps) => {
   const handleIncrease = () => {
     if (quantity === 0) {
       onAddToCart(dish);
-      // Animate the add to cart button
-      if (addButtonRef.current) {
-        addToCartButtonAnimation(addButtonRef.current);
-      }
-      // Animate the entire card
-      if (cardRef.current) {
-        cartItemAnimation(cardRef.current, true);
-      }
     } else {
       updateQuantity(dish.id, quantity + 1);
-      // Animate quantity change
-      if (quantityRef.current) {
-        quantityUpdateAnimation(quantityRef.current);
-      }
     }
   };
 
   const handleDecrease = () => {
     if (quantity > 0) {
       updateQuantity(dish.id, quantity - 1);
-      // Animate quantity change
-      if (quantityRef.current) {
-        quantityUpdateAnimation(quantityRef.current);
-      }
-      // If removing last item, animate card
-      if (quantity === 1 && cardRef.current) {
-        cartItemAnimation(cardRef.current, false);
-      }
     }
   };
 
   return (
-    <Card 
-      ref={cardRef}
-      className="group hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 bg-white/80 backdrop-blur-sm border-orange-100"
-    >
+    <Card className="group hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 bg-white/80 backdrop-blur-sm border-orange-100">
       <CardContent className="p-6">
         {/* Dish Image */}
         <div className="w-full h-48 bg-gradient-to-br from-orange-100 to-red-100 rounded-xl mb-4 flex items-center justify-center text-6xl group-hover:scale-105 transition-transform duration-300">
@@ -105,9 +77,8 @@ export const DishCard = ({ dish, onAddToCart }: DishCardProps) => {
           {/* Add to Cart Button or Quantity Controls */}
           {quantity === 0 ? (
             <Button
-              ref={addButtonRef}
               onClick={handleIncrease}
-              className="w-full bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white py-3 rounded-lg transition-all duration-300 transform hover:scale-105"
+              className="w-full bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white py-3 rounded-lg transition-all duration-300"
             >
               <Plus className="w-4 h-4 mr-2" />
               Add to Cart
@@ -118,15 +89,12 @@ export const DishCard = ({ dish, onAddToCart }: DishCardProps) => {
                 onClick={handleDecrease}
                 variant="outline"
                 size="sm"
-                className="w-10 h-10 p-0 rounded-full border-orange-200 hover:bg-orange-50 transition-all duration-200 hover:scale-110"
+                className="w-10 h-10 p-0 rounded-full border-orange-200 hover:bg-orange-50 transition-colors duration-200"
               >
                 <Minus className="w-4 h-4" />
               </Button>
               
-              <span 
-                ref={quantityRef}
-                className="text-lg font-semibold text-orange-600 bg-orange-50 px-4 py-2 rounded-full transition-all duration-200"
-              >
+              <span className="text-lg font-semibold text-orange-600 bg-orange-50 px-4 py-2 rounded-full">
                 {quantity} in cart
               </span>
               
@@ -134,7 +102,7 @@ export const DishCard = ({ dish, onAddToCart }: DishCardProps) => {
                 onClick={handleIncrease}
                 variant="outline"
                 size="sm"
-                className="w-10 h-10 p-0 rounded-full border-orange-200 hover:bg-orange-50 transition-all duration-200 hover:scale-110"
+                className="w-10 h-10 p-0 rounded-full border-orange-200 hover:bg-orange-50 transition-colors duration-200"
               >
                 <Plus className="w-4 h-4" />
               </Button>
