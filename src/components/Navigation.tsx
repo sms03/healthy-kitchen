@@ -5,6 +5,7 @@ import { ShoppingCart, Menu, X, User, Loader2 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCartPersistence } from "@/hooks/useCartPersistence";
+import { DarkModeToggle } from "@/components/DarkModeToggle";
 
 interface NavigationProps {
   cartItemsCount: number;
@@ -43,7 +44,7 @@ export const Navigation = ({ cartItemsCount, onCartClick }: NavigationProps) => 
         ? 'mt-4 w-[90%] max-w-4xl' 
         : 'mt-2 w-[95%] max-w-5xl'
     }`}>
-      <div className={`bg-white/95 backdrop-blur-md shadow-lg border border-white/20 transition-all duration-300 ${
+      <div className={`bg-white/95 dark:bg-gray-900/95 backdrop-blur-md shadow-lg border border-white/20 dark:border-gray-700/20 transition-all duration-300 ${
         isScrolled 
           ? 'rounded-full px-6 py-3' 
           : 'rounded-3xl px-8 py-4'
@@ -59,10 +60,10 @@ export const Navigation = ({ cartItemsCount, onCartClick }: NavigationProps) => 
               }`}>HK</span>
             </div>
             <div className="flex flex-col">
-              <h1 className={`font-bold text-gray-800 leading-tight font-playfair transition-all duration-300 ${
+              <h1 className={`font-bold text-gray-800 dark:text-gray-200 leading-tight font-playfair transition-all duration-300 ${
                 isScrolled ? 'text-xl' : 'text-2xl'
               }`}>Healthy Kitchen</h1>
-              <p className={`text-gray-600 leading-tight font-lora transition-all duration-300 ${
+              <p className={`text-gray-600 dark:text-gray-400 leading-tight font-lora transition-all duration-300 ${
                 isScrolled ? 'text-xs' : 'text-sm'
               }`}>Delicious & Nutritious</p>
             </div>
@@ -77,7 +78,7 @@ export const Navigation = ({ cartItemsCount, onCartClick }: NavigationProps) => 
                 className={`font-medium transition-all duration-300 font-lora px-4 py-2 rounded-full border-2 text-base ${
                   location.pathname === item.path 
                     ? 'text-white bg-gradient-to-r from-orange-500 to-red-600 border-orange-500 shadow-md' 
-                    : 'text-gray-700 hover:text-orange-600 border-gray-200 hover:border-orange-300 hover:bg-orange-50'
+                    : 'text-gray-700 dark:text-gray-300 hover:text-orange-600 dark:hover:text-orange-400 border-gray-200 dark:border-gray-600 hover:border-orange-300 hover:bg-orange-50 dark:hover:bg-orange-950'
                 }`}
               >
                 {item.label}
@@ -85,7 +86,7 @@ export const Navigation = ({ cartItemsCount, onCartClick }: NavigationProps) => 
             ))}
           </div>
 
-          {/* Cart & Auth */}
+          {/* Cart, Theme, Auth */}
           <div className="flex items-center space-x-3">
             <Link to="/cart">
               <Button
@@ -96,7 +97,7 @@ export const Navigation = ({ cartItemsCount, onCartClick }: NavigationProps) => 
                 } ${
                   location.pathname === '/cart'
                     ? 'bg-gradient-to-r from-orange-500 to-red-600 border-orange-500 text-white hover:from-orange-600 hover:to-red-700'
-                    : 'border-orange-200 hover:bg-orange-50'
+                    : 'border-orange-200 dark:border-orange-300 hover:bg-orange-50 dark:hover:bg-orange-950'
                 }`}
               >
                 <ShoppingCart className={`transition-all duration-300 ${
@@ -112,6 +113,9 @@ export const Navigation = ({ cartItemsCount, onCartClick }: NavigationProps) => 
               </Button>
             </Link>
 
+            {/* Dark Mode Toggle */}
+            <DarkModeToggle isScrolled={isScrolled} />
+
             {/* Auth Button */}
             {!loading && (
               user && !signingOut ? (
@@ -124,7 +128,7 @@ export const Navigation = ({ cartItemsCount, onCartClick }: NavigationProps) => 
                     } ${
                       location.pathname === '/profile'
                         ? 'bg-gradient-to-r from-orange-500 to-red-600 border-orange-500 text-white hover:from-orange-600 hover:to-red-700'
-                        : 'border-orange-200 hover:bg-orange-50'
+                        : 'border-orange-200 dark:border-orange-300 hover:bg-orange-50 dark:hover:bg-orange-950'
                     }`}
                   >
                     <User className={`transition-all duration-300 ${
@@ -157,7 +161,7 @@ export const Navigation = ({ cartItemsCount, onCartClick }: NavigationProps) => 
             <Button
               variant="ghost"
               size="sm"
-              className="md:hidden rounded-full"
+              className="md:hidden rounded-full dark:hover:bg-gray-800"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             >
               {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -167,7 +171,7 @@ export const Navigation = ({ cartItemsCount, onCartClick }: NavigationProps) => 
 
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
-          <div className="md:hidden pt-4 border-t border-gray-100 mt-4">
+          <div className="md:hidden pt-4 border-t border-gray-100 dark:border-gray-700 mt-4">
             <div className="flex flex-col space-y-3">
               {navItems.map((item) => (
                 <Link 
@@ -177,7 +181,7 @@ export const Navigation = ({ cartItemsCount, onCartClick }: NavigationProps) => 
                   className={`text-left py-3 px-4 transition-all duration-300 font-lora rounded-lg border-2 text-base ${
                     location.pathname === item.path 
                       ? 'text-white bg-gradient-to-r from-orange-500 to-red-600 border-orange-500 shadow-md font-semibold' 
-                      : 'text-gray-700 hover:text-orange-600 border-gray-200 hover:border-orange-300 hover:bg-orange-50'
+                      : 'text-gray-700 dark:text-gray-300 hover:text-orange-600 dark:hover:text-orange-400 border-gray-200 dark:border-gray-600 hover:border-orange-300 hover:bg-orange-50 dark:hover:bg-orange-950'
                   }`}
                 >
                   {item.label}
