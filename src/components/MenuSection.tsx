@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useCategories } from "@/hooks/useCategories";
 import { useRecipes } from "@/hooks/useRecipes";
 import { useAuth } from "@/contexts/AuthContext";
+import { useCart } from "@/contexts/CartContext";
 import { Loader2 } from "lucide-react";
 
 interface MenuSectionProps {
@@ -14,6 +15,7 @@ interface MenuSectionProps {
 export const MenuSection = ({ onAddToCart }: MenuSectionProps) => {
   const [activeCategory, setActiveCategory] = useState("all");
   const { user } = useAuth();
+  const { addToCart } = useCart();
   
   const { data: categories, isLoading: categoriesLoading } = useCategories();
   const { data: recipes, isLoading: recipesLoading } = useRecipes();
@@ -81,7 +83,7 @@ export const MenuSection = ({ onAddToCart }: MenuSectionProps) => {
 
   // Create authenticated add to cart handler
   const handleAddToCart = (dish: any) => {
-    onAddToCart(dish, !!user);
+    addToCart(dish);
   };
 
   return (
