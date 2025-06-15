@@ -104,39 +104,6 @@ const Contact = () => {
                     </div>
                   </CardContent>
                 </Card>
-
-                {/* YouTube Channels */}
-                <div className="space-y-4">
-                  <h3 className="text-xl font-semibold text-gray-800">Follow Our YouTube Channels</h3>
-                  
-                  <Card className="bg-white/80 backdrop-blur-sm border-orange-100 shadow-xl hover:shadow-2xl transition-all duration-300 cursor-pointer">
-                    <CardContent className="p-4">
-                      <div className="flex items-center space-x-4">
-                        <div className="w-10 h-10 bg-red-600 rounded-full flex items-center justify-center">
-                          <Youtube className="w-6 h-6 text-white" />
-                        </div>
-                        <div>
-                          <h4 className="font-medium text-gray-800">Sharvari's Healthy Kitchen Hindi</h4>
-                          <p className="text-sm text-gray-600">Healthy recipes in Hindi</p>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-
-                  <Card className="bg-white/80 backdrop-blur-sm border-orange-100 shadow-xl hover:shadow-2xl transition-all duration-300 cursor-pointer">
-                    <CardContent className="p-4">
-                      <div className="flex items-center space-x-4">
-                        <div className="w-10 h-10 bg-red-600 rounded-full flex items-center justify-center">
-                          <Youtube className="w-6 h-6 text-white" />
-                        </div>
-                        <div>
-                          <h4 className="font-medium text-gray-800">Sharvari's Healthy Kitchen Marathi</h4>
-                          <p className="text-sm text-gray-600">Healthy recipes in Marathi</p>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </div>
               </div>
             </div>
           </div>
