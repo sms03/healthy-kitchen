@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { DishCard } from "@/components/DishCard";
 import { Button } from "@/components/ui/button";
@@ -92,7 +91,7 @@ const Menu = () => {
 
   // Create authenticated add to cart handler
   const handleAddToCart = (dish: any) => {
-    addToCart(dish, !!user);
+    addToCart(dish);
   };
 
   return (
