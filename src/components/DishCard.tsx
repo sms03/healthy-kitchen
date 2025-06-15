@@ -1,7 +1,8 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Star, Clock, Plus } from "lucide-react";
+import { Star, Clock, Plus, Minus } from "lucide-react";
+import { useCart } from "@/contexts/CartContext";
 
 interface DishCardProps {
   dish: {
@@ -17,6 +18,26 @@ interface DishCardProps {
 }
 
 export const DishCard = ({ dish, onAddToCart }: DishCardProps) => {
+  const { items, updateQuantity } = useCart();
+  
+  // Find if this dish is already in cart
+  const cartItem = items.find(item => item.id === dish.id);
+  const quantity = cartItem?.quantity || 0;
+
+  const handleIncrease = () => {
+    if (quantity === 0) {
+      onAddToCart(dish);
+    } else {
+      updateQuantity(dish.id, quantity + 1);
+    }
+  };
+
+  const handleDecrease = () => {
+    if (quantity > 0) {
+      updateQuantity(dish.id, quantity - 1);
+    }
+  };
+
   return (
     <Card className="group hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 bg-white/80 backdrop-blur-sm border-orange-100">
       <CardContent className="p-6">
@@ -52,14 +73,40 @@ export const DishCard = ({ dish, onAddToCart }: DishCardProps) => {
             </div>
           </div>
 
-          {/* Add to Cart Button */}
-          <Button
-            onClick={() => onAddToCart(dish)}
-            className="w-full bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white py-3 rounded-lg transition-all duration-300 transform hover:scale-105"
-          >
-            <Plus className="w-4 h-4 mr-2" />
-            Add to Cart
-          </Button>
+          {/* Add to Cart Button or Quantity Controls */}
+          {quantity === 0 ? (
+            <Button
+              onClick={handleIncrease}
+              className="w-full bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white py-3 rounded-lg transition-all duration-300 transform hover:scale-105"
+            >
+              <Plus className="w-4 h-4 mr-2" />
+              Add to Cart
+            </Button>
+          ) : (
+            <div className="flex items-center justify-between">
+              <Button
+                onClick={handleDecrease}
+                variant="outline"
+                size="sm"
+                className="w-10 h-10 p-0 rounded-full border-orange-200 hover:bg-orange-50"
+              >
+                <Minus className="w-4 h-4" />
+              </Button>
+              
+              <span className="text-lg font-semibold text-orange-600 bg-orange-50 px-4 py-2 rounded-full">
+                {quantity} in cart
+              </span>
+              
+              <Button
+                onClick={handleIncrease}
+                variant="outline"
+                size="sm"
+                className="w-10 h-10 p-0 rounded-full border-orange-200 hover:bg-orange-50"
+              >
+                <Plus className="w-4 h-4" />
+              </Button>
+            </div>
+          )}
         </div>
       </CardContent>
     </Card>
