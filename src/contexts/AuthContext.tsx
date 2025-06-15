@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from "@/integrations/supabase/client";
@@ -126,51 +125,23 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   };
 
   const signOut = async () => {
+    // Always clear local state first
+    setSession(null);
+    setUser(null);
+    
     try {
-      // Check if there's an active session before attempting to sign out
-      if (!session) {
-        // No active session, just clear local state
-        setSession(null);
-        setUser(null);
-        toast({
-          title: "Signed Out",
-          description: "You have been successfully signed out."
-        });
-        return;
-      }
-
-      const { error } = await supabase.auth.signOut();
-      if (error) {
-        // If error is about session not found, still clear local state
-        if (error.message.includes('session_not_found') || error.message.includes('Session not found')) {
-          setSession(null);
-          setUser(null);
-          toast({
-            title: "Signed Out",
-            description: "You have been successfully signed out."
-          });
-        } else {
-          toast({
-            title: "Sign Out Error",
-            description: error.message,
-            variant: "destructive"
-          });
-        }
-      } else {
-        toast({
-          title: "Signed Out",
-          description: "You have been successfully signed out."
-        });
-      }
-    } catch (error: any) {
-      // Clear local state even if there's an error
-      setSession(null);
-      setUser(null);
-      toast({
-        title: "Signed Out",
-        description: "You have been successfully signed out."
-      });
+      // Attempt to sign out from Supabase, but don't fail if it doesn't work
+      await supabase.auth.signOut();
+    } catch (error) {
+      // Silently handle any errors - we've already cleared local state
+      console.log('Sign out attempt completed');
     }
+    
+    // Always show success message since we've cleared the local session
+    toast({
+      title: "Signed Out",
+      description: "You have been successfully signed out."
+    });
   };
 
   const updateProfile = async (updates: { full_name?: string; username?: string; profile_image_url?: string }) => {
