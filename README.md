@@ -1,73 +1,130 @@
-# Welcome to your Lovable project
+# 🍽️ Healthy Kitchen
 
-## Project info
+<div align="center">
+  <img src="public/placeholder.svg" alt="Healthy Kitchen Logo" width="200" height="200">
+  
+  **A modern web application for discovering and managing healthy recipes**
+  
+  ![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
+  ![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
+  ![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white)
+  ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
+  ![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)
 
-**URL**: https://lovable.dev/projects/b9621a15-10ff-457f-a1b8-3a6f42bc1b1d
+</div>
 
-## How can I edit this code?
+---
 
-There are several ways of editing your application.
+## 🌟 Features
 
-**Use Lovable**
+- 🥗 **Recipe Discovery**: Browse through a curated collection of healthy recipes
+- 🛒 **Shopping Cart**: Add ingredients to your cart for easy meal planning
+- 👤 **Personal Recipes**: Create and manage your own custom recipes
+- 🎨 **Modern UI**: Beautiful, responsive design with smooth animations
+- 📱 **Mobile Friendly**: Optimized for all device sizes
+- 🔍 **Smart Search**: Find recipes by ingredients, categories, or dietary preferences
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/b9621a15-10ff-457f-a1b8-3a6f42bc1b1d) and start prompting.
+## 🚀 Quick Start
 
-Changes made via Lovable will be committed automatically to this repo.
+### Prerequisites
 
-**Use your preferred IDE**
+Make sure you have the following installed:
+- [Node.js](https://nodejs.org/) (v18 or higher)
+- [npm](https://www.npmjs.com/) or [bun](https://bun.sh/)
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### Installation
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+```bash
+# Clone the repository
+git clone https://github.com/your-username/healthy-kitchen.git
 
-Follow these steps:
+# Navigate to the project directory
+cd healthy-kitchen
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+# Install dependencies
+npm install
+# or
+bun install
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Start the development server
 npm run dev
+# or
+bun dev
 ```
 
-**Edit a file directly in GitHub**
+Open [http://localhost:5173](http://localhost:5173) to view the application in your browser.
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## 🛠️ Technology Stack
 
-**Use GitHub Codespaces**
+This project is built with modern web technologies:
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+- **⚡ Vite** - Lightning fast build tool
+- **⚛️ React 18** - UI library with latest features
+- **🔷 TypeScript** - Type-safe JavaScript
+- **🎨 Tailwind CSS** - Utility-first CSS framework
+- **🧩 shadcn/ui** - High-quality React components
+- **🗄️ Supabase** - Backend as a Service
+- **🎭 Framer Motion** - Smooth animations
+- **📱 React Router** - Client-side routing
 
-## What technologies are used for this project?
+## 📁 Project Structure
 
-This project is built with:
+```
+src/
+├── components/          # Reusable UI components
+│   ├── ui/             # shadcn/ui components
+│   ├── DishCard.tsx    # Recipe card component
+│   ├── Navigation.tsx  # App navigation
+│   └── ...
+├── pages/              # Route components
+│   ├── Index.tsx       # Home page
+│   ├── Menu.tsx        # Recipe listing
+│   ├── Recipes.tsx     # Personal recipes
+│   └── ...
+├── contexts/           # React contexts
+├── hooks/              # Custom React hooks
+├── integrations/       # External service integrations
+├── lib/                # Utility functions
+└── types/              # TypeScript type definitions
+```
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## 🎯 Available Scripts
 
-## How can I deploy this project?
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run preview` - Preview production build
+- `npm run lint` - Run ESLint
 
-Simply open [Lovable](https://lovable.dev/projects/b9621a15-10ff-457f-a1b8-3a6f42bc1b1d) and click on Share -> Publish.
+## 🚀 Deployment
 
-## Can I connect a custom domain to my Lovable project?
+The application can be deployed to various platforms:
 
-Yes, you can!
+- **Vercel**: Connect your GitHub repository for automatic deployments
+- **Netlify**: Drag and drop the `dist` folder after running `npm run build`
+- **GitHub Pages**: Use GitHub Actions for automated deployment
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+## 🤝 Contributing
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+We welcome contributions! Please follow these steps:
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgments
+
+- Design inspiration from modern food applications
+- Built with ❤️ using open-source technologies
+- Special thanks to the React and TypeScript communities
+
+---
+
+<div align="center">
+  Made with ❤️ by the Healthy Kitchen team
+</div>
