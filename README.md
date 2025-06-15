@@ -1,25 +1,18 @@
 # 🍽️ Healthy Kitchen 🥗
 
 <div align="center">
-  <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExaWxwdWRhMzVieXQ5c2EwMGtvenExMGxwZjVwcWM5YTNhdW90eHBuNCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/4ayiIWaq2VULC/giphy.gif" alt="Fresh Cooking" width="200">
-  
   <h2>🌟 A modern web application for discovering and managing healthy recipes 🌟</h2>
   
   <p align="center">
     <strong>Cook • Share • Enjoy • Stay Healthy</strong>
-  </p>  ![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
+  </p>![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
   ![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
   ![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white)
-  ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
-  ![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)
+  ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)  ![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)
 
 </div>
 
 ---
-
-<div align="center">
-  <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExdXFjZWRjYXJsbDBrc2w2cHQ3NjVwMjR1anBybGluejE5Y3Nxd3Q5diZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/26BRQaiZM0IeyoJfa/giphy.gif" alt="Healthy Cooking" width="300">
-</div>
 
 ## 🌟 Features
 
@@ -75,8 +68,6 @@ Find recipes by ingredients, categories, dietary preferences, or cooking time.
 ## 🚀 Quick Start
 
 <div align="center">
-  <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExaGJkazRtZzY4YzlqZW93M2cyMjhmdWRrcTlkMTR2cWVveGhjaGNocCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3o6ZsYq4eUWrMzErac/giphy.gif" alt="Chopping Vegetables" width="200">
-  <br>
   <strong>Let's get cooking! 👨‍🍳👩‍🍳</strong>
 </div>
 
@@ -108,8 +99,6 @@ bun dev
 ```
 
 <div align="center">
-  <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExcG9nanJxNzU0dXFqNms5eXA3ZzIzMWw1aHV6M2dkNWZtbGY4dHZnYSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/26BRQaiZM0IeyoJfa/giphy.gif" alt="Cooking Success" width="150">
-  <br>
   <strong>🎉 Voilà! Open <a href="http://localhost:5173">http://localhost:5173</a> to taste your creation! 🎉</strong>
 </div>
 
@@ -178,8 +167,6 @@ src/
 ## 🚀 Deployment
 
 <div align="center">
-  <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExdHU0ZDc2cXE0NTdkbzN5aGMwN3YzbWhranM4YnphcmRpZzNoZXR3ciZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/l4pTfx2qLszoacZRS/giphy.gif" alt="Pizza Ready" width="150">
-  <br>
   <strong>🍽️ Ready to serve your masterpiece to the world! 🍽️</strong>
 </div>
 
@@ -194,8 +181,6 @@ The application can be deployed to various platforms:
 ## 🤝 Contributing
 
 <div align="center">
-  <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExdWdqc2JzNXJwNGI1Z3ZsZmpseXNyMDRsMXE3MXY4ZWQwYm1yZ2N3aiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/bqalUGFYfyHzW/giphy.gif" alt="Team Cooking" width="150">
-  <br>
   <strong>👨‍🍳👩‍🍳 Join our kitchen team! We welcome all aspiring chefs! 👨‍🍳👩‍🍳</strong>
 </div>
 
@@ -234,8 +219,6 @@ We welcome contributions! Please follow these steps:
 ---
 
 <div align="center">
-  <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExaXN1dWw1M3MyM3lyb2xuZnQ4N2pseTBsa3A3Zm5wa3dhc3c3cHZhZiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/SvR8MNpG8wuS4i2gFb/giphy.gif" alt="Happy Cooking" width="200">
-  <br>
   <h2>🍽️ Made with ❤️ by the Healthy Kitchen team 🍽️</h2>
   <p>
     <strong>Bon Appétit! Happy Coding! Happy Cooking!</strong>
