@@ -1,6 +1,6 @@
 
 import { Button } from "@/components/ui/button";
-import { Play, ArrowDown } from "lucide-react";
+import { Play, ArrowDown, Clock, Award, Heart } from "lucide-react";
 import { Link } from "react-router-dom";
 
 export const Hero = () => {
@@ -22,7 +22,7 @@ export const Hero = () => {
               </h1>
               <p className="text-xl text-gray-600 max-w-lg leading-relaxed font-lora">
                 Experience authentic flavors crafted by expert chef Sharvari Salunkhe. 
-                From traditional bakery delights to innovative healthy recipes.
+                From traditional bakery delights to premium chicken & mutton specialties.
               </p>
             </div>
 
@@ -49,6 +49,39 @@ export const Hero = () => {
               </Link>
             </div>
 
+            {/* Special Features */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-8">
+              <div className="flex items-center space-x-3 text-gray-600">
+                <div className="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center">
+                  <Clock className="w-5 h-5 text-orange-600" />
+                </div>
+                <div>
+                  <p className="font-semibold text-sm font-playfair">Fresh Daily</p>
+                  <p className="text-xs">Made to order</p>
+                </div>
+              </div>
+              
+              <div className="flex items-center space-x-3 text-gray-600">
+                <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center">
+                  <Award className="w-5 h-5 text-red-600" />
+                </div>
+                <div>
+                  <p className="font-semibold text-sm font-playfair">Premium Quality</p>
+                  <p className="text-xs">Finest ingredients</p>
+                </div>
+              </div>
+              
+              <div className="flex items-center space-x-3 text-gray-600">
+                <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+                  <Heart className="w-5 h-5 text-green-600" />
+                </div>
+                <div>
+                  <p className="font-semibold text-sm font-playfair">Healthy Choice</p>
+                  <p className="text-xs">Nutritious recipes</p>
+                </div>
+              </div>
+            </div>
+
             {/* YouTube Channels */}
             <div className="flex flex-col sm:flex-row gap-4 text-sm text-gray-600 font-lora">
               <div className="flex items-center">
@@ -65,36 +98,49 @@ export const Hero = () => {
           {/* Right Content - Food Images */}
           <div className="relative">
             <div className="grid grid-cols-2 gap-4">
-              {/* Main Featured Dish */}
+              {/* Main Featured Dish - Chicken Special */}
               <div className="col-span-2 relative group">
                 <div className="bg-white rounded-2xl p-6 shadow-2xl hover:shadow-3xl transition-all duration-300 transform hover:-translate-y-2">
-                  <div className="w-full h-64 bg-gradient-to-br from-orange-200 to-red-200 rounded-xl mb-4 flex items-center justify-center">
-                    <span className="text-4xl">🧁</span>
+                  <div className="w-full h-64 bg-gradient-to-br from-yellow-200 to-orange-200 rounded-xl mb-4 flex items-center justify-center">
+                    <span className="text-4xl">🍗</span>
                   </div>
-                  <h3 className="text-xl font-semibold text-gray-800 mb-2 font-playfair">Signature Bakery</h3>
-                  <p className="text-gray-600 font-lora">Fresh daily specialties</p>
+                  <h3 className="text-xl font-semibold text-gray-800 mb-2 font-playfair">Signature Chicken Masala</h3>
+                  <p className="text-gray-600 font-lora">Rich, aromatic spices with tender chicken</p>
+                  <div className="mt-3 flex items-center text-sm text-orange-600">
+                    <span className="font-semibold">₹299</span>
+                    <span className="ml-2 text-gray-500">• 30 mins</span>
+                  </div>
                 </div>
               </div>
 
               {/* Secondary Dishes */}
               <div className="bg-white rounded-xl p-4 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <div className="w-full h-32 bg-gradient-to-br from-red-200 to-pink-200 rounded-lg mb-3 flex items-center justify-center">
+                  <span className="text-2xl">🍖</span>
+                </div>
+                <h4 className="font-medium text-gray-800 font-playfair">Mutton Handi</h4>
+                <p className="text-xs text-gray-600 mt-1">Slow-cooked perfection</p>
+                <div className="mt-2 text-sm text-orange-600 font-semibold">₹399</div>
+              </div>
+
+              <div className="bg-white rounded-xl p-4 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
                 <div className="w-full h-32 bg-gradient-to-br from-green-200 to-teal-200 rounded-lg mb-3 flex items-center justify-center">
                   <span className="text-2xl">🥗</span>
                 </div>
                 <h4 className="font-medium text-gray-800 font-playfair">Healthy Specials</h4>
-              </div>
-
-              <div className="bg-white rounded-xl p-4 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
-                <div className="w-full h-32 bg-gradient-to-br from-purple-200 to-pink-200 rounded-lg mb-3 flex items-center justify-center">
-                  <span className="text-2xl">🍛</span>
-                </div>
-                <h4 className="font-medium text-gray-800 font-playfair">Gourmet Meals</h4>
+                <p className="text-xs text-gray-600 mt-1">Nutritious & delicious</p>
+                <div className="mt-2 text-sm text-orange-600 font-semibold">₹199</div>
               </div>
             </div>
 
             {/* Floating Elements */}
             <div className="absolute -top-4 -right-4 w-16 h-16 bg-orange-400 rounded-full opacity-20 animate-bounce"></div>
             <div className="absolute -bottom-4 -left-4 w-12 h-12 bg-red-400 rounded-full opacity-20 animate-bounce delay-500"></div>
+            
+            {/* Special Badge */}
+            <div className="absolute top-4 left-4 bg-gradient-to-r from-red-500 to-orange-500 text-white px-3 py-1 rounded-full text-sm font-semibold shadow-lg">
+              Chef's Special
+            </div>
           </div>
         </div>
       </div>
