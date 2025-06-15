@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -7,6 +7,9 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Clock, Users, ChefHat, Lock, Loader2, Youtube, Play } from "lucide-react";
 import { Navigation } from "@/components/Navigation";
 import { Footer } from "@/components/Footer";
+import { useAuth } from "@/contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
+import { useToast } from "@/hooks/use-toast";
 
 interface PersonalRecipe {
   id: string;
@@ -51,6 +54,21 @@ const recipeYouTubeData = {
 const Recipes = () => {
   const [activeFilter, setActiveFilter] = useState("all");
   const [selectedRecipe, setSelectedRecipe] = useState<PersonalRecipe | null>(null);
+  const { user, loading } = useAuth();
+  const navigate = useNavigate();
+  const { toast } = useToast();
+
+  // Redirect if not authenticated
+  useEffect(() => {
+    if (!loading && !user) {
+      toast({
+        title: "Authentication Required",
+        description: "Please sign in to view recipes",
+        variant: "destructive"
+      });
+      navigate('/auth');
+    }
+  }, [user, loading, navigate, toast]);
 
   const { data: recipes, isLoading } = useQuery({
     queryKey: ['personalRecipes'],
@@ -66,6 +84,7 @@ const Recipes = () => {
       
       return data as PersonalRecipe[];
     },
+    enabled: !!user, // Only run query if user is authenticated
   });
 
   const filterOptions = [
@@ -81,6 +100,26 @@ const Recipes = () => {
     if (activeFilter === "secret") return recipe.is_secret;
     return recipe.difficulty?.toLowerCase() === activeFilter;
   }) || [];
+
+  // Show loading while checking authentication
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-orange-50 via-red-50 to-pink-50">
+        <Navigation cartItemsCount={0} onCartClick={() => {}} />
+        <div className="container mx-auto px-4 pt-32">
+          <div className="flex items-center justify-center min-h-[400px]">
+            <Loader2 className="w-8 h-8 animate-spin text-orange-600" />
+          </div>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
+
+  // Don't render if not authenticated (will redirect)
+  if (!user) {
+    return null;
+  }
 
   if (isLoading) {
     return (

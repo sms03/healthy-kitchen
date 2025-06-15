@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useCategories } from "@/hooks/useCategories";
 import { useRecipes } from "@/hooks/useRecipes";
 import { useCart } from "@/contexts/CartContext";
+import { useAuth } from "@/contexts/AuthContext";
 import { useCartPersistence } from "@/hooks/useCartPersistence";
 import { Loader2 } from "lucide-react";
 import { Navigation } from "@/components/Navigation";
@@ -18,6 +19,7 @@ const Menu = () => {
   const { data: categories, isLoading: categoriesLoading } = useCategories();
   const { data: recipes, isLoading: recipesLoading } = useRecipes();
   const { items: cartItems, addToCart, removeFromCart, updateQuantity, getCartItemsCount } = useCart();
+  const { user } = useAuth();
   
   // Initialize cart persistence
   useCartPersistence();
@@ -88,6 +90,11 @@ const Menu = () => {
     };
   };
 
+  // Create authenticated add to cart handler
+  const handleAddToCart = (dish: any) => {
+    addToCart(dish, !!user);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-red-50 to-pink-50">
       <Navigation 
@@ -134,7 +141,7 @@ const Menu = () => {
                   <DishCard 
                     key={`recipe-${recipe.id}`}
                     dish={dish} 
-                    onAddToCart={addToCart}
+                    onAddToCart={handleAddToCart}
                   />
                 );
               })}

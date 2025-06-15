@@ -4,6 +4,7 @@ import { DishCard } from "@/components/DishCard";
 import { Button } from "@/components/ui/button";
 import { useCategories } from "@/hooks/useCategories";
 import { useRecipes } from "@/hooks/useRecipes";
+import { useAuth } from "@/contexts/AuthContext";
 import { Loader2 } from "lucide-react";
 
 interface MenuSectionProps {
@@ -12,6 +13,7 @@ interface MenuSectionProps {
 
 export const MenuSection = ({ onAddToCart }: MenuSectionProps) => {
   const [activeCategory, setActiveCategory] = useState("all");
+  const { user } = useAuth();
   
   const { data: categories, isLoading: categoriesLoading } = useCategories();
   const { data: recipes, isLoading: recipesLoading } = useRecipes();
@@ -53,7 +55,7 @@ export const MenuSection = ({ onAddToCart }: MenuSectionProps) => {
       for (let i = 0; i < str.length; i++) {
         const char = str.charCodeAt(i);
         hash = ((hash << 5) - hash) + char;
-        hash = hash & hash; // Convert to 32-bit integer
+        hash = hash & hash;
       }
       return Math.abs(hash);
     };
@@ -75,6 +77,11 @@ export const MenuSection = ({ onAddToCart }: MenuSectionProps) => {
       rating: 4.5 + Math.random() * 0.4, // Random rating between 4.5-4.9
       prepTime: recipe.preparation_time ? `${recipe.preparation_time} mins` : "30 mins"
     };
+  };
+
+  // Create authenticated add to cart handler
+  const handleAddToCart = (dish: any) => {
+    onAddToCart(dish, !!user);
   };
 
   return (
@@ -116,7 +123,7 @@ export const MenuSection = ({ onAddToCart }: MenuSectionProps) => {
               <DishCard 
                 key={`recipe-${recipe.id}`}
                 dish={dish} 
-                onAddToCart={onAddToCart}
+                onAddToCart={handleAddToCart}
               />
             );
           })}

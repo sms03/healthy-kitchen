@@ -14,7 +14,7 @@ interface CartItem {
 interface CartContextType {
   items: CartItem[];
   setItems: React.Dispatch<React.SetStateAction<CartItem[]>>;
-  addToCart: (dish: any) => void;
+  addToCart: (dish: any, isAuthenticated?: boolean) => void;
   removeFromCart: (dishId: number) => void;
   updateQuantity: (dishId: number, quantity: number) => void;
   getCartItemsCount: () => number;
@@ -40,7 +40,17 @@ export const CartProvider = ({ children }: CartProviderProps) => {
   const [items, setItems] = useState<CartItem[]>([]);
   const { toast } = useToast();
 
-  const addToCart = (dish: any) => {
+  const addToCart = (dish: any, isAuthenticated: boolean = false) => {
+    // Check if user is authenticated
+    if (!isAuthenticated) {
+      toast({
+        title: "Sign In Required",
+        description: "Please sign in to add items to your cart",
+        variant: "destructive"
+      });
+      return;
+    }
+
     // Validate dish has valid ID
     if (!dish || typeof dish.id !== 'number' || isNaN(dish.id)) {
       console.error('Invalid dish data:', dish);
@@ -96,7 +106,8 @@ export const CartProvider = ({ children }: CartProviderProps) => {
           description: `${item.name} has been removed from your cart`,
         });
       }
-      return prev.filter(item => item.id === dishId);
+      // Fix: filter OUT the item with matching ID
+      return prev.filter(item => item.id !== dishId);
     });
   };
 
