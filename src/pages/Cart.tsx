@@ -28,7 +28,7 @@ const Cart = () => {
     }
   }, [cartItems, staggerAnimation, fadeInLeft, fadeInRight]);
 
-  const handleRemoveItem = (itemId: string) => {
+  const handleRemoveItem = (itemId: number) => {
     const itemElement = document.querySelector(`[data-item-id="${itemId}"]`);
     if (itemElement) {
       cartItemAnimation(itemElement, false);
@@ -38,7 +38,7 @@ const Cart = () => {
     }
   };
 
-  const handleUpdateQuantity = (itemId: string, newQuantity: number) => {
+  const handleUpdateQuantity = (itemId: number, newQuantity: number) => {
     updateQuantity(itemId, newQuantity);
     const itemElement = document.querySelector(`[data-item-id="${itemId}"]`);
     if (itemElement) {
