@@ -13,7 +13,8 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useCart } from "@/contexts/CartContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { Camera, User, ShoppingBag, CreditCard } from "lucide-react";
+import { Camera, User, ShoppingBag, CreditCard, Loader2 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 interface Profile {
   id: string;
@@ -32,9 +33,17 @@ const Profile = () => {
   const [uploading, setUploading] = useState(false);
   const [loading, setLoading] = useState(false);
   
-  const { user, updateProfile, signOut } = useAuth();
+  const { user, updateProfile, signOut, loading: authLoading, signingOut } = useAuth();
   const { getCartItemsCount } = useCart();
   const { toast } = useToast();
+  const navigate = useNavigate();
+
+  // Redirect to auth page if user is not authenticated
+  useEffect(() => {
+    if (!authLoading && !user && !signingOut) {
+      navigate('/auth');
+    }
+  }, [user, authLoading, signingOut, navigate]);
 
   useEffect(() => {
     if (user) {
@@ -140,8 +149,21 @@ const Profile = () => {
     }
   };
 
+  // Show loading spinner while checking authentication
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-orange-50 via-red-50 to-pink-50 flex items-center justify-center">
+        <div className="flex items-center space-x-2">
+          <Loader2 className="w-6 h-6 animate-spin text-orange-500" />
+          <span className="text-gray-600">Loading...</span>
+        </div>
+      </div>
+    );
+  }
+
+  // Don't render anything if user is not authenticated (will redirect)
   if (!user) {
-    return <div>Please sign in to view your profile.</div>;
+    return null;
   }
 
   return (
@@ -254,8 +276,16 @@ const Profile = () => {
                           type="button" 
                           variant="outline"
                           onClick={signOut}
+                          disabled={signingOut}
                         >
-                          Sign Out
+                          {signingOut ? (
+                            <>
+                              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                              Signing Out...
+                            </>
+                          ) : (
+                            "Sign Out"
+                          )}
                         </Button>
                       </div>
                     </form>
