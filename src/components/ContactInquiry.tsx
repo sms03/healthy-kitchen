@@ -95,11 +95,10 @@ export const ContactInquiry = ({ isOpen, onClose, dish, servingSize }: ContactIn
   };
 
   if (!isOpen) return null;
-
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <Card className="w-full max-w-md bg-white shadow-2xl">
-        <CardHeader className="pb-4">
+      <Card className="w-full max-w-lg max-h-[90vh] bg-white shadow-2xl flex flex-col overflow-hidden">
+        <CardHeader className="pb-4 flex-shrink-0">
           <div className="flex items-center justify-between">
             <CardTitle className="text-xl font-semibold text-gray-800">
               Pre-Order Inquiry
@@ -121,78 +120,78 @@ export const ContactInquiry = ({ isOpen, onClose, dish, servingSize }: ContactIn
               )}
               <p className="text-sm text-orange-600">Price: ₹{dish.price}</p>
             </div>
-          )}
-        </CardHeader>
+          )}        </CardHeader>
 
-        <CardContent className="space-y-4">
-          <div className="bg-blue-50 p-3 rounded-lg text-sm text-blue-800">
+        <CardContent className="space-y-4 flex-1 overflow-y-auto scrollbar-custom px-6 pb-6">          <div className="bg-blue-50 p-3 rounded-lg text-sm text-blue-800">
             <p className="font-medium mb-1">📋 Pre-Order Process:</p>
-            <p>• Pay 50% advance to confirm order</p>
-            <p>• Remaining 50% on delivery</p>
-            <p>• We'll contact you within 24 hours</p>
-          </div>
-
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <Label htmlFor="name">Full Name</Label>
-              <Input
-                id="name"
-                value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                required
-                className="mt-1"
-              />
+            <div className="space-y-1">
+              <p>• Pay 50% advance to confirm order</p>
+              <p>• Remaining 50% on delivery</p>
+              <p>• We'll contact you within 24 hours</p>
             </div>
+          </div>          <form onSubmit={handleSubmit} className="space-y-3">
+            <div className="grid grid-cols-1 gap-3">
+              <div>
+                <Label htmlFor="name" className="text-sm font-medium">Full Name</Label>
+                <Input
+                  id="name"
+                  value={formData.name}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  required
+                  className="mt-1"
+                />
+              </div>
 
-            <div>
-              <Label htmlFor="email">Email Address</Label>
-              <Input
-                id="email"
-                type="email"
-                value={formData.email}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                required
-                className="mt-1"
-              />
-            </div>
+              <div>
+                <Label htmlFor="email" className="text-sm font-medium">Email Address</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  value={formData.email}
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  required
+                  className="mt-1"
+                />
+              </div>
 
-            <div>
-              <Label htmlFor="phone">Phone Number</Label>
-              <Input
-                id="phone"
-                type="tel"
-                value={formData.phone}
-                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                required
-                className="mt-1"
-              />
-            </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <Label htmlFor="phone" className="text-sm font-medium">Phone Number</Label>
+                  <Input
+                    id="phone"
+                    type="tel"
+                    value={formData.phone}
+                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                    required
+                    className="mt-1"
+                  />
+                </div>
 
-            <div>
-              <Label htmlFor="quantity">Quantity</Label>
-              <Input
-                id="quantity"
-                type="number"
-                min="1"
-                value={formData.quantity}
-                onChange={(e) => setFormData({ ...formData, quantity: parseInt(e.target.value) || 1 })}
-                className="mt-1"
-              />
-            </div>
+                <div>
+                  <Label htmlFor="quantity" className="text-sm font-medium">Quantity</Label>
+                  <Input
+                    id="quantity"
+                    type="number"
+                    min="1"
+                    value={formData.quantity}
+                    onChange={(e) => setFormData({ ...formData, quantity: parseInt(e.target.value) || 1 })}
+                    className="mt-1"
+                  />
+                </div>
+              </div>
 
-            <div>
-              <Label htmlFor="requests">Special Requests (Optional)</Label>
-              <Textarea
-                id="requests"
-                value={formData.specialRequests}
-                onChange={(e) => setFormData({ ...formData, specialRequests: e.target.value })}
-                className="mt-1"
-                rows={3}
-                placeholder="Any special dietary requirements or preferences..."
-              />
-            </div>
-
-            <div className="flex gap-2 pt-4">
+              <div>
+                <Label htmlFor="requests" className="text-sm font-medium">Special Requests (Optional)</Label>
+                <Textarea
+                  id="requests"
+                  value={formData.specialRequests}
+                  onChange={(e) => setFormData({ ...formData, specialRequests: e.target.value })}
+                  className="mt-1 scrollbar-thin"
+                  rows={2}
+                  placeholder="Any special dietary requirements or preferences..."
+                />
+              </div>
+            </div>            <div className="flex gap-2 pt-3 border-t">
               <Button
                 type="button"
                 variant="outline"
@@ -211,8 +210,8 @@ export const ContactInquiry = ({ isOpen, onClose, dish, servingSize }: ContactIn
             </div>
           </form>
 
-          <div className="flex items-center justify-center space-x-4 pt-2 text-sm text-gray-600">
-            <div className="flex items-center">
+          <div className="flex items-center justify-center pt-2 border-t">
+            <div className="flex items-center text-sm text-gray-600">
               <Phone className="w-4 h-4 mr-1" />
               <span>+91 98765 43210</span>
             </div>
