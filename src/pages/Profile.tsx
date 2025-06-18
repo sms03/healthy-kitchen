@@ -10,7 +10,6 @@ import { Badge } from "@/components/ui/badge";
 import { Navigation } from "@/components/Navigation";
 import { Footer } from "@/components/Footer";
 import { useAuth } from "@/contexts/AuthContext";
-import { useCart } from "@/contexts/CartContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { Camera, User, ShoppingBag, CreditCard, Loader2 } from "lucide-react";
@@ -34,7 +33,6 @@ const Profile = () => {
   const [loading, setLoading] = useState(false);
   
   const { user, updateProfile, signOut, loading: authLoading, signingOut } = useAuth();
-  const { getCartItemsCount } = useCart();
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -168,7 +166,7 @@ const Profile = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-red-50 to-pink-50">
-      <Navigation cartItemsCount={getCartItemsCount()} onCartClick={() => {}} />
+      <Navigation />
       
       <main className="pt-32 pb-16">
         <div className="container mx-auto px-4 max-w-4xl">

@@ -94,7 +94,7 @@ const Recipes = () => {
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-orange-50 via-red-50 to-pink-50">
-        <Navigation cartItemsCount={0} onCartClick={() => {}} />
+        <Navigation />
         <div className="container mx-auto px-4 pt-32">
           <div className="flex items-center justify-center min-h-[400px]">
             <Loader2 className="w-8 h-8 animate-spin text-orange-600" />
@@ -109,7 +109,7 @@ const Recipes = () => {
   if (!user) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-orange-50 via-red-50 to-pink-50">
-        <Navigation cartItemsCount={0} onCartClick={() => {}} />
+        <Navigation />
         
         <main className="pt-32 pb-16 relative">
           {/* Auth overlay */}
@@ -207,7 +207,7 @@ const Recipes = () => {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-orange-50 via-red-50 to-pink-50">
-        <Navigation cartItemsCount={0} onCartClick={() => {}} />
+        <Navigation />
         <div className="container mx-auto px-4 pt-32">
           <div className="flex items-center justify-center min-h-[400px]">
             <Loader2 className="w-8 h-8 animate-spin text-orange-600" />
@@ -220,7 +220,7 @@ const Recipes = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-red-50 to-pink-50">
-      <Navigation cartItemsCount={0} onCartClick={() => {}} />
+      <Navigation />
       
       <main className="pt-32 pb-16">
         <section className="py-20 bg-gradient-to-br from-orange-50 to-red-50">
