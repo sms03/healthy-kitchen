@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -9,7 +8,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuth } from "@/contexts/AuthContext";
 import { Navigation } from "@/components/Navigation";
 import { Footer } from "@/components/Footer";
-import { useCart } from "@/contexts/CartContext";
 import { useEffect } from "react";
 
 const Auth = () => {
@@ -22,7 +20,6 @@ const Auth = () => {
   const [loading, setLoading] = useState(false);
   
   const { signIn, signUp, user } = useAuth();
-  const { getCartItemsCount } = useCart();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -57,7 +54,7 @@ const Auth = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-red-50 to-pink-50">
-      <Navigation cartItemsCount={getCartItemsCount()} onCartClick={() => {}} />
+      <Navigation />
       
       <main className="pt-32 pb-16">
         <div className="container mx-auto px-4 max-w-md">

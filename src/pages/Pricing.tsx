@@ -1,15 +1,12 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Check, Star, Crown, Sparkles } from "lucide-react";
 import { Navigation } from "@/components/Navigation";
 import { Footer } from "@/components/Footer";
-import { useCart } from "@/contexts/CartContext";
 
 const Pricing = () => {
   const [billingPeriod, setBillingPeriod] = useState<'monthly' | 'yearly'>('monthly');
-  const { getCartItemsCount } = useCart();
 
   const plans = [
     {
@@ -70,10 +67,7 @@ const Pricing = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-red-50 to-pink-50">
-      <Navigation 
-        cartItemsCount={getCartItemsCount()}
-        onCartClick={() => {}}
-      />
+      <Navigation />
       
       <main className="pt-32 pb-16">
         <section className="py-20">

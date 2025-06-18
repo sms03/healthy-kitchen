@@ -1,4 +1,3 @@
-
 import { Navigation } from "@/components/Navigation";
 import { Footer } from "@/components/Footer";
 import { Youtube } from "lucide-react";
@@ -6,7 +5,7 @@ import { Youtube } from "lucide-react";
 const About = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-red-50 to-pink-50">
-      <Navigation cartItemsCount={0} onCartClick={() => {}} />
+      <Navigation />
       
       <main className="pt-32 pb-16">
         <section className="py-20 bg-white">
