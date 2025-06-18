@@ -1,24 +1,15 @@
 
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { ShoppingCart, Menu, X, User, Loader2 } from "lucide-react";
+import { Menu, X, User, Loader2 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
-import { useCartPersistence } from "@/hooks/useCartPersistence";
 
-interface NavigationProps {
-  cartItemsCount: number;
-  onCartClick: () => void;
-}
-
-export const Navigation = ({ cartItemsCount, onCartClick }: NavigationProps) => {
+export const Navigation = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const location = useLocation();
   const { user, loading, signingOut } = useAuth();
-
-  // Initialize cart persistence
-  useCartPersistence();
 
   const navItems = [
     { path: "/", label: "Home" },
@@ -85,33 +76,8 @@ export const Navigation = ({ cartItemsCount, onCartClick }: NavigationProps) => 
             ))}
           </div>
 
-          {/* Cart and Auth */}
+          {/* Auth */}
           <div className="flex items-center space-x-2 sm:space-x-2.5 md:space-x-3 lg:space-x-3">
-            <Link to="/cart">
-              <Button
-                variant="outline"
-                size="icon"
-                className={`relative rounded-full font-lora transition-all duration-300 ${
-                  isScrolled ? 'w-9 h-9 sm:w-10 sm:h-10 md:w-11 md:h-11 lg:w-11 lg:h-11' : 'w-10 h-10 sm:w-11 sm:h-11 md:w-12 md:h-12 lg:w-13 lg:h-13'
-                } ${
-                  location.pathname === '/cart'
-                    ? 'bg-gradient-to-r from-orange-500 to-red-600 border-orange-500 text-white hover:from-orange-600 hover:to-red-700'
-                    : 'border-orange-200 hover:bg-orange-50'
-                }`}
-              >
-                <ShoppingCart className={`transition-all duration-300 ${
-                  isScrolled ? 'w-4 h-4 sm:w-4.5 sm:h-4.5 md:w-5 md:h-5 lg:w-5 lg:h-5' : 'w-4.5 h-4.5 sm:w-5 sm:h-5 md:w-5.5 md:h-5.5 lg:w-6 lg:h-6'
-                }`} />
-                {cartItemsCount > 0 && (
-                  <span className={`absolute -top-1 -right-1 sm:-top-1.5 sm:-right-1.5 md:-top-2 md:-right-2 lg:-top-2 lg:-right-2 bg-red-500 text-white rounded-full flex items-center justify-center font-bold transition-all duration-300 ${
-                    isScrolled ? 'w-5 h-5 sm:w-5.5 sm:h-5.5 md:w-6 md:h-6 lg:w-6 lg:h-6 text-xs' : 'w-5.5 h-5.5 sm:w-6 sm:h-6 md:w-6.5 md:h-6.5 lg:w-7 lg:h-7 text-xs'
-                  }`}>
-                    {cartItemsCount}
-                  </span>
-                )}
-              </Button>
-            </Link>
-
             {/* Auth Button */}
             {!loading && (
               user && !signingOut ? (
