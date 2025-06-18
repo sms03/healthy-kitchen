@@ -4,18 +4,10 @@ import { DishCard } from "@/components/DishCard";
 import { Button } from "@/components/ui/button";
 import { useCategories } from "@/hooks/useCategories";
 import { useRecipes } from "@/hooks/useRecipes";
-import { useAuth } from "@/contexts/AuthContext";
-import { useCart } from "@/contexts/CartContext";
 import { Loader2 } from "lucide-react";
 
-interface MenuSectionProps {
-  onAddToCart: (dish: any) => void;
-}
-
-export const MenuSection = ({ onAddToCart }: MenuSectionProps) => {
+export const MenuSection = () => {
   const [activeCategory, setActiveCategory] = useState("all");
-  const { user } = useAuth();
-  const { addToCart } = useCart();
   
   const { data: categories, isLoading: categoriesLoading } = useCategories();
   const { data: recipes, isLoading: recipesLoading } = useRecipes();
@@ -77,6 +69,7 @@ export const MenuSection = ({ onAddToCart }: MenuSectionProps) => {
       originalId: recipe.id, // Keep original UUID for database operations
       name: recipe.name || "Unknown Item",
       description: recipe.description || "",
+      detailedDescription: recipe.detailed_description,
       price: typeof recipe.price === 'string' ? parseFloat(recipe.price) : (recipe.price || 0),
       image: recipe.name?.includes("Egg Bhurji") ? "🍳" :
              recipe.name?.includes("Egg Masala") ? "🥚" :
@@ -84,14 +77,13 @@ export const MenuSection = ({ onAddToCart }: MenuSectionProps) => {
              recipe.name?.includes("Chicken Handi") ? "🍗" :
              recipe.name?.includes("Mutton Masala") ? "🍖" :
              recipe.name?.includes("Mutton Handi") ? "🥩" : "🍽️",
+      imageGallery: recipe.image_gallery || [],
       rating: 4.5 + Math.random() * 0.4, // Random rating between 4.5-4.9
-      prepTime: recipe.preparation_time ? `${recipe.preparation_time} mins` : "30 mins"
+      spiceLevel: recipe.spice_level,
+      cookingMethod: recipe.cooking_method,
+      chefNotes: recipe.chef_notes,
+      nutritionalInfo: recipe.nutritional_info
     };
-  };
-
-  // Create authenticated add to cart handler
-  const handleAddToCart = (dish: any) => {
-    addToCart(dish);
   };
 
   return (
@@ -132,8 +124,7 @@ export const MenuSection = ({ onAddToCart }: MenuSectionProps) => {
             return (
               <DishCard 
                 key={`recipe-${recipe.id}`}
-                dish={dish} 
-                onAddToCart={handleAddToCart}
+                dish={dish}
               />
             );
           })}

@@ -3,34 +3,21 @@ import { useState } from "react";
 import { DishCard } from "@/components/DishCard";
 import { useCategories } from "@/hooks/useCategories";
 import { useRecipes } from "@/hooks/useRecipes";
-import { useCart } from "@/contexts/CartContext";
-import { useAuth } from "@/contexts/AuthContext";
-import { useCartPersistence } from "@/hooks/useCartPersistence";
 import { Loader2 } from "lucide-react";
 import { Navigation } from "@/components/Navigation";
 import { Footer } from "@/components/Footer";
-import { Cart } from "@/components/Cart";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 
 const Menu = () => {
   const [activeCategory, setActiveCategory] = useState("all");
-  const [isCartOpen, setIsCartOpen] = useState(false);
   
   const { data: categories, isLoading: categoriesLoading } = useCategories();
   const { data: recipes, isLoading: recipesLoading } = useRecipes();
-  const { items: cartItems, addToCart, removeFromCart, updateQuantity, getCartItemsCount } = useCart();
-  const { user } = useAuth();
-  
-  // Initialize cart persistence
-  useCartPersistence();
 
   if (categoriesLoading || recipesLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-orange-50 via-red-50 to-pink-50">
-        <Navigation 
-          cartItemsCount={getCartItemsCount()}
-          onCartClick={() => setIsCartOpen(true)}
-        />
+        <Navigation />
         <div className="container mx-auto px-4 pt-32">
           <div className="flex items-center justify-center min-h-[400px]">
             <Loader2 className="w-8 h-8 animate-spin text-orange-600" />
@@ -86,6 +73,7 @@ const Menu = () => {
       originalId: recipe.id, // Keep original UUID for database operations
       name: recipe.name || "Unknown Item",
       description: recipe.description || "",
+      detailedDescription: recipe.detailed_description,
       price: typeof recipe.price === 'string' ? parseFloat(recipe.price) : (recipe.price || 0),
       image: recipe.name?.includes("Egg Bhurji") ? "🍳" :
              recipe.name?.includes("Egg Masala") ? "🥚" :
@@ -93,22 +81,18 @@ const Menu = () => {
              recipe.name?.includes("Chicken Handi") ? "🍗" :
              recipe.name?.includes("Mutton Masala") ? "🍖" :
              recipe.name?.includes("Mutton Handi") ? "🥩" : "🍽️",
+      imageGallery: recipe.image_gallery || [],
       rating: 4.5 + Math.random() * 0.4,
-      prepTime: recipe.preparation_time ? `${recipe.preparation_time} mins` : "30 mins"
+      spiceLevel: recipe.spice_level,
+      cookingMethod: recipe.cooking_method,
+      chefNotes: recipe.chef_notes,
+      nutritionalInfo: recipe.nutritional_info
     };
-  };
-
-  // Create authenticated add to cart handler
-  const handleAddToCart = (dish: any) => {
-    addToCart(dish);
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-red-50 to-pink-50">
-      <Navigation 
-        cartItemsCount={getCartItemsCount()}
-        onCartClick={() => setIsCartOpen(true)}
-      />
+      <Navigation />
       
       <main className="pt-32 pb-16">
         <section className="py-20 bg-gradient-to-br from-gray-50 to-orange-50">
@@ -145,8 +129,7 @@ const Menu = () => {
                     return (
                       <DishCard 
                         key={`recipe-${recipe.id}`}
-                        dish={dish} 
-                        onAddToCart={handleAddToCart}
+                        dish={dish}
                       />
                     );
                   })}
@@ -164,14 +147,6 @@ const Menu = () => {
       </main>
       
       <Footer />
-      
-      <Cart 
-        isOpen={isCartOpen}
-        onClose={() => setIsCartOpen(false)}
-        items={cartItems}
-        onRemoveItem={removeFromCart}
-        onUpdateQuantity={updateQuantity}
-      />
     </div>
   );
 };

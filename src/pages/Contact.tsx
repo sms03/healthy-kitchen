@@ -3,14 +3,14 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Phone, Mail, MapPin, Youtube } from "lucide-react";
+import { Phone, Mail, MapPin } from "lucide-react";
 import { Navigation } from "@/components/Navigation";
 import { Footer } from "@/components/Footer";
 
 const Contact = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-red-50 to-pink-50">
-      <Navigation cartItemsCount={0} onCartClick={() => {}} />
+      <Navigation />
       
       <main className="pt-32 pb-16">
         <section className="py-20 bg-gradient-to-br from-orange-50 to-red-50">
@@ -20,7 +20,7 @@ const Contact = () => {
                 Get in <span className="text-gradient bg-gradient-to-r from-orange-500 to-red-600 bg-clip-text text-transparent">Touch</span>
               </h1>
               <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-                Have questions about our menu or want to place a custom order? We'd love to hear from you!
+                Have questions about our menu or want to place a pre-order? We'd love to hear from you!
               </p>
             </div>
 
@@ -49,7 +49,7 @@ const Contact = () => {
                     />
                     
                     <Textarea 
-                      placeholder="Your Message or Custom Order Details"
+                      placeholder="Your Message or Pre-Order Details"
                       rows={5}
                       className="border-orange-200 focus:border-orange-500"
                     />
@@ -101,6 +101,19 @@ const Contact = () => {
                         <h3 className="font-semibold text-gray-800">Location</h3>
                         <p className="text-gray-600">Local Area Delivery</p>
                       </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Pre-order Information */}
+                <Card className="bg-gradient-to-r from-orange-100 to-red-100 border-orange-200 shadow-xl">
+                  <CardContent className="p-6">
+                    <h3 className="font-semibold text-gray-800 mb-3">📋 Pre-Order Process</h3>
+                    <div className="space-y-2 text-sm text-gray-700">
+                      <p>• Limited orders only - First come, first served</p>
+                      <p>• 50% advance payment required to confirm order</p>
+                      <p>• Remaining 50% to be paid on delivery</p>
+                      <p>• We'll contact you within 24 hours to confirm</p>
                     </div>
                   </CardContent>
                 </Card>
