@@ -48,41 +48,6 @@ export type Database = {
         }
         Relationships: []
       }
-      cart_items: {
-        Row: {
-          created_at: string
-          id: string
-          quantity: number
-          recipe_id: string
-          updated_at: string
-          user_id: string
-        }
-        Insert: {
-          created_at?: string
-          id?: string
-          quantity: number
-          recipe_id: string
-          updated_at?: string
-          user_id: string
-        }
-        Update: {
-          created_at?: string
-          id?: string
-          quantity?: number
-          recipe_id?: string
-          updated_at?: string
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "cart_items_recipe_id_fkey"
-            columns: ["recipe_id"]
-            isOneToOne: false
-            referencedRelation: "recipes"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       categories: {
         Row: {
           created_at: string
@@ -112,6 +77,65 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      contact_inquiries: {
+        Row: {
+          created_at: string
+          dish_id: string | null
+          dish_name: string
+          id: string
+          inquiry_type: string | null
+          quantity: number
+          serving_size: string | null
+          special_requests: string | null
+          status: string | null
+          updated_at: string
+          user_email: string
+          user_id: string | null
+          user_name: string
+          user_phone: string | null
+        }
+        Insert: {
+          created_at?: string
+          dish_id?: string | null
+          dish_name: string
+          id?: string
+          inquiry_type?: string | null
+          quantity?: number
+          serving_size?: string | null
+          special_requests?: string | null
+          status?: string | null
+          updated_at?: string
+          user_email: string
+          user_id?: string | null
+          user_name: string
+          user_phone?: string | null
+        }
+        Update: {
+          created_at?: string
+          dish_id?: string | null
+          dish_name?: string
+          id?: string
+          inquiry_type?: string | null
+          quantity?: number
+          serving_size?: string | null
+          special_requests?: string | null
+          status?: string | null
+          updated_at?: string
+          user_email?: string
+          user_id?: string | null
+          user_name?: string
+          user_phone?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "contact_inquiries_dish_id_fkey"
+            columns: ["dish_id"]
+            isOneToOne: false
+            referencedRelation: "recipes"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       order_items: {
         Row: {
@@ -345,44 +369,62 @@ export type Database = {
       recipes: {
         Row: {
           category_id: string | null
+          chef_notes: string | null
+          cooking_method: string | null
           created_at: string
           description: string | null
+          detailed_description: string | null
           id: string
+          image_gallery: string[] | null
           image_url: string | null
           ingredients: string[] | null
           is_available: boolean | null
           is_featured: boolean | null
           name: string
+          nutritional_info: Json | null
           preparation_time: number | null
           price: number
+          spice_level: number | null
           updated_at: string
         }
         Insert: {
           category_id?: string | null
+          chef_notes?: string | null
+          cooking_method?: string | null
           created_at?: string
           description?: string | null
+          detailed_description?: string | null
           id?: string
+          image_gallery?: string[] | null
           image_url?: string | null
           ingredients?: string[] | null
           is_available?: boolean | null
           is_featured?: boolean | null
           name: string
+          nutritional_info?: Json | null
           preparation_time?: number | null
           price: number
+          spice_level?: number | null
           updated_at?: string
         }
         Update: {
           category_id?: string | null
+          chef_notes?: string | null
+          cooking_method?: string | null
           created_at?: string
           description?: string | null
+          detailed_description?: string | null
           id?: string
+          image_gallery?: string[] | null
           image_url?: string | null
           ingredients?: string[] | null
           is_available?: boolean | null
           is_featured?: boolean | null
           name?: string
+          nutritional_info?: Json | null
           preparation_time?: number | null
           price?: number
+          spice_level?: number | null
           updated_at?: string
         }
         Relationships: [

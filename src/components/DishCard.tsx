@@ -3,9 +3,11 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Clock, Plus, Minus } from "lucide-react";
-import { useCart } from "@/contexts/CartContext";
+import { Badge } from "@/components/ui/badge";
+import { MessageCircle, Flame, ChefHat, Info } from "lucide-react";
 import { useRecipeServings } from "@/hooks/useRecipeServings";
+import { ContactInquiry } from "@/components/ContactInquiry";
+import { ImageCarousel } from "@/components/ImageCarousel";
 
 interface DishCardProps {
   dish: {
@@ -13,17 +15,22 @@ interface DishCardProps {
     originalId?: string;
     name: string;
     description: string;
+    detailedDescription?: string;
     price: number;
     image: string;
+    imageGallery?: string[];
     rating: number;
-    prepTime: string;
+    spiceLevel?: number;
+    cookingMethod?: string;
+    chefNotes?: string;
+    nutritionalInfo?: any;
   };
-  onAddToCart: (dish: any) => void;
+  onAddToCart?: (dish: any) => void; // Keep for compatibility but won't use
 }
 
-export const DishCard = ({ dish, onAddToCart }: DishCardProps) => {
-  const { items, updateQuantity } = useCart();
+export const DishCard = ({ dish }: DishCardProps) => {
   const [selectedServing, setSelectedServing] = useState<string>("");
+  const [isContactOpen, setIsContactOpen] = useState(false);
   
   // Fetch serving options for this dish
   const { data: servings, isLoading: servingsLoading } = useRecipeServings(dish.originalId);
@@ -43,41 +50,34 @@ export const DishCard = ({ dish, onAddToCart }: DishCardProps) => {
     ? Math.round(dish.price * currentServing.price_multiplier + (currentServing.additional_price || 0))
     : dish.price;
 
-  // Create a unique cart item ID that includes serving info
-  const cartItemId = selectedServing ? 
-    parseInt(`${dish.id}${selectedServing.slice(-4)}`, 36) % 1000000 : dish.id;
-  
-  // Find if this specific dish+serving combo is in cart
-  const cartItem = items.find(item => 
-    item.id === cartItemId || 
-    (item.originalId === dish.originalId && item.name.includes(currentServing?.serving_name || ''))
-  );
-  const quantity = cartItem?.quantity || 0;
-
-  const handleIncrease = () => {
-    if (!currentServing) return;
-    
+  const handleContactUs = () => {
     const dishWithServing = {
       ...dish,
-      id: cartItemId,
-      name: `${dish.name} (${currentServing.serving_name})`,
       price: finalPrice,
-      servingId: currentServing.id,
-      servingName: currentServing.serving_name
     };
-
-    if (quantity === 0) {
-      onAddToCart(dishWithServing);
-    } else {
-      updateQuantity(cartItemId, quantity + 1);
-    }
+    setIsContactOpen(true);
   };
 
-  const handleDecrease = () => {
-    if (quantity > 0) {
-      updateQuantity(cartItemId, quantity - 1);
-    }
+  // Prepare image gallery - combine main image with gallery
+  const allImages = [
+    dish.image,
+    ...(dish.imageGallery || [])
+  ].filter(Boolean);
+
+  // Get spice level display
+  const getSpiceLevel = (level?: number) => {
+    if (!level) return { text: "Mild", flames: 1 };
+    const spiceLevels = [
+      { text: "Mild", flames: 1 },
+      { text: "Medium", flames: 2 },
+      { text: "Hot", flames: 3 },
+      { text: "Very Hot", flames: 4 },
+      { text: "Extremely Hot", flames: 5 }
+    ];
+    return spiceLevels[level - 1] || spiceLevels[0];
   };
+
+  const spiceInfo = getSpiceLevel(dish.spiceLevel);
 
   if (servingsLoading) {
     return (
@@ -94,98 +94,107 @@ export const DishCard = ({ dish, onAddToCart }: DishCardProps) => {
   }
 
   return (
-    <Card className="group hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 bg-white/80 backdrop-blur-sm border-orange-100">
-      <CardContent className="p-6">
-        {/* Dish Image */}
-        <div className="w-full h-48 bg-gradient-to-br from-orange-100 to-red-100 rounded-xl mb-4 flex items-center justify-center text-6xl group-hover:scale-105 transition-transform duration-300">
-          {dish.image}
-        </div>
+    <>
+      <Card className="group hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 bg-white/80 backdrop-blur-sm border-orange-100">
+        <CardContent className="p-6">
+          {/* Image Carousel */}
+          <ImageCarousel
+            images={allImages}
+            dishName={dish.name}
+            className="w-full h-48 mb-4 group-hover:scale-105 transition-transform duration-300"
+          />
 
-        {/* Dish Info */}
-        <div className="space-y-3">
-          <div className="flex items-start justify-between">
-            <h3 className="text-xl font-semibold text-gray-800 group-hover:text-orange-600 transition-colors">
-              {dish.name}
-            </h3>
-            <span className="text-2xl font-bold text-orange-600">
-              ₹{finalPrice}
-            </span>
-          </div>
-
-          <p className="text-gray-600 text-sm leading-relaxed">
-            {dish.description}
-          </p>
-
-          {/* Prep Time Only */}
-          <div className="flex items-center justify-center text-sm text-gray-500">
-            <div className="flex items-center space-x-1">
-              <Clock className="w-4 h-4" />
-              <span>{dish.prepTime}</span>
+          {/* Dish Info */}
+          <div className="space-y-3">
+            <div className="flex items-start justify-between">
+              <h3 className="text-xl font-semibold text-gray-800 group-hover:text-orange-600 transition-colors">
+                {dish.name}
+              </h3>
+              <span className="text-2xl font-bold text-orange-600">
+                ₹{finalPrice}
+              </span>
             </div>
-          </div>
 
-          {/* Serving Size Tabs */}
-          {servings && servings.length > 1 && (
-            <Tabs value={selectedServing} onValueChange={setSelectedServing} className="w-full">
-              <TabsList className="grid w-full grid-cols-2 h-9">
+            {/* Spice Level and Cooking Method */}
+            <div className="flex items-center gap-3 flex-wrap">
+              {dish.spiceLevel && (
+                <Badge variant="outline" className="text-xs">
+                  <Flame className="w-3 h-3 mr-1" />
+                  {spiceInfo.text}
+                  <span className="ml-1">
+                    {'🔥'.repeat(spiceInfo.flames)}
+                  </span>
+                </Badge>
+              )}
+              {dish.cookingMethod && (
+                <Badge variant="outline" className="text-xs">
+                  <ChefHat className="w-3 h-3 mr-1" />
+                  {dish.cookingMethod}
+                </Badge>
+              )}
+            </div>
+
+            <p className="text-gray-600 text-sm leading-relaxed">
+              {dish.detailedDescription || dish.description}
+            </p>
+
+            {/* Chef's Notes */}
+            {dish.chefNotes && (
+              <div className="bg-orange-50 p-3 rounded-lg">
+                <p className="text-xs font-medium text-orange-800 mb-1">👨‍🍳 Chef's Note:</p>
+                <p className="text-xs text-orange-700">{dish.chefNotes}</p>
+              </div>
+            )}
+
+            {/* Serving Size Tabs */}
+            {servings && servings.length > 1 && (
+              <Tabs value={selectedServing} onValueChange={setSelectedServing} className="w-full">
+                <TabsList className="grid w-full grid-cols-2 h-9">
+                  {servings.map((serving) => (
+                    <TabsTrigger 
+                      key={serving.id} 
+                      value={serving.id}
+                      className="text-xs data-[state=active]:bg-orange-500 data-[state=active]:text-white"
+                    >
+                      {serving.serving_name}
+                    </TabsTrigger>
+                  ))}
+                </TabsList>
+                
                 {servings.map((serving) => (
-                  <TabsTrigger 
-                    key={serving.id} 
-                    value={serving.id}
-                    className="text-xs data-[state=active]:bg-orange-500 data-[state=active]:text-white"
-                  >
-                    {serving.serving_name}
-                  </TabsTrigger>
+                  <TabsContent key={serving.id} value={serving.id} className="mt-2">
+                    <div className="text-xs text-gray-500 text-center">
+                      {serving.serving_description}
+                    </div>
+                  </TabsContent>
                 ))}
-              </TabsList>
-              
-              {servings.map((serving) => (
-                <TabsContent key={serving.id} value={serving.id} className="mt-2">
-                  <div className="text-xs text-gray-500 text-center">
-                    {serving.serving_description}
-                  </div>
-                </TabsContent>
-              ))}
-            </Tabs>
-          )}
+              </Tabs>
+            )}
 
-          {/* Add to Cart Button or Quantity Controls */}
-          {quantity === 0 ? (
+            {/* Contact Us Button */}
             <Button
-              onClick={handleIncrease}
+              onClick={handleContactUs}
               disabled={!currentServing}
               className="w-full bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white py-3 rounded-lg transition-all duration-300 transform hover:scale-105"
             >
-              <Plus className="w-4 h-4 mr-2" />
-              Add to Cart
+              <MessageCircle className="w-4 h-4 mr-2" />
+              Contact for Pre-Order
             </Button>
-          ) : (
-            <div className="flex items-center justify-between">
-              <Button
-                onClick={handleDecrease}
-                variant="outline"
-                size="sm"
-                className="w-10 h-10 p-0 rounded-full border-orange-200 hover:bg-orange-50"
-              >
-                <Minus className="w-4 h-4" />
-              </Button>
-              
-              <span className="text-lg font-semibold text-orange-600 bg-orange-50 px-4 py-2 rounded-full">
-                {quantity} in cart
-              </span>
-              
-              <Button
-                onClick={handleIncrease}
-                variant="outline"
-                size="sm"
-                className="w-10 h-10 p-0 rounded-full border-orange-200 hover:bg-orange-50"
-              >
-                <Plus className="w-4 h-4" />
-              </Button>
+
+            {/* Pre-order Info */}
+            <div className="text-xs text-center text-gray-500 bg-gray-50 p-2 rounded">
+              💡 Limited orders only • 50% advance • Remaining on delivery
             </div>
-          )}
-        </div>
-      </CardContent>
-    </Card>
+          </div>
+        </CardContent>
+      </Card>
+
+      <ContactInquiry
+        isOpen={isContactOpen}
+        onClose={() => setIsContactOpen(false)}
+        dish={dish}
+        servingSize={currentServing?.serving_name}
+      />
+    </>
   );
 };
