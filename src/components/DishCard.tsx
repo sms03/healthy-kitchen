@@ -82,74 +82,75 @@ export const DishCard = ({ dish }: DishCardProps) => {
       </Card>
     );
   }
-
   return (
     <>
-      <Card className="minimal-card group hover:shadow-lg transition-all duration-300">
-        <CardContent className="p-6">
-          {/* Image */}
-          <ImageCarousel
-            images={allImages}
-            dishName={dish.name}
-            className="w-full h-48 mb-6 rounded-lg overflow-hidden bg-gradient-to-br from-slate-50 to-slate-100"
-          />
+      <Card className="modern-card group overflow-hidden">
+        <CardContent className="p-0">          {/* Image */}
+          <div className="relative overflow-hidden">
+            <ImageCarousel
+              images={allImages}
+              dishName={dish.name}
+              className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500"
+            />
+            
+            {/* Price Badge */}
+            <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full shadow-lg border border-white/20">
+              <span className="text-base font-bold text-slate-900">₹{finalPrice}</span>
+            </div>
 
-          {/* Content */}
-          <div className="space-y-4">
-            <div className="flex items-start justify-between">
-              <div className="flex-1">
-                <h3 className="text-xl font-semibold text-slate-900 mb-2">
-                  {dish.name}
-                </h3>
-                
-                {/* Badges */}
-                <div className="flex items-center gap-2 flex-wrap mb-3">
-                  {dish.spiceLevel && (
-                    <Badge variant="outline" className="border-slate-200 text-slate-600 bg-slate-50">
-                      <Flame className="w-3 h-3 mr-1" />
-                      {spiceInfo.text}
-                    </Badge>
-                  )}
-                  {dish.cookingMethod && (
-                    <Badge variant="outline" className="border-slate-200 text-slate-600 bg-slate-50">
-                      <ChefHat className="w-3 h-3 mr-1" />
-                      {dish.cookingMethod}
-                    </Badge>
-                  )}
-                </div>
+            {/* Spice Level Indicator */}
+            {dish.spiceLevel && (
+              <div className="absolute top-3 left-3 bg-gradient-to-r from-red-500 to-orange-500 text-white px-2 py-1 rounded-full text-xs font-medium">
+                {Array.from({ length: spiceInfo.flames }, (_, i) => (
+                  <Flame key={i} className="w-3 h-3 inline-block fill-current" />
+                ))}
+                <span className="ml-1">{spiceInfo.text}</span>
               </div>
+            )}
+          </div>{/* Content */}
+          <div className="p-5 space-y-3">
+            <div className="space-y-2">
+              <h3 className="text-lg font-bold text-slate-900 group-hover:text-indigo-600 transition-colors">
+                {dish.name}
+              </h3>
               
-              <div className="text-right ml-4">
-                <span className="text-2xl font-bold text-slate-900">
-                  ₹{finalPrice}
-                </span>
+              {/* Badges */}
+              <div className="flex items-center gap-2 flex-wrap">
+                {dish.cookingMethod && (
+                  <Badge variant="outline" className="border-indigo-200 text-indigo-700 bg-indigo-50 hover:bg-indigo-100 transition-colors text-xs">
+                    <ChefHat className="w-3 h-3 mr-1" />
+                    {dish.cookingMethod}
+                  </Badge>
+                )}
               </div>
             </div>
 
-            <p className="text-slate-600 leading-relaxed">
+            <p className="text-slate-600 leading-relaxed line-clamp-3 text-sm">
               {dish.detailedDescription || dish.description}
             </p>
 
             {/* Chef's Notes */}
             {dish.chefNotes && (
-              <div className="bg-blue-50 border-l-4 border-blue-200 p-4 rounded-r-lg">
+              <div className="bg-gradient-to-r from-indigo-50 to-purple-50 border border-indigo-100 p-3 rounded-xl">
                 <div className="flex items-center mb-2">
-                  <ChefHat className="w-4 h-4 text-blue-600 mr-2" />
-                  <p className="text-sm font-medium text-blue-900">Chef's Note</p>
+                  <div className="w-5 h-5 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-full flex items-center justify-center mr-2">
+                    <ChefHat className="w-3 h-3 text-white" />
+                  </div>
+                  <p className="text-xs font-semibold text-indigo-900">Chef's Special Note</p>
                 </div>
-                <p className="text-sm text-blue-800 leading-relaxed">{dish.chefNotes}</p>
+                <p className="text-xs text-indigo-800 leading-relaxed">{dish.chefNotes}</p>
               </div>
             )}
 
             {/* Fish availability note */}
             {isFishDish && (
-              <div className="bg-slate-50 border border-slate-200 p-4 rounded-lg">
-                <div className="flex items-center mb-2">
-                  <Info className="w-4 h-4 text-slate-600 mr-2" />
-                  <p className="text-sm font-medium text-slate-700">Availability Notice</p>
+              <div className="bg-amber-50 border border-amber-200 p-3 rounded-xl">
+                <div className="flex items-center mb-1">
+                  <Info className="w-4 h-4 text-amber-600 mr-2" />
+                  <p className="text-xs font-semibold text-amber-900">Fresh Catch Notice</p>
                 </div>
-                <p className="text-sm text-slate-600">
-                  Fresh catch prepared daily. Availability and pricing depend on market conditions.
+                <p className="text-xs text-amber-800">
+                  Daily selection based on freshest catch. Pricing varies with market availability.
                 </p>
               </div>
             )}
@@ -157,12 +158,12 @@ export const DishCard = ({ dish }: DishCardProps) => {
             {/* Serving Options */}
             {currentServings && currentServings.length > 1 && (
               <Tabs value={selectedServing} onValueChange={setSelectedServing} className="w-full">
-                <TabsList className="grid w-full grid-cols-2 h-auto p-1 bg-slate-50">
+                <TabsList className="grid w-full grid-cols-2 h-auto p-1 bg-slate-100 rounded-lg">
                   {currentServings.map((serving) => (
                     <TabsTrigger 
                       key={serving.id} 
                       value={serving.id}
-                      className="py-3 text-sm data-[state=active]:bg-white data-[state=active]:shadow-sm"
+                      className="py-2 text-xs data-[state=active]:bg-white data-[state=active]:shadow-lg data-[state=active]:text-indigo-600 rounded-md transition-all duration-300"
                     >
                       {serving.serving_name}
                     </TabsTrigger>
@@ -170,8 +171,8 @@ export const DishCard = ({ dish }: DishCardProps) => {
                 </TabsList>
                 
                 {currentServings.map((serving) => (
-                  <TabsContent key={serving.id} value={serving.id} className="mt-3">
-                    <div className="text-sm text-slate-600 text-center bg-slate-50 p-3 rounded-lg">
+                  <TabsContent key={serving.id} value={serving.id} className="mt-2">
+                    <div className="text-xs text-slate-700 text-center bg-slate-50 p-3 rounded-lg border border-slate-200">
                       {serving.serving_description}
                     </div>
                   </TabsContent>
@@ -183,15 +184,15 @@ export const DishCard = ({ dish }: DishCardProps) => {
             <Button
               onClick={() => setIsContactOpen(true)}
               disabled={!currentServing}
-              className="w-full professional-button py-3"
+              className="w-full cta-button py-3 text-sm font-medium"
             >
               <MessageCircle className="w-4 h-4 mr-2" />
               Reserve This Dish
             </Button>
 
             {/* Reservation Info */}
-            <div className="text-xs text-center text-slate-500 bg-slate-50 p-3 rounded-lg">
-              50% advance • Balance on delivery • Limited daily preparation
+            <div className="text-xs text-center text-slate-500 bg-slate-50 p-3 rounded-lg border border-slate-200">
+              <strong>50% advance</strong> • Balance on delivery • Limited daily preparation
             </div>
           </div>
         </CardContent>
