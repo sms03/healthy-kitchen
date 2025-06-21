@@ -137,22 +137,19 @@ const Profile = () => {
       .join('')
       .toUpperCase();
   };
-
   const getSubscriptionBadgeColor = (tier: string) => {
     switch (tier) {
-      case 'pro': return 'bg-blue-500';
+      case 'pro': return 'bg-indigo-500';
       case 'pro_plus': return 'bg-purple-500';
-      default: return 'bg-gray-500';
+      default: return 'bg-slate-500';
     }
-  };
-
-  // Show loading spinner while checking authentication
+  };  // Show loading spinner while checking authentication
   if (authLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-orange-50 via-red-50 to-pink-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-white via-slate-50 to-blue-50/30 flex items-center justify-center">
         <div className="flex items-center space-x-2">
-          <Loader2 className="w-6 h-6 animate-spin text-orange-500" />
-          <span className="text-gray-600">Loading...</span>
+          <Loader2 className="w-5 h-5 animate-spin text-indigo-500" />
+          <span className="text-slate-600 text-sm">Loading...</span>
         </div>
       </div>
     );
@@ -161,28 +158,33 @@ const Profile = () => {
   // Don't render anything if user is not authenticated (will redirect)
   if (!user) {
     return null;
-  }
-
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-red-50 to-pink-50">
+  }  return (    <div className="min-h-screen bg-gradient-to-br from-white via-slate-50 to-blue-50/30">
       <Navigation />
-      
-      <main className="pt-32 pb-16">
-        <div className="container mx-auto px-4 max-w-4xl">
+        <main className="pt-32 pb-12">
+        <div className="container mx-auto px-4 max-w-4xl">          {/* Hero Section */}
+          <div className="text-center mb-8">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-slate-900 mb-6 tracking-tight">
+              Profile <span className="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">Settings</span>
+            </h1>
+            <p className="text-lg md:text-xl text-slate-600 leading-relaxed max-w-2xl mx-auto">
+              Manage your account information and subscription preferences
+            </p>
+          </div>
+
           <div className="grid gap-6">
             {/* Profile Header */}
-            <Card className="bg-white/80 backdrop-blur-md shadow-xl border border-white/20">
-              <CardHeader className="text-center">
-                <div className="flex flex-col items-center space-y-4">
+            <Card className="bg-white/80 backdrop-blur-md shadow-lg border border-white/20">
+              <CardHeader className="text-center pb-4">
+                <div className="flex flex-col items-center space-y-3">
                   <div className="relative">
-                    <Avatar className="w-24 h-24">
+                    <Avatar className="w-16 h-16">
                       <AvatarImage src={profile?.profile_image_url} />
-                      <AvatarFallback className="text-xl">
+                      <AvatarFallback className="text-sm">
                         {profile?.full_name ? getInitials(profile.full_name) : <User />}
                       </AvatarFallback>
                     </Avatar>
-                    <label className="absolute bottom-0 right-0 bg-orange-500 text-white p-2 rounded-full cursor-pointer hover:bg-orange-600 transition-colors">
-                      <Camera className="w-4 h-4" />
+                    <label className="absolute bottom-0 right-0 bg-indigo-500 text-white p-1.5 rounded-full cursor-pointer hover:bg-indigo-600 transition-colors">
+                      <Camera className="w-3 h-3" />
                       <input
                         type="file"
                         accept="image/*"
@@ -193,75 +195,75 @@ const Profile = () => {
                     </label>
                   </div>
                   <div>
-                    <h1 className="text-2xl font-bold text-gray-800">
+                    <h2 className="text-lg font-semibold text-slate-900">
                       {profile?.full_name || "Loading..."}
-                    </h1>
-                    <p className="text-gray-600">@{profile?.username}</p>
+                    </h2>
+                    <p className="text-sm text-slate-600">@{profile?.username}</p>
                     {profile?.subscription_tier && (
-                      <Badge className={`mt-2 ${getSubscriptionBadgeColor(profile.subscription_tier)} text-white`}>
+                      <Badge className={`mt-1 text-xs ${getSubscriptionBadgeColor(profile.subscription_tier)} text-white`}>
                         {profile.subscription_tier.replace('_', ' ').toUpperCase()}
                       </Badge>
                     )}
                   </div>
                 </div>
               </CardHeader>
-            </Card>
-
-            {/* Profile Management */}
+            </Card>            {/* Profile Management */}
             <Tabs defaultValue="profile" className="w-full">
-              <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="profile" className="flex items-center gap-2">
-                  <User className="w-4 h-4" />
+              <TabsList className="grid w-full grid-cols-2 h-9">
+                <TabsTrigger value="profile" className="flex items-center gap-2 text-sm">
+                  <User className="w-3.5 h-3.5" />
                   Profile
                 </TabsTrigger>
-                <TabsTrigger value="subscription" className="flex items-center gap-2">
-                  <CreditCard className="w-4 h-4" />
+                <TabsTrigger value="subscription" className="flex items-center gap-2 text-sm">
+                  <CreditCard className="w-3.5 h-3.5" />
                   Subscription
                 </TabsTrigger>
               </TabsList>
 
-              <TabsContent value="profile">
-                <Card className="bg-white/80 backdrop-blur-md shadow-xl border border-white/20">
-                  <CardHeader>
-                    <CardTitle>Edit Profile</CardTitle>
+              <TabsContent value="profile" className="mt-4">
+                <Card className="bg-white/80 backdrop-blur-md shadow-lg border border-white/20">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-lg">Edit Profile</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <form onSubmit={handleUpdateProfile} className="space-y-4">
                       <div className="space-y-2">
-                        <Label htmlFor="fullname">Full Name</Label>
+                        <Label htmlFor="fullname" className="text-sm">Full Name</Label>
                         <Input
                           id="fullname"
                           value={fullName}
                           onChange={(e) => setFullName(e.target.value)}
                           placeholder="Enter your full name"
+                          className="h-9"
                         />
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="username">Username</Label>
+                        <Label htmlFor="username" className="text-sm">Username</Label>
                         <Input
                           id="username"
                           value={username}
                           onChange={(e) => setUsername(e.target.value)}
                           placeholder="Enter your username"
+                          className="h-9"
                         />
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="email">Email</Label>
+                        <Label htmlFor="email" className="text-sm">Email</Label>
                         <Input
                           id="email"
                           value={user.email || ""}
                           disabled
-                          className="bg-gray-100"
+                          className="bg-gray-100 h-9"
                         />
-                        <p className="text-sm text-gray-500">
+                        <p className="text-xs text-slate-500">
                           Email changes are not currently supported
                         </p>
                       </div>
-                      <div className="flex gap-4">
+                      <div className="flex gap-3 pt-2">
                         <Button 
                           type="submit" 
                           disabled={loading}
-                          className="bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700"
+                          className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 h-9 px-6 text-sm"
                         >
                           {loading ? "Updating..." : "Update Profile"}
                         </Button>
@@ -270,10 +272,11 @@ const Profile = () => {
                           variant="outline"
                           onClick={signOut}
                           disabled={signingOut}
+                          className="h-9 px-6 text-sm"
                         >
                           {signingOut ? (
                             <>
-                              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                              <Loader2 className="w-3.5 h-3.5 mr-2 animate-spin" />
                               Signing Out...
                             </>
                           ) : (
@@ -286,29 +289,29 @@ const Profile = () => {
                 </Card>
               </TabsContent>
 
-              <TabsContent value="subscription">
-                <Card className="bg-white/80 backdrop-blur-md shadow-xl border border-white/20">
-                  <CardHeader>
-                    <CardTitle>Subscription Details</CardTitle>
+              <TabsContent value="subscription" className="mt-4">
+                <Card className="bg-white/80 backdrop-blur-md shadow-lg border border-white/20">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-lg">Subscription Details</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-4">
                       <div>
-                        <Label>Current Plan</Label>
-                        <p className="text-lg font-semibold">
+                        <Label className="text-sm">Current Plan</Label>
+                        <p className="text-base font-semibold text-slate-900">
                           {profile?.subscription_tier?.replace('_', ' ').toUpperCase() || 'FREE'}
                         </p>
                       </div>
                       {profile?.subscription_start_date && (
                         <div>
-                          <Label>Subscription Started</Label>
-                          <p>{new Date(profile.subscription_start_date).toLocaleDateString()}</p>
+                          <Label className="text-sm">Subscription Started</Label>
+                          <p className="text-sm text-slate-600">{new Date(profile.subscription_start_date).toLocaleDateString()}</p>
                         </div>
                       )}
                       {profile?.subscription_end_date && (
                         <div>
-                          <Label>Subscription Ends</Label>
-                          <p>{new Date(profile.subscription_end_date).toLocaleDateString()}</p>
+                          <Label className="text-sm">Subscription Ends</Label>
+                          <p className="text-sm text-slate-600">{new Date(profile.subscription_end_date).toLocaleDateString()}</p>
                         </div>
                       )}
                     </div>
