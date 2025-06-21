@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 
 export const Hero = () => {
   return (
-    <section id="home" className="pt-32 pb-16 relative overflow-hidden font-lora">
+    <section id="home" className="pt-32 pb-16 relative overflow-hidden font-roboto">
       {/* Background Elements */}
       <div className="absolute inset-0 bg-gradient-to-br from-orange-100 via-red-50 to-pink-100"></div>
       <div className="absolute top-20 left-10 w-32 h-32 bg-orange-200/30 rounded-full animate-pulse"></div>
@@ -16,11 +16,11 @@ export const Hero = () => {
           {/* Left Content */}
           <div className="space-y-8 text-center lg:text-left">
             <div className="space-y-6">
-              <h1 className="text-6xl lg:text-7xl font-bold text-gray-800 leading-tight font-playfair">
+              <h1 className="text-6xl lg:text-7xl font-bold text-gray-800 leading-tight font-roboto">
                 Taste the
                 <span className="text-gradient bg-gradient-to-r from-orange-500 to-red-600 bg-clip-text text-transparent"> Magic</span>
               </h1>
-              <p className="text-xl text-gray-600 max-w-lg leading-relaxed font-lora">
+              <p className="text-xl text-gray-600 max-w-lg leading-relaxed font-roboto">
                 Experience authentic flavors crafted by expert chef Sharvari Salunkhe. 
                 From traditional bakery delights to premium chicken & mutton specialties.
               </p>
@@ -30,7 +30,7 @@ export const Hero = () => {
               <Link to="/menu">
                 <Button 
                   size="lg" 
-                  className="bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white px-10 py-7 text-lg font-lora font-medium transition-all duration-300 hover:scale-105"
+                  className="bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white px-10 py-7 text-lg font-roboto font-medium transition-all duration-300 hover:scale-105"
                 >
                   Order Now
                   <ArrowDown className="ml-2 w-5 h-5" />
@@ -41,7 +41,7 @@ export const Hero = () => {
                 <Button 
                   variant="outline" 
                   size="lg"
-                  className="border-orange-300 text-orange-600 hover:bg-orange-50 px-10 py-7 text-lg font-lora font-medium transition-all duration-300 hover:scale-105"
+                  className="border-orange-300 text-orange-600 hover:bg-orange-50 px-10 py-7 text-lg font-roboto font-medium transition-all duration-300 hover:scale-105"
                 >
                   <Play className="mr-2 w-5 h-5" />
                   Watch Recipes
@@ -56,7 +56,7 @@ export const Hero = () => {
                   <Clock className="w-5 h-5 text-orange-600" />
                 </div>
                 <div>
-                  <p className="font-semibold text-sm font-playfair">Fresh Daily</p>
+                  <p className="font-semibold text-sm font-roboto">Fresh Daily</p>
                   <p className="text-xs">Made to order</p>
                 </div>
               </div>
@@ -66,7 +66,7 @@ export const Hero = () => {
                   <Award className="w-5 h-5 text-red-600" />
                 </div>
                 <div>
-                  <p className="font-semibold text-sm font-playfair">Premium Quality</p>
+                  <p className="font-semibold text-sm font-roboto">Premium Quality</p>
                   <p className="text-xs">Finest ingredients</p>
                 </div>
               </div>
@@ -76,14 +76,14 @@ export const Hero = () => {
                   <Heart className="w-5 h-5 text-green-600" />
                 </div>
                 <div>
-                  <p className="font-semibold text-sm font-playfair">Healthy Choice</p>
+                  <p className="font-semibold text-sm font-roboto">Healthy Choice</p>
                   <p className="text-xs">Nutritious recipes</p>
                 </div>
               </div>
             </div>
 
             {/* YouTube Channels */}
-            <div className="flex flex-col sm:flex-row gap-4 text-sm font-lora">
+            <div className="flex flex-col sm:flex-row gap-4 text-sm font-roboto">
               <a 
                 href="https://www.youtube.com/@SHK-Hindi" 
                 target="_blank" 
@@ -114,8 +114,8 @@ export const Hero = () => {
                   <div className="w-full h-64 bg-gradient-to-br from-yellow-200 to-orange-200 rounded-xl mb-4 flex items-center justify-center">
                     <span className="text-4xl">🍗</span>
                   </div>
-                  <h3 className="text-xl font-semibold text-gray-800 mb-2 font-playfair">Signature Chicken Masala</h3>
-                  <p className="text-gray-600 font-lora">Rich, aromatic spices with tender chicken</p>
+                  <h3 className="text-xl font-semibold text-gray-800 mb-2 font-roboto">Signature Chicken Masala</h3>
+                  <p className="text-gray-600 font-roboto">Rich, aromatic spices with tender chicken</p>
                   <div className="mt-3 flex items-center text-sm text-orange-600">
                     <span className="font-semibold">₹299</span>
                     <span className="ml-2 text-gray-500">• 30 mins</span>
@@ -128,7 +128,7 @@ export const Hero = () => {
                 <div className="w-full h-32 bg-gradient-to-br from-red-200 to-pink-200 rounded-lg mb-3 flex items-center justify-center">
                   <span className="text-2xl">🍖</span>
                 </div>
-                <h4 className="font-medium text-gray-800 font-playfair">Mutton Handi</h4>
+                <h4 className="font-medium text-gray-800 font-roboto">Mutton Handi</h4>
                 <p className="text-xs text-gray-600 mt-1">Slow-cooked perfection</p>
                 <div className="mt-2 text-sm text-orange-600 font-semibold">₹399</div>
               </div>
@@ -137,7 +137,7 @@ export const Hero = () => {
                 <div className="w-full h-32 bg-gradient-to-br from-green-200 to-teal-200 rounded-lg mb-3 flex items-center justify-center">
                   <span className="text-2xl">🥗</span>
                 </div>
-                <h4 className="font-medium text-gray-800 font-playfair">Healthy Specials</h4>
+                <h4 className="font-medium text-gray-800 font-roboto">Healthy Specials</h4>
                 <p className="text-xs text-gray-600 mt-1">Nutritious & delicious</p>
                 <div className="mt-2 text-sm text-orange-600 font-semibold">₹199</div>
               </div>
@@ -157,3 +157,4 @@ export const Hero = () => {
     </section>
   );
 };
+
