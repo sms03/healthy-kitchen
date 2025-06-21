@@ -42,7 +42,7 @@ export const ContactInquiry = ({ isOpen, onClose, dish, servingSize }: ContactIn
   const spiceLevels = [
     { value: "mild", label: "Mild", price: 0 },
     { value: "medium", label: "Medium", price: 0 },
-    { value: "spicy", label: "Spicy", price: 20 }
+    { value: "spicy", label: "Spicy", price: 0 }
   ];
 
   const fishTypes = [
@@ -56,14 +56,15 @@ export const ContactInquiry = ({ isOpen, onClose, dish, servingSize }: ContactIn
     if (!dish) return 0;
     let basePrice = dish.price;
     
-    // Add spice level cost
-    const spiceLevel = spiceLevels.find(s => s.value === formData.spiceLevel);
-    if (spiceLevel) basePrice += spiceLevel.price;
-    
     // Apply fish type multiplier for fish dishes
     if (dish.name.toLowerCase().includes('fish') && formData.fishType) {
       const fishType = fishTypes.find(f => f.value === formData.fishType);
       if (fishType) basePrice *= fishType.priceMultiplier;
+    }
+    
+    // Add charge for special requests (₹50 if there are any special requests)
+    if (formData.specialRequests.trim()) {
+      basePrice += 50;
     }
     
     return Math.round(basePrice * formData.quantity);
@@ -191,6 +192,11 @@ Email: ${formData.email}`;
                 <p className="text-sm text-orange-600">Serving: {servingSize}</p>
               )}
               <p className="text-sm text-orange-600">Total Price: ₹{calculatePrice()}</p>
+              {dish.name.toLowerCase().includes('fish') && (
+                <p className="text-xs text-blue-600 mt-1">
+                  🐟 Fish dishes are subject to availability and pricing may vary based on fish type
+                </p>
+              )}
             </div>
           )}
         </CardHeader>
@@ -273,7 +279,7 @@ Email: ${formData.email}`;
 
               {/* Spice Level Selection */}
               <div>
-                <Label className="text-sm font-medium">Spice Level</Label>
+                <Label className="text-sm font-medium">Spice Level (No extra charge)</Label>
                 <Select value={formData.spiceLevel} onValueChange={(value) => setFormData({ ...formData, spiceLevel: value })}>
                   <SelectTrigger className="mt-1">
                     <SelectValue />
@@ -281,7 +287,7 @@ Email: ${formData.email}`;
                   <SelectContent>
                     {spiceLevels.map((level) => (
                       <SelectItem key={level.value} value={level.value}>
-                        {level.label} {level.price > 0 && `(+₹${level.price})`}
+                        {level.label}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -311,17 +317,17 @@ Email: ${formData.email}`;
               )}
 
               <div>
-                <Label htmlFor="requests" className="text-sm font-medium">Special Requests (Optional)</Label>
+                <Label htmlFor="requests" className="text-sm font-medium">Special Requests (+₹50)</Label>
                 <Textarea
                   id="requests"
                   value={formData.specialRequests}
                   onChange={(e) => setFormData({ ...formData, specialRequests: e.target.value })}
                   className="mt-1 scrollbar-thin"
                   rows={2}
-                  placeholder="Any special dietary requirements or preferences..."
+                  placeholder="Any special dietary requirements, extra ingredients, or preferences..."
                 />
                 <p className="text-xs text-gray-500 mt-1">
-                  *Special requests may incur additional charges
+                  *Special requests incur ₹50 additional charge
                 </p>
               </div>
             </div>

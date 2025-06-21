@@ -67,7 +67,7 @@ export const MenuSection = () => {
       is_featured: false,
       image_gallery: [],
       spice_level: 2,
-      cooking_method: 'Curry',
+      cooking_method: null,
       chef_notes: 'Best served with steamed rice. Fish selection depends on daily availability.',
       nutritional_info: {},
       created_at: new Date().toISOString(),
@@ -87,7 +87,7 @@ export const MenuSection = () => {
       is_featured: false,
       image_gallery: [],
       spice_level: 2,
-      cooking_method: 'Fried',
+      cooking_method: null,
       chef_notes: 'Served with lemon wedges and onions. Fish type selection available.',
       nutritional_info: {},
       created_at: new Date().toISOString(),
@@ -123,6 +123,12 @@ export const MenuSection = () => {
 
     const numericId = stringToHash(recipe.id);
     
+    // Adjust spice level for Chicken/Mutton Handi to medium (2)
+    let adjustedSpiceLevel = recipe.spice_level;
+    if (recipe.name?.includes("Chicken Handi") || recipe.name?.includes("Mutton Handi")) {
+      adjustedSpiceLevel = 2;
+    }
+    
     return {
       id: numericId,
       originalId: recipe.id, // Keep original UUID for database operations
@@ -139,8 +145,8 @@ export const MenuSection = () => {
              recipe.name?.includes("Fish") ? "🐟" : "🍽️",
       imageGallery: recipe.image_gallery || [],
       rating: 4.5 + Math.random() * 0.4, // Random rating between 4.5-4.9
-      spiceLevel: recipe.spice_level,
-      cookingMethod: recipe.cooking_method,
+      spiceLevel: adjustedSpiceLevel,
+      cookingMethod: recipe.name?.includes("Fish") ? null : recipe.cooking_method,
       chefNotes: recipe.chef_notes,
       nutritionalInfo: recipe.nutritional_info
     };
