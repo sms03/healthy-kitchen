@@ -86,3 +86,4 @@ export const ImageCarousel = ({ images, dishName, className = "" }: ImageCarouse
     </div>
   );
 };
+
