@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -210,14 +209,10 @@ const Profile = () => {
 
             {/* Profile Management */}
             <Tabs defaultValue="profile" className="w-full">
-              <TabsList className="grid w-full grid-cols-3">
+              <TabsList className="grid w-full grid-cols-2">
                 <TabsTrigger value="profile" className="flex items-center gap-2">
                   <User className="w-4 h-4" />
                   Profile
-                </TabsTrigger>
-                <TabsTrigger value="orders" className="flex items-center gap-2">
-                  <ShoppingBag className="w-4 h-4" />
-                  Orders
                 </TabsTrigger>
                 <TabsTrigger value="subscription" className="flex items-center gap-2">
                   <CreditCard className="w-4 h-4" />
@@ -287,17 +282,6 @@ const Profile = () => {
                         </Button>
                       </div>
                     </form>
-                  </CardContent>
-                </Card>
-              </TabsContent>
-
-              <TabsContent value="orders">
-                <Card className="bg-white/80 backdrop-blur-md shadow-xl border border-white/20">
-                  <CardHeader>
-                    <CardTitle>Order History</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-gray-600">No orders yet. Start shopping to see your order history!</p>
                   </CardContent>
                 </Card>
               </TabsContent>
