@@ -87,12 +87,14 @@ const Recipes = () => {
   const filteredRecipes = recipes?.filter(recipe => {
     if (activeFilter === "all") return true;
     if (activeFilter === "secret") return recipe.is_secret;
-    return recipe.difficulty?.toLowerCase() === activeFilter;
-  }) || [];  // Show loading while checking authentication  if (loading) {
+    return recipe.difficulty?.toLowerCase() === activeFilter;  }) || [];
+  
+  // Show loading while checking authentication
+  if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-white via-slate-50 to-blue-50/30">
         <Navigation />
-        <div className="container mx-auto px-6 lg:px-8 pt-24">
+        <div className="container mx-auto px-6 lg:px-8 pt-32">
           <div className="flex items-center justify-center min-h-[300px]">
             <div className="flex items-center space-x-2">
               <Loader2 className="w-5 h-5 animate-spin text-indigo-600" />
@@ -205,12 +207,11 @@ const Recipes = () => {
       </div>
     );
   }
-
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-white via-slate-50 to-blue-50/30">
         <Navigation />
-        <div className="container mx-auto px-6 lg:px-8 pt-24">
+        <div className="container mx-auto px-6 lg:px-8 pt-32">
           <div className="flex items-center justify-center min-h-[300px]">
             <div className="flex items-center space-x-2">
               <Loader2 className="w-5 h-5 animate-spin text-indigo-600" />
