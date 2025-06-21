@@ -44,12 +44,19 @@ const Menu = () => {
       description: 'Traditional fish curry with aromatic spices',
       detailed_description: 'Fresh fish cooked in rich coconut-based curry with traditional spices. Choice of fish type affects pricing.',
       price: 280,
+      category_id: null,
+      image_url: null,
+      ingredients: ['Fish', 'Coconut', 'Spices', 'Onions', 'Tomatoes'],
+      preparation_time: 30,
+      is_available: true,
+      is_featured: false,
       image_gallery: [],
       spice_level: 2,
       cooking_method: 'Curry',
       chef_notes: 'Best served with steamed rice. Fish selection depends on daily availability.',
       nutritional_info: {},
-      category_id: null
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
     },
     {
       id: 'fish-fry-static',
@@ -57,12 +64,19 @@ const Menu = () => {
       description: 'Crispy fried fish with spice coating',
       detailed_description: 'Fresh fish marinated in spices and shallow fried to perfection. Crispy outside, tender inside.',
       price: 320,
+      category_id: null,
+      image_url: null,
+      ingredients: ['Fish', 'Spices', 'Oil', 'Lemon', 'Onions'],
+      preparation_time: 25,
+      is_available: true,
+      is_featured: false,
       image_gallery: [],
       spice_level: 2,
       cooking_method: 'Fried',
       chef_notes: 'Served with lemon wedges and onions. Fish type selection available.',
       nutritional_info: {},
-      category_id: null
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
     }
   ];
 
