@@ -82,8 +82,7 @@ const Menu = () => {
 
   // Combine database recipes with static fish dishes
   const allRecipes = [...(recipes || [])];
-  
-  // Add static fish dishes if not found in database
+    // Add static fish dishes if they don't exist in database
   staticFishDishes.forEach(staticDish => {
     const exists = recipes?.some(recipe => 
       recipe.name.toLowerCase() === staticDish.name.toLowerCase()
@@ -93,13 +92,26 @@ const Menu = () => {
     }
   });
 
-  // Filter to show the specific dishes plus any fish dishes
-  const filteredRecipes = allRecipes.filter(recipe => 
-    (targetDishes.includes(recipe.name) || recipe.name.toLowerCase().includes('fish')) &&
-    (activeCategory === "all" || recipe.category_id === activeCategory)
-  );
+  // Create a special "fish" category ID for filtering
+  const FISH_CATEGORY_ID = 'fish-dishes';
+  
+  // Assign fish category to fish dishes
+  allRecipes.forEach(recipe => {
+    if (recipe.name.toLowerCase().includes('fish')) {
+      recipe.category_id = FISH_CATEGORY_ID;
+    }
+  });
 
-  // Create categories with emojis for display
+  // Filter to show the specific dishes plus any fish dishes
+  const filteredRecipes = allRecipes.filter(recipe => {
+    if (activeCategory === "all") {
+      return targetDishes.includes(recipe.name) || recipe.name.toLowerCase().includes('fish');
+    } else if (activeCategory === FISH_CATEGORY_ID) {
+      return recipe.name.toLowerCase().includes('fish');
+    } else {
+      return targetDishes.includes(recipe.name) && recipe.category_id === activeCategory;
+    }
+  });  // Create categories with emojis for display
   const categoryOptions = [
     { id: "all", name: "All Items", emoji: "🍽️" },
     ...(categories?.map(cat => ({
@@ -109,7 +121,8 @@ const Menu = () => {
              cat.name === "Chicken Dishes" ? "🍗" : 
              cat.name === "Mutton Dishes" ? "🍖" :
              cat.name === "Fish Dishes" ? "🐟" : "🍽️"
-    })) || [])
+    })) || []),
+    { id: FISH_CATEGORY_ID, name: "Fish Dishes", emoji: "🐟" }
   ];
 
   // Convert recipe to dish format for compatibility with existing DishCard
@@ -170,11 +183,9 @@ const Menu = () => {
               <p className="text-xl text-gray-600 max-w-2xl mx-auto">
                 Carefully crafted dishes with authentic flavors, made fresh daily for your enjoyment
               </p>
-            </div>
-
-            {/* Category Filter using Tabs */}
+            </div>            {/* Category Filter using Tabs */}
             <Tabs value={activeCategory} onValueChange={setActiveCategory} className="w-full mb-12">
-              <TabsList className="grid w-full grid-cols-2 lg:grid-cols-4 h-auto p-2 bg-white/80 backdrop-blur-sm border border-orange-100 rounded-2xl">
+              <TabsList className="grid w-full grid-cols-2 md:grid-cols-3 lg:grid-cols-5 h-auto p-2 bg-white/80 backdrop-blur-sm border border-orange-100 rounded-2xl">
                 {categoryOptions.map((category) => (
                   <TabsTrigger
                     key={category.id}
