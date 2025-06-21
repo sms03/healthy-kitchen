@@ -3,12 +3,11 @@ import { Heart, Phone, Mail, MapPin, Instagram, Facebook, Twitter } from "lucide
 import { Link } from "react-router-dom";
 
 export const Footer = () => {
-  return (
-    <footer className="relative bg-gradient-to-br from-gray-100 via-gray-200 to-gray-300 text-gray-800 overflow-hidden">
+  return (    <footer className="relative bg-gradient-to-br from-orange-50 via-red-50 to-pink-100 text-gray-700 overflow-hidden">
       {/* Decorative background elements */}
-      <div className="absolute inset-0 opacity-5">
-        <div className="absolute top-5 left-10 w-20 h-20 bg-orange-400 rounded-full blur-2xl"></div>
-        <div className="absolute bottom-10 right-20 w-24 h-24 bg-red-400 rounded-full blur-2xl"></div>
+      <div className="absolute inset-0 opacity-10">
+        <div className="absolute top-5 left-10 w-20 h-20 bg-orange-300 rounded-full blur-2xl"></div>
+        <div className="absolute bottom-10 right-20 w-24 h-24 bg-red-300 rounded-full blur-2xl"></div>
       </div>
       
       <div className="relative z-10 container mx-auto px-6 py-12">
@@ -23,18 +22,16 @@ export const Footer = () => {
               <div>
                 <h3 className="text-xl font-bold bg-gradient-to-r from-orange-500 to-red-600 bg-clip-text text-transparent font-roboto">
                   Healthy Kitchen
-                </h3>
-                <p className="text-gray-600 text-xs font-roboto">Delicious & Nutritious</p>
+                </h3>                <p className="text-gray-600 text-xs font-roboto">Delicious & Nutritious</p>
               </div>
             </div>
-            <p className="text-gray-700 text-sm leading-relaxed font-roboto">
+            <p className="text-gray-600 text-sm leading-relaxed font-roboto">
               Serving fresh, healthy, and delicious dishes with love.
             </p>
           </div>
 
-          {/* Quick Links */}
-          <div className="space-y-4">
-            <h4 className="text-lg font-semibold text-gray-800 relative font-roboto">
+          {/* Quick Links */}          <div className="space-y-4">
+            <h4 className="text-lg font-semibold text-gray-700 relative font-roboto">
               Quick Links
               <div className="absolute bottom-0 left-0 w-8 h-0.5 bg-gradient-to-r from-orange-400 to-red-500"></div>
             </h4>
@@ -55,9 +52,8 @@ export const Footer = () => {
             </div>
           </div>
 
-          {/* About & Contact Links */}
-          <div className="space-y-4">
-            <h4 className="text-lg font-semibold text-gray-800 relative font-roboto">
+          {/* About & Contact Links */}          <div className="space-y-4">
+            <h4 className="text-lg font-semibold text-gray-700 relative font-roboto">
               More Info
               <div className="absolute bottom-0 left-0 w-8 h-0.5 bg-gradient-to-r from-orange-400 to-red-500"></div>
             </h4>
@@ -77,9 +73,8 @@ export const Footer = () => {
             </div>
           </div>
 
-          {/* Contact Info */}
-          <div className="space-y-4">
-            <h4 className="text-lg font-semibold text-gray-800 relative font-roboto">
+          {/* Contact Info */}          <div className="space-y-4">
+            <h4 className="text-lg font-semibold text-gray-700 relative font-roboto">
               Get In Touch
               <div className="absolute bottom-0 left-0 w-8 h-0.5 bg-gradient-to-r from-orange-400 to-red-500"></div>
             </h4>
@@ -97,24 +92,21 @@ export const Footer = () => {
                 <span className="font-roboto">hello@healthykitchen.com</span>
               </div>
             </div>
-            
-            {/* Social Media Links */}
+              {/* Social Media Links */}
             <div className="flex space-x-3">
-              <a href="#" className="w-8 h-8 bg-gray-300/50 rounded-full flex items-center justify-center hover:bg-orange-400 hover:text-white transition-all duration-300">
+              <a href="#" className="w-8 h-8 bg-white/60 rounded-full flex items-center justify-center hover:bg-orange-400 hover:text-white transition-all duration-300">
                 <Instagram className="w-4 h-4" />
               </a>
-              <a href="#" className="w-8 h-8 bg-gray-300/50 rounded-full flex items-center justify-center hover:bg-blue-500 hover:text-white transition-all duration-300">
+              <a href="#" className="w-8 h-8 bg-white/60 rounded-full flex items-center justify-center hover:bg-blue-500 hover:text-white transition-all duration-300">
                 <Facebook className="w-4 h-4" />
               </a>
-              <a href="#" className="w-8 h-8 bg-gray-300/50 rounded-full flex items-center justify-center hover:bg-blue-400 hover:text-white transition-all duration-300">
+              <a href="#" className="w-8 h-8 bg-white/60 rounded-full flex items-center justify-center hover:bg-blue-400 hover:text-white transition-all duration-300">
                 <Twitter className="w-4 h-4" />
               </a>
             </div>
           </div>
-        </div>
-
-        {/* Bottom Bar */}
-        <div className="border-t border-gray-400 pt-6 text-center">
+        </div>        {/* Bottom Bar */}
+        <div className="border-t border-gray-300 pt-6 text-center">
           <p className="text-gray-600 flex items-center justify-center space-x-2 text-sm font-roboto">
             <span>Made with</span>
             <Heart className="w-4 h-4 text-red-500 fill-current animate-pulse" />
