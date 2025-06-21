@@ -16,12 +16,11 @@ export default {
 			screens: {
 				'2xl': '1400px'
 			}
-		},
-		extend: {
+		},		extend: {
 			fontFamily: {
-				'lora': ['Lora', 'serif'],
-				'playfair': ['Playfair', 'serif'],
-				'sans': ['Lora', 'sans-serif'],
+				'roboto': ['Roboto', 'sans-serif'],
+				'sans': ['Roboto', 'sans-serif'],
+				'serif': ['Roboto', 'sans-serif'],
 			},
 			colors: {
 				border: 'hsl(var(--border))',
