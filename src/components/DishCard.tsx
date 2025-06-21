@@ -198,3 +198,4 @@ export const DishCard = ({ dish }: DishCardProps) => {
     </>
   );
 };
+
