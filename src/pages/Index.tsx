@@ -2,7 +2,6 @@
 import { Hero } from "@/components/Hero";
 import { Navigation } from "@/components/Navigation";
 import { Footer } from "@/components/Footer";
-import { MenuSection } from "@/components/MenuSection";
 
 const Index = () => {
   return (
@@ -11,7 +10,6 @@ const Index = () => {
       
       <main>
         <Hero />
-        <MenuSection />
       </main>
       
       <Footer />

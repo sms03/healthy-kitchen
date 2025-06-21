@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -45,16 +46,23 @@
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 217.2 91.2% 59.8%;
 
-    /* Michelin-inspired color palette */
+    /* Professional Michelin-inspired pastel palette */
     --champagne: 45 31% 93%;
     --pearl: 210 17% 95%;
     --sage: 120 15% 85%;
-    --blush: 15 25% 90%;
+    --blush: 350 25% 90%;
     --cream: 48 25% 96%;
     --lavender: 260 20% 92%;
     --mint: 150 20% 88%;
     --gold-accent: 45 70% 75%;
     --deep-charcoal: 220 13% 18%;
+    
+    /* Professional pastel colors */
+    --pastel-blue: 210 100% 95%;
+    --pastel-pink: 350 100% 95%;
+    --pastel-green: 120 100% 95%;
+    --pastel-purple: 270 100% 95%;
+    --pastel-slate: 210 15% 95%;
   }
 
   .dark {
@@ -118,26 +126,38 @@
   }
 }
 
-/* Professional restaurant styling */
+/* Professional restaurant styling with pastel colors */
 @layer components {
   .michelin-gradient {
-    @apply bg-gradient-to-br from-amber-50 via-orange-50 to-rose-50;
+    @apply bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50;
   }
   
   .chef-signature {
-    @apply bg-gradient-to-r from-amber-100 via-orange-100 to-rose-100 border-l-4 border-amber-400;
+    @apply bg-gradient-to-r from-blue-50 via-indigo-50 to-purple-50 border-l-4 border-blue-400;
   }
   
   .elegant-card {
-    @apply bg-white/90 backdrop-blur-sm border border-amber-100 shadow-xl rounded-2xl;
+    @apply bg-white/90 backdrop-blur-sm border border-slate-200 shadow-xl rounded-2xl;
   }
   
-  .gold-accent {
-    @apply text-amber-600 border-amber-200;
+  .professional-accent {
+    @apply text-blue-600 border-blue-200;
   }
   
   .restaurant-button {
-    @apply bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white shadow-lg;
+    @apply bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white shadow-lg;
+  }
+  
+  .pastel-card {
+    @apply bg-gradient-to-br from-white via-blue-50 to-indigo-50 border border-slate-200;
+  }
+  
+  .michelin-text {
+    @apply text-slate-700;
+  }
+  
+  .michelin-header {
+    @apply text-slate-800 font-playfair;
   }
 }
 
@@ -150,43 +170,43 @@
   }
 
   ::-webkit-scrollbar-track {
-    background: linear-gradient(180deg, #f8fffe 0%, #f1f8f4 100%);
+    background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
     border-radius: 10px;
     box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
   }
 
   ::-webkit-scrollbar-thumb {
-    background: linear-gradient(135deg, #10b981 0%, #059669 50%, #047857 100%);
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 50%, #1e40af 100%);
     border-radius: 10px;
-    border: 2px solid #f8fffe;
-    box-shadow: 0 2px 4px rgba(16, 185, 129, 0.2);
+    border: 2px solid #f8fafc;
+    box-shadow: 0 2px 4px rgba(59, 130, 246, 0.2);
     transition: all 0.3s ease;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(135deg, #059669 0%, #047857 50%, #065f46 100%);
-    box-shadow: 0 4px 8px rgba(16, 185, 129, 0.3);
+    background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 50%, #1e3a8a 100%);
+    box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
     transform: scale(1.05);
   }
 
   ::-webkit-scrollbar-thumb:active {
-    background: linear-gradient(135deg, #047857 0%, #065f46 100%);
+    background: linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%);
   }
 
   ::-webkit-scrollbar-corner {
-    background: #f8fffe;
+    background: #f8fafc;
   }
 
   /* Firefox Scrollbar */
   * {
     scrollbar-width: thin;
-    scrollbar-color: #ec713c #f1f8f4;
+    scrollbar-color: #3b82f6 #f1f5f9;
   }
 
   /* Custom scrollbar for specific containers */
   .custom-scrollbar {
     scrollbar-width: thin;
-    scrollbar-color: #10b981 #f1f8f4;
+    scrollbar-color: #3b82f6 #f1f5f9;
   }
 
   .custom-scrollbar::-webkit-scrollbar {
@@ -194,18 +214,18 @@
   }
 
   .custom-scrollbar::-webkit-scrollbar-track {
-    background: rgba(241, 248, 244, 0.5);
+    background: rgba(241, 245, 249, 0.5);
     border-radius: 6px;
   }
 
   .custom-scrollbar::-webkit-scrollbar-thumb {
-    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
     border-radius: 6px;
-    border: 1px solid rgba(248, 255, 254, 0.5);
+    border: 1px solid rgba(248, 250, 252, 0.5);
   }
 
   .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(135deg, #059669 0%, #047857 100%);
+    background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
   }
 
   /* Dark mode scrollbar */
@@ -215,14 +235,14 @@
   }
 
   .dark ::-webkit-scrollbar-thumb {
-    background: linear-gradient(135deg, #10b981 0%, #059669 50%, #047857 100%);
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 50%, #1e40af 100%);
     border: 2px solid #1f2937;
-    box-shadow: 0 2px 4px rgba(16, 185, 129, 0.3);
+    box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3);
   }
 
   .dark ::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(135deg, #34d399 0%, #10b981 50%, #059669 100%);
-    box-shadow: 0 4px 8px rgba(52, 211, 153, 0.4);
+    background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 50%, #1d4ed8 100%);
+    box-shadow: 0 4px 8px rgba(96, 165, 250, 0.4);
   }
 
   .dark ::-webkit-scrollbar-corner {
@@ -230,7 +250,7 @@
   }
 
   .dark * {
-    scrollbar-color: #10b981 #1f2937;
+    scrollbar-color: #3b82f6 #1f2937;
   }
 }
 
