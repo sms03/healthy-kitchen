@@ -34,23 +34,27 @@
     --input: 214.3 31.8% 91.4%;
     --ring: 222.2 84% 4.9%;
 
-    --radius: 0.5rem;
+    --radius: 0.75rem;
 
     --sidebar-background: 0 0% 98%;
-
     --sidebar-foreground: 240 5.3% 26.1%;
-
     --sidebar-primary: 240 5.9% 10%;
-
     --sidebar-primary-foreground: 0 0% 98%;
-
     --sidebar-accent: 240 4.8% 95.9%;
-
     --sidebar-accent-foreground: 240 5.9% 10%;
-
     --sidebar-border: 220 13% 91%;
-
     --sidebar-ring: 217.2 91.2% 59.8%;
+
+    /* Michelin-inspired color palette */
+    --champagne: 45 31% 93%;
+    --pearl: 210 17% 95%;
+    --sage: 120 15% 85%;
+    --blush: 15 25% 90%;
+    --cream: 48 25% 96%;
+    --lavender: 260 20% 92%;
+    --mint: 150 20% 88%;
+    --gold-accent: 45 70% 75%;
+    --deep-charcoal: 220 13% 18%;
   }
 
   .dark {
@@ -99,6 +103,41 @@
 
   body {
     @apply bg-background text-foreground;
+    font-family: 'Playfair Display', 'Georgia', serif;
+  }
+
+  /* Michelin star restaurant typography */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Playfair Display', 'Georgia', serif;
+    letter-spacing: 0.025em;
+  }
+
+  p, span, div {
+    font-family: 'Lora', 'Times New Roman', serif;
+    line-height: 1.7;
+  }
+}
+
+/* Professional restaurant styling */
+@layer components {
+  .michelin-gradient {
+    @apply bg-gradient-to-br from-amber-50 via-orange-50 to-rose-50;
+  }
+  
+  .chef-signature {
+    @apply bg-gradient-to-r from-amber-100 via-orange-100 to-rose-100 border-l-4 border-amber-400;
+  }
+  
+  .elegant-card {
+    @apply bg-white/90 backdrop-blur-sm border border-amber-100 shadow-xl rounded-2xl;
+  }
+  
+  .gold-accent {
+    @apply text-amber-600 border-amber-200;
+  }
+  
+  .restaurant-button {
+    @apply bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white shadow-lg;
   }
 }
 

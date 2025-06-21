@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -20,7 +21,7 @@ export default {
 		extend: {
 			fontFamily: {
 				'lora': ['Lora', 'serif'],
-				'playfair': ['Playfair', 'serif'],
+				'playfair': ['Playfair Display', 'serif'],
 				'sans': ['Lora', 'sans-serif'],
 			},
 			colors: {
@@ -66,7 +67,17 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
-				}
+				},
+				// Michelin-inspired colors
+				champagne: 'hsl(var(--champagne))',
+				pearl: 'hsl(var(--pearl))',
+				sage: 'hsl(var(--sage))',
+				blush: 'hsl(var(--blush))',
+				cream: 'hsl(var(--cream))',
+				lavender: 'hsl(var(--lavender))',
+				mint: 'hsl(var(--mint))',
+				'gold-accent': 'hsl(var(--gold-accent))',
+				'deep-charcoal': 'hsl(var(--deep-charcoal))'
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
@@ -90,7 +101,8 @@ export default {
 						height: '0'
 					}
 				}
-			},			animation: {
+			},
+			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
 				'accordion-up': 'accordion-up 0.2s ease-out'
 			}
