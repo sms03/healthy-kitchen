@@ -156,12 +156,11 @@ const Menu = () => {
   };  return (
     <div className="min-h-screen bg-gradient-to-br from-white via-slate-50 to-blue-50/30">
       <Navigation />
-        <main className="pt-32 pb-16">
-        {/* Hero Section */}
+        <main className="pt-32 pb-16">        {/* Hero Section */}
         <section className="relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50"></div>
           <div className="relative container mx-auto px-6 lg:px-8 py-10">
-            <div className="text-center max-w-3xl mx-auto">              <div className="inline-flex items-center space-x-2 bg-white/80 backdrop-blur-sm px-4 py-2 rounded-full shadow-sm border border-white/20 mb-6">
+            <div className="text-center max-w-3xl mx-auto">
+              <div className="inline-flex items-center space-x-2 bg-white/60 backdrop-blur-sm px-4 py-2 rounded-full shadow-sm border border-white/30 mb-6">
                 <ChefHat className="w-4 h-4 text-indigo-600" />
                 <span className="text-sm font-medium text-slate-700">Signature Collection</span>
               </div>
