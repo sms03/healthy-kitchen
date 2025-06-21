@@ -118,3 +118,4 @@ export const Cart = ({ isOpen, onClose, items, onRemoveItem, onUpdateQuantity }:
     </Sheet>
   );
 };
+
