@@ -28,18 +28,62 @@ const Menu = () => {
     );
   }
 
-  // Define the specific dishes we want to show
+  // Define the specific dishes we want to show including fish dishes
   const targetDishes = [
     'Egg Bhurji', 'Egg Masala', 
     'Chicken Masala', 'Chicken Handi', 
-    'Mutton Masala', 'Mutton Handi'
+    'Mutton Masala', 'Mutton Handi',
+    'Fish Curry', 'Fish Fry'
   ];
 
-  // Filter to only show the 6 specific dishes
-  const filteredRecipes = recipes?.filter(recipe => 
-    targetDishes.includes(recipe.name) &&
+  // Add static fish dishes if they don't exist in database
+  const staticFishDishes = [
+    {
+      id: 'fish-curry-static',
+      name: 'Fish Curry',
+      description: 'Traditional fish curry with aromatic spices',
+      detailed_description: 'Fresh fish cooked in rich coconut-based curry with traditional spices. Choice of fish type affects pricing.',
+      price: 280,
+      image_gallery: [],
+      spice_level: 2,
+      cooking_method: 'Curry',
+      chef_notes: 'Best served with steamed rice. Fish selection depends on daily availability.',
+      nutritional_info: {},
+      category_id: null
+    },
+    {
+      id: 'fish-fry-static',
+      name: 'Fish Fry',
+      description: 'Crispy fried fish with spice coating',
+      detailed_description: 'Fresh fish marinated in spices and shallow fried to perfection. Crispy outside, tender inside.',
+      price: 320,
+      image_gallery: [],
+      spice_level: 2,
+      cooking_method: 'Fried',
+      chef_notes: 'Served with lemon wedges and onions. Fish type selection available.',
+      nutritional_info: {},
+      category_id: null
+    }
+  ];
+
+  // Combine database recipes with static fish dishes
+  const allRecipes = [...(recipes || [])];
+  
+  // Add static fish dishes if not found in database
+  staticFishDishes.forEach(staticDish => {
+    const exists = recipes?.some(recipe => 
+      recipe.name.toLowerCase() === staticDish.name.toLowerCase()
+    );
+    if (!exists) {
+      allRecipes.push(staticDish);
+    }
+  });
+
+  // Filter to show the specific dishes plus any fish dishes
+  const filteredRecipes = allRecipes.filter(recipe => 
+    (targetDishes.includes(recipe.name) || recipe.name.toLowerCase().includes('fish')) &&
     (activeCategory === "all" || recipe.category_id === activeCategory)
-  ) || [];
+  );
 
   // Create categories with emojis for display
   const categoryOptions = [
@@ -49,7 +93,8 @@ const Menu = () => {
       name: cat.name,
       emoji: cat.name === "Egg Dishes" ? "🥚" : 
              cat.name === "Chicken Dishes" ? "🍗" : 
-             cat.name === "Mutton Dishes" ? "🍖" : "🍽️"
+             cat.name === "Mutton Dishes" ? "🍖" :
+             cat.name === "Fish Dishes" ? "🐟" : "🍽️"
     })) || [])
   ];
 
@@ -80,7 +125,8 @@ const Menu = () => {
              recipe.name?.includes("Chicken Masala") ? "🍛" :
              recipe.name?.includes("Chicken Handi") ? "🍗" :
              recipe.name?.includes("Mutton Masala") ? "🍖" :
-             recipe.name?.includes("Mutton Handi") ? "🥩" : "🍽️",
+             recipe.name?.includes("Mutton Handi") ? "🥩" :
+             recipe.name?.includes("Fish") ? "🐟" : "🍽️",
       imageGallery: recipe.image_gallery || [],
       rating: 4.5 + Math.random() * 0.4,
       spiceLevel: recipe.spice_level,

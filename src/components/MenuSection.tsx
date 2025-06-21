@@ -24,11 +24,12 @@ export const MenuSection = () => {
     );
   }
 
-  // Define the specific dishes we want to show
+  // Define the specific dishes we want to show including fish dishes
   const targetDishes = [
     'Egg Bhurji', 'Egg Masala', 
     'Chicken Masala', 'Chicken Handi', 
-    'Mutton Masala', 'Mutton Handi'
+    'Mutton Masala', 'Mutton Handi',
+    'Fish Curry', 'Fish Fry'
   ];
 
   // Create categories with emojis for display
@@ -39,19 +40,61 @@ export const MenuSection = () => {
       name: cat.name,
       emoji: cat.name === "Egg Dishes" ? "🥚" : 
              cat.name === "Chicken Dishes" ? "🍗" : 
-             cat.name === "Mutton Dishes" ? "🍖" : "🍽️"
+             cat.name === "Mutton Dishes" ? "🍖" :
+             cat.name === "Fish Dishes" ? "🐟" : "🍽️"
     })) || [])
   ];
 
-  // Filter to only show the 6 specific dishes
+  // Filter to show the specific dishes plus any fish dishes from database
   const filteredRecipes = recipes?.filter(recipe => 
-    targetDishes.includes(recipe.name) &&
+    (targetDishes.includes(recipe.name) || recipe.name.toLowerCase().includes('fish')) &&
     (activeCategory === "all" || recipe.category_id === activeCategory)
   ) || [];
 
+  // Add static fish dishes if they don't exist in database
+  const staticFishDishes = [
+    {
+      id: 'fish-curry-static',
+      name: 'Fish Curry',
+      description: 'Traditional fish curry with aromatic spices',
+      detailed_description: 'Fresh fish cooked in rich coconut-based curry with traditional spices. Choice of fish type affects pricing.',
+      price: 280,
+      image_gallery: [],
+      spice_level: 2,
+      cooking_method: 'Curry',
+      chef_notes: 'Best served with steamed rice. Fish selection depends on daily availability.',
+      nutritional_info: {}
+    },
+    {
+      id: 'fish-fry-static',
+      name: 'Fish Fry',
+      description: 'Crispy fried fish with spice coating',
+      detailed_description: 'Fresh fish marinated in spices and shallow fried to perfection. Crispy outside, tender inside.',
+      price: 320,
+      image_gallery: [],
+      spice_level: 2,
+      cooking_method: 'Fried',
+      chef_notes: 'Served with lemon wedges and onions. Fish type selection available.',
+      nutritional_info: {}
+    }
+  ];
+
+  // Combine database recipes with static fish dishes
+  const allRecipes = [...filteredRecipes];
+  
+  // Add static fish dishes if not found in database
+  staticFishDishes.forEach(staticDish => {
+    const exists = filteredRecipes.some(recipe => 
+      recipe.name.toLowerCase() === staticDish.name.toLowerCase()
+    );
+    if (!exists) {
+      allRecipes.push(staticDish);
+    }
+  });
+
   // Convert recipe to dish format for compatibility with existing DishCard
   const convertRecipeToDish = (recipe: any) => {
-    // Create a hash from the UUID string to get a consistent numeric ID
+    // Create a hash from the ID string to get a consistent numeric ID
     const stringToHash = (str: string) => {
       let hash = 0;
       for (let i = 0; i < str.length; i++) {
@@ -76,7 +119,8 @@ export const MenuSection = () => {
              recipe.name?.includes("Chicken Masala") ? "🍛" :
              recipe.name?.includes("Chicken Handi") ? "🍗" :
              recipe.name?.includes("Mutton Masala") ? "🍖" :
-             recipe.name?.includes("Mutton Handi") ? "🥩" : "🍽️",
+             recipe.name?.includes("Mutton Handi") ? "🥩" :
+             recipe.name?.includes("Fish") ? "🐟" : "🍽️",
       imageGallery: recipe.image_gallery || [],
       rating: 4.5 + Math.random() * 0.4, // Random rating between 4.5-4.9
       spiceLevel: recipe.spice_level,
@@ -119,7 +163,7 @@ export const MenuSection = () => {
 
         {/* Menu Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredRecipes.map((recipe) => {
+          {allRecipes.map((recipe) => {
             const dish = convertRecipeToDish(recipe);
             return (
               <DishCard 
@@ -130,7 +174,7 @@ export const MenuSection = () => {
           })}
         </div>
 
-        {filteredRecipes.length === 0 && (
+        {allRecipes.length === 0 && (
           <div className="text-center py-12">
             <p className="text-gray-500 text-lg">No items found in this category.</p>
           </div>
