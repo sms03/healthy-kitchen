@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 
 export default {
@@ -21,7 +20,7 @@ export default {
 		extend: {
 			fontFamily: {
 				'lora': ['Lora', 'serif'],
-				'playfair': ['Playfair Display', 'serif'],
+				'playfair': ['Playfair', 'serif'],
 				'sans': ['Lora', 'sans-serif'],
 			},
 			colors: {
@@ -67,24 +66,7 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
-				},
-				// Professional Michelin-inspired colors
-				champagne: 'hsl(var(--champagne))',
-				pearl: 'hsl(var(--pearl))',
-				sage: 'hsl(var(--sage))',
-				blush: 'hsl(var(--blush))',
-				cream: 'hsl(var(--cream))',
-				lavender: 'hsl(var(--lavender))',
-				mint: 'hsl(var(--mint))',
-				'gold-accent': 'hsl(var(--gold-accent))',
-				'deep-charcoal': 'hsl(var(--deep-charcoal))',
-				
-				// Professional pastel palette
-				'pastel-blue': 'hsl(var(--pastel-blue))',
-				'pastel-pink': 'hsl(var(--pastel-pink))',
-				'pastel-green': 'hsl(var(--pastel-green))',
-				'pastel-purple': 'hsl(var(--pastel-purple))',
-				'pastel-slate': 'hsl(var(--pastel-slate))',
+				}
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
@@ -108,8 +90,7 @@ export default {
 						height: '0'
 					}
 				}
-			},
-			animation: {
+			},			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
 				'accordion-up': 'accordion-up 0.2s ease-out'
 			}
@@ -122,7 +103,7 @@ export default {
 			const newUtilities = {
 				'.scrollbar-thin': {
 					'scrollbar-width': 'thin',
-					'scrollbar-color': '#3b82f6 #f1f5f9',
+					'scrollbar-color': '#10b981 #f1f8f4',
 				},
 				'.scrollbar-custom': {
 					'&::-webkit-scrollbar': {
@@ -130,16 +111,16 @@ export default {
 						height: '8px',
 					},
 					'&::-webkit-scrollbar-track': {
-						background: 'rgba(241, 245, 249, 0.5)',
+						background: 'rgba(241, 248, 244, 0.5)',
 						'border-radius': '6px',
 					},
 					'&::-webkit-scrollbar-thumb': {
-						background: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)',
+						background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
 						'border-radius': '6px',
-						border: '1px solid rgba(248, 250, 252, 0.5)',
+						border: '1px solid rgba(248, 255, 254, 0.5)',
 					},
 					'&::-webkit-scrollbar-thumb:hover': {
-						background: 'linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%)',
+						background: 'linear-gradient(135deg, #059669 0%, #047857 100%)',
 					},
 				},
 				'.scrollbar-none': {
