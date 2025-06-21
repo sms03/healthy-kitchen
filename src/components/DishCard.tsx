@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { MessageCircle, Flame, ChefHat, Info, Star } from "lucide-react";
+import { MessageCircle, Flame, ChefHat, Info } from "lucide-react";
 import { useRecipeServings } from "@/hooks/useRecipeServings";
 import { useFishServings } from "@/hooks/useFishServings";
 import { ContactInquiry } from "@/components/ContactInquiry";
@@ -20,62 +20,39 @@ interface DishCardProps {
     price: number;
     image: string;
     imageGallery?: string[];
-    rating: number;
     spiceLevel?: number;
     cookingMethod?: string;
     chefNotes?: string;
     nutritionalInfo?: any;
   };
-  onAddToCart?: (dish: any) => void;
 }
 
 export const DishCard = ({ dish }: DishCardProps) => {
   const [selectedServing, setSelectedServing] = useState<string>("");
   const [isContactOpen, setIsContactOpen] = useState(false);
   
-  // Check if it's a fish dish
   const isFishDish = dish.name.toLowerCase().includes('fish');
   
-  // Fetch appropriate serving options
   const { data: servings, isLoading: servingsLoading } = useRecipeServings(
     !isFishDish ? dish.originalId : undefined
   );
   const { data: fishServings, isLoading: fishServingsLoading } = useFishServings();
   
-  // Use appropriate servings based on dish type
   const currentServings = isFishDish ? fishServings : servings;
   const isLoading = isFishDish ? fishServingsLoading : servingsLoading;
   
-  // Set default serving when servings are loaded
   useEffect(() => {
     if (currentServings && currentServings.length > 0 && !selectedServing) {
       setSelectedServing(currentServings[0].id);
     }
   }, [currentServings, selectedServing]);
 
-  // Find the current serving option
   const currentServing = currentServings?.find(s => s.id === selectedServing) || currentServings?.[0];
   
-  // Calculate the price based on selected serving
   const finalPrice = currentServing 
     ? Math.round(dish.price * currentServing.price_multiplier + (currentServing.additional_price || 0))
     : dish.price;
 
-  const handleContactUs = () => {
-    const dishWithServing = {
-      ...dish,
-      price: finalPrice,
-    };
-    setIsContactOpen(true);
-  };
-
-  // Prepare image gallery
-  const allImages = [
-    dish.image,
-    ...(dish.imageGallery || [])
-  ].filter(Boolean);
-
-  // Get spice level display
   const getSpiceLevel = (level?: number) => {
     if (!level) return { text: "Mild", flames: 1 };
     const spiceLevels = [
@@ -90,14 +67,16 @@ export const DishCard = ({ dish }: DishCardProps) => {
 
   const spiceInfo = getSpiceLevel(dish.spiceLevel);
 
+  const allImages = [dish.image, ...(dish.imageGallery || [])].filter(Boolean);
+
   if (isLoading) {
     return (
-      <Card className="group hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-3 elegant-card">
-        <CardContent className="p-8">
+      <Card className="minimal-card">
+        <CardContent className="p-6">
           <div className="animate-pulse space-y-4">
-            <div className="w-full h-56 bg-gradient-to-r from-amber-100 to-orange-100 rounded-2xl"></div>
-            <div className="h-4 bg-amber-100 rounded w-3/4"></div>
-            <div className="h-4 bg-amber-100 rounded w-1/2"></div>
+            <div className="w-full h-48 bg-slate-100 rounded-lg"></div>
+            <div className="h-4 bg-slate-100 rounded w-3/4"></div>
+            <div className="h-4 bg-slate-100 rounded w-1/2"></div>
           </div>
         </CardContent>
       </Card>
@@ -106,101 +85,84 @@ export const DishCard = ({ dish }: DishCardProps) => {
 
   return (
     <>
-      <Card className="group hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-3 elegant-card border-amber-100">
-        <CardContent className="p-8">
-          {/* Image Carousel */}
+      <Card className="minimal-card group hover:shadow-lg transition-all duration-300">
+        <CardContent className="p-6">
+          {/* Image */}
           <ImageCarousel
             images={allImages}
             dishName={dish.name}
-            className="w-full h-56 mb-6 group-hover:scale-105 transition-transform duration-500 rounded-2xl overflow-hidden shadow-lg"
+            className="w-full h-48 mb-6 rounded-lg overflow-hidden bg-gradient-to-br from-slate-50 to-slate-100"
           />
 
-          {/* Dish Info */}
+          {/* Content */}
           <div className="space-y-4">
             <div className="flex items-start justify-between">
-              <div>
-                <h3 className="text-2xl font-bold text-deep-charcoal group-hover:text-amber-600 transition-colors font-playfair">
+              <div className="flex-1">
+                <h3 className="text-xl font-semibold text-slate-900 mb-2">
                   {dish.name}
                 </h3>
-                <div className="flex items-center mt-2">
-                  <div className="flex items-center">
-                    {[...Array(5)].map((_, i) => (
-                      <Star
-                        key={i}
-                        className={`w-4 h-4 ${
-                          i < Math.floor(dish.rating) 
-                            ? 'text-amber-400 fill-amber-400' 
-                            : 'text-gray-300'
-                        }`}
-                      />
-                    ))}
-                  </div>
-                  <span className="ml-2 text-sm text-gray-600 font-medium">
-                    {dish.rating.toFixed(1)}
-                  </span>
+                
+                {/* Badges */}
+                <div className="flex items-center gap-2 flex-wrap mb-3">
+                  {dish.spiceLevel && (
+                    <Badge variant="outline" className="border-slate-200 text-slate-600 bg-slate-50">
+                      <Flame className="w-3 h-3 mr-1" />
+                      {spiceInfo.text}
+                    </Badge>
+                  )}
+                  {dish.cookingMethod && (
+                    <Badge variant="outline" className="border-slate-200 text-slate-600 bg-slate-50">
+                      <ChefHat className="w-3 h-3 mr-1" />
+                      {dish.cookingMethod}
+                    </Badge>
+                  )}
                 </div>
               </div>
-              <span className="text-3xl font-bold text-amber-600 font-playfair">
-                ₹{finalPrice}
-              </span>
+              
+              <div className="text-right ml-4">
+                <span className="text-2xl font-bold text-slate-900">
+                  ₹{finalPrice}
+                </span>
+              </div>
             </div>
 
-            {/* Spice Level and Cooking Method */}
-            <div className="flex items-center gap-3 flex-wrap">
-              {dish.spiceLevel && (
-                <Badge variant="outline" className="border-amber-200 text-amber-700 bg-amber-50">
-                  <Flame className="w-3 h-3 mr-1" />
-                  {spiceInfo.text}
-                  <span className="ml-1">
-                    {'🔥'.repeat(spiceInfo.flames)}
-                  </span>
-                </Badge>
-              )}
-              {dish.cookingMethod && (
-                <Badge variant="outline" className="border-orange-200 text-orange-700 bg-orange-50">
-                  <ChefHat className="w-3 h-3 mr-1" />
-                  {dish.cookingMethod}
-                </Badge>
-              )}
-            </div>
-
-            <p className="text-gray-700 leading-relaxed">
+            <p className="text-slate-600 leading-relaxed">
               {dish.detailedDescription || dish.description}
             </p>
 
-            {/* Chef's Notes - Always shown */}
+            {/* Chef's Notes */}
             {dish.chefNotes && (
-              <div className="chef-signature p-4 rounded-xl">
+              <div className="bg-blue-50 border-l-4 border-blue-200 p-4 rounded-r-lg">
                 <div className="flex items-center mb-2">
-                  <ChefHat className="w-4 h-4 text-amber-600 mr-2" />
-                  <p className="text-sm font-semibold text-amber-800">Chef's Signature Note</p>
+                  <ChefHat className="w-4 h-4 text-blue-600 mr-2" />
+                  <p className="text-sm font-medium text-blue-900">Chef's Note</p>
                 </div>
-                <p className="text-sm text-amber-700 italic leading-relaxed">{dish.chefNotes}</p>
+                <p className="text-sm text-blue-800 leading-relaxed">{dish.chefNotes}</p>
               </div>
             )}
 
             {/* Fish availability note */}
             {isFishDish && (
-              <div className="bg-blue-50 border border-blue-200 p-4 rounded-xl">
+              <div className="bg-slate-50 border border-slate-200 p-4 rounded-lg">
                 <div className="flex items-center mb-2">
-                  <Info className="w-4 h-4 text-blue-600 mr-2" />
-                  <p className="text-sm font-semibold text-blue-800">Fresh Catch Notice</p>
+                  <Info className="w-4 h-4 text-slate-600 mr-2" />
+                  <p className="text-sm font-medium text-slate-700">Availability Notice</p>
                 </div>
-                <p className="text-sm text-blue-700">
-                  Our fish dishes are prepared with the day's freshest catch. Availability and pricing depend on market conditions and seasonal availability.
+                <p className="text-sm text-slate-600">
+                  Fresh catch prepared daily. Availability and pricing depend on market conditions.
                 </p>
               </div>
             )}
 
-            {/* Serving Size Tabs */}
+            {/* Serving Options */}
             {currentServings && currentServings.length > 1 && (
               <Tabs value={selectedServing} onValueChange={setSelectedServing} className="w-full">
-                <TabsList className="grid w-full grid-cols-2 h-auto p-1 bg-amber-50 border border-amber-200">
+                <TabsList className="grid w-full grid-cols-2 h-auto p-1 bg-slate-50">
                   {currentServings.map((serving) => (
                     <TabsTrigger 
                       key={serving.id} 
                       value={serving.id}
-                      className="py-3 text-sm data-[state=active]:bg-amber-500 data-[state=active]:text-white font-medium rounded-lg"
+                      className="py-3 text-sm data-[state=active]:bg-white data-[state=active]:shadow-sm"
                     >
                       {serving.serving_name}
                     </TabsTrigger>
@@ -209,7 +171,7 @@ export const DishCard = ({ dish }: DishCardProps) => {
                 
                 {currentServings.map((serving) => (
                   <TabsContent key={serving.id} value={serving.id} className="mt-3">
-                    <div className="text-sm text-gray-600 text-center bg-gray-50 p-3 rounded-lg">
+                    <div className="text-sm text-slate-600 text-center bg-slate-50 p-3 rounded-lg">
                       {serving.serving_description}
                     </div>
                   </TabsContent>
@@ -217,24 +179,19 @@ export const DishCard = ({ dish }: DishCardProps) => {
               </Tabs>
             )}
 
-            {/* Contact Us Button */}
+            {/* Order Button */}
             <Button
-              onClick={handleContactUs}
+              onClick={() => setIsContactOpen(true)}
               disabled={!currentServing}
-              className="w-full restaurant-button py-4 rounded-xl transition-all duration-300 transform hover:scale-105 font-medium text-lg"
+              className="w-full professional-button py-3"
             >
-              <MessageCircle className="w-5 h-5 mr-3" />
-              Reserve Your Experience
+              <MessageCircle className="w-4 h-4 mr-2" />
+              Reserve This Dish
             </Button>
 
-            {/* Pre-order Info */}
-            <div className="text-sm text-center text-gray-600 bg-gradient-to-r from-amber-50 to-orange-50 p-4 rounded-xl border border-amber-100">
-              <div className="flex items-center justify-center mb-1">
-                <Star className="w-4 h-4 text-amber-500 mr-1" />
-                <span className="font-medium">Exclusive Dining Experience</span>
-                <Star className="w-4 h-4 text-amber-500 ml-1" />
-              </div>
-              <p>50% advance reservation • Balance on delivery • Limited daily preparations</p>
+            {/* Reservation Info */}
+            <div className="text-xs text-center text-slate-500 bg-slate-50 p-3 rounded-lg">
+              50% advance • Balance on delivery • Limited daily preparation
             </div>
           </div>
         </CardContent>

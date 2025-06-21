@@ -5,7 +5,7 @@ import { Footer } from "@/components/Footer";
 
 const Index = () => {
   return (
-    <div className="min-h-screen michelin-gradient">
+    <div className="min-h-screen professional-gradient">
       <Navigation />
       
       <main>
