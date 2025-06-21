@@ -1,116 +1,125 @@
 
-import { Heart, Phone, Mail, Instagram, Facebook, Twitter, ChefHat } from "lucide-react";
+import { Heart, Phone, Mail, MapPin, Instagram, Facebook, Twitter } from "lucide-react";
 import { Link } from "react-router-dom";
 
 export const Footer = () => {
   return (
-    <footer className="relative">
-      {/* Gradient transition from content to footer */}
-      <div className="h-32 bg-gradient-to-b from-transparent via-slate-50/50 to-slate-100"></div>
+    <footer className="relative bg-gradient-to-br from-gray-100 via-gray-200 to-gray-300 text-gray-800 overflow-hidden">
+      {/* Decorative background elements */}
+      <div className="absolute inset-0 opacity-5">
+        <div className="absolute top-5 left-10 w-20 h-20 bg-orange-400 rounded-full blur-2xl"></div>
+        <div className="absolute bottom-10 right-20 w-24 h-24 bg-red-400 rounded-full blur-2xl"></div>
+      </div>
       
-      {/* Main footer */}
-      <div className="bg-gradient-to-br from-slate-100 via-slate-50 to-blue-50/30">
-        <div className="container mx-auto px-6 lg:px-8 py-16">
-          {/* Main Footer Content */}
-          <div className="grid lg:grid-cols-4 md:grid-cols-2 gap-8 mb-12">
-            {/* Brand Section */}
-            <div className="lg:col-span-2 space-y-6">
-              <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
-                  <ChefHat className="w-5 h-5 text-white" />
-                </div>
-                <span className="text-2xl font-bold text-slate-900">Healthy Kitchen</span>
+      <div className="relative z-10 container mx-auto px-6 py-12">
+        {/* Main Footer Content */}
+        <div className="grid lg:grid-cols-4 md:grid-cols-2 gap-8 mb-8">
+          {/* Brand Section */}
+          <div className="lg:col-span-1 space-y-4">
+            <div className="flex items-center space-x-3">
+              <div className="w-10 h-10 bg-gradient-to-r from-orange-400 to-red-500 rounded-full flex items-center justify-center shadow-lg">
+                <span className="text-white font-bold text-lg font-playfair">HK</span>
               </div>
-              <p className="text-slate-600 text-base leading-relaxed max-w-md">
-                Fresh, healthy, and delicious dishes crafted with passion. 
-                Experience the perfect blend of nutrition and flavor in every bite.
-              </p>
-              
-              {/* Contact Info */}
-              <div className="space-y-3">
-                <div className="flex items-center space-x-3 text-slate-700">
-                  <div className="w-8 h-8 bg-indigo-100 rounded-lg flex items-center justify-center">
-                    <Phone className="w-4 h-4 text-indigo-600" />
-                  </div>
-                  <span className="text-sm font-medium">+91 98765 43210</span>
-                </div>
-                <div className="flex items-center space-x-3 text-slate-700">
-                  <div className="w-8 h-8 bg-indigo-100 rounded-lg flex items-center justify-center">
-                    <Mail className="w-4 h-4 text-indigo-600" />
-                  </div>
-                  <span className="text-sm font-medium">hello@healthykitchen.com</span>
-                </div>
+              <div>
+                <h3 className="text-xl font-bold bg-gradient-to-r from-orange-500 to-red-600 bg-clip-text text-transparent font-playfair">
+                  Healthy Kitchen
+                </h3>
+                <p className="text-gray-600 text-xs font-lora">Delicious & Nutritious</p>
               </div>
             </div>
-
-            {/* Quick Links */}
-            <div className="space-y-6">
-              <h4 className="text-lg font-semibold text-slate-900">Quick Links</h4>
-              <div className="space-y-3">
-                {[
-                  { path: "/", label: "Home" },
-                  { path: "/menu", label: "Menu" },
-                  { path: "/recipes", label: "Recipes" },
-                  { path: "/about", label: "About" },
-                  { path: "/contact", label: "Contact" },
-                ].map((link) => (
-                  <Link 
-                    key={link.path}
-                    to={link.path}
-                    className="block text-slate-600 hover:text-indigo-600 transition-colors text-sm font-medium hover:translate-x-1 transform duration-200"
-                  >
-                    {link.label}
-                  </Link>
-                ))}
-              </div>
-            </div>
-
-            {/* Social & Newsletter */}
-            <div className="space-y-6">
-              <h4 className="text-lg font-semibold text-slate-900">Stay Connected</h4>
-              
-              {/* Social Links */}
-              <div className="flex space-x-3">
-                <a href="#" className="w-10 h-10 bg-white hover:bg-indigo-600 rounded-xl flex items-center justify-center transition-all duration-300 shadow-md hover:shadow-lg group border border-slate-200">
-                  <Instagram className="w-4 h-4 text-slate-600 group-hover:text-white" />
-                </a>
-                <a href="#" className="w-10 h-10 bg-white hover:bg-indigo-600 rounded-xl flex items-center justify-center transition-all duration-300 shadow-md hover:shadow-lg group border border-slate-200">
-                  <Facebook className="w-4 h-4 text-slate-600 group-hover:text-white" />
-                </a>
-                <a href="#" className="w-10 h-10 bg-white hover:bg-indigo-600 rounded-xl flex items-center justify-center transition-all duration-300 shadow-md hover:shadow-lg group border border-slate-200">
-                  <Twitter className="w-4 h-4 text-slate-600 group-hover:text-white" />
-                </a>
-              </div>
-
-              {/* Newsletter */}
-              <div className="space-y-4">
-                <p className="text-sm text-slate-600 font-medium">Get weekly recipes & updates</p>
-                <div className="space-y-3">
-                  <input 
-                    type="email" 
-                    placeholder="Enter your email" 
-                    className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-900 placeholder-slate-400 text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all shadow-sm"
-                  />
-                  <button className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
-                    Subscribe Now
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Bottom Bar */}
-          <div className="border-t border-slate-200 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="text-slate-500 flex items-center space-x-2 text-sm">
-              <span>© 2024 Healthy Kitchen. Made with</span>
-              <Heart className="w-4 h-4 text-red-500 fill-current" />
-              <span>in India</span>
+            <p className="text-gray-700 text-sm leading-relaxed font-lora">
+              Serving fresh, healthy, and delicious dishes with love.
             </p>
-            <div className="flex space-x-6 text-slate-500 text-sm">
-              <a href="#" className="hover:text-indigo-600 transition-colors font-medium">Privacy Policy</a>
-              <a href="#" className="hover:text-indigo-600 transition-colors font-medium">Terms of Service</a>
+          </div>
+
+          {/* Quick Links */}
+          <div className="space-y-4">
+            <h4 className="text-lg font-semibold text-gray-800 relative font-playfair">
+              Quick Links
+              <div className="absolute bottom-0 left-0 w-8 h-0.5 bg-gradient-to-r from-orange-400 to-red-500"></div>
+            </h4>
+            <div className="space-y-2">
+              {[
+                { path: "/", label: "Home" },
+                { path: "/menu", label: "Menu" },
+                { path: "/recipes", label: "Recipes" }
+              ].map((link) => (
+                <Link 
+                  key={link.path}
+                  to={link.path}
+                  className="block text-gray-600 hover:text-orange-500 transition-colors duration-300 font-lora text-sm"
+                >
+                  {link.label}
+                </Link>
+              ))}
             </div>
           </div>
+
+          {/* About & Contact Links */}
+          <div className="space-y-4">
+            <h4 className="text-lg font-semibold text-gray-800 relative font-playfair">
+              More Info
+              <div className="absolute bottom-0 left-0 w-8 h-0.5 bg-gradient-to-r from-orange-400 to-red-500"></div>
+            </h4>
+            <div className="space-y-2">
+              <Link 
+                to="/about"
+                className="block text-gray-600 hover:text-orange-500 transition-colors duration-300 font-lora text-sm"
+              >
+                About Us
+              </Link>
+              <Link 
+                to="/contact"
+                className="block text-gray-600 hover:text-orange-500 transition-colors duration-300 font-lora text-sm"
+              >
+                Contact
+              </Link>
+            </div>
+          </div>
+
+          {/* Contact Info */}
+          <div className="space-y-4">
+            <h4 className="text-lg font-semibold text-gray-800 relative font-playfair">
+              Get In Touch
+              <div className="absolute bottom-0 left-0 w-8 h-0.5 bg-gradient-to-r from-orange-400 to-red-500"></div>
+            </h4>
+            <div className="space-y-3">
+              <div className="flex items-center space-x-2 text-gray-600 text-sm">
+                <div className="w-6 h-6 bg-orange-200 rounded-lg flex items-center justify-center">
+                  <Phone className="w-3 h-3 text-orange-600" />
+                </div>
+                <span className="font-lora">+91 98765 43210</span>
+              </div>
+              <div className="flex items-center space-x-2 text-gray-600 text-sm">
+                <div className="w-6 h-6 bg-orange-200 rounded-lg flex items-center justify-center">
+                  <Mail className="w-3 h-3 text-orange-600" />
+                </div>
+                <span className="font-lora">hello@healthykitchen.com</span>
+              </div>
+            </div>
+            
+            {/* Social Media Links */}
+            <div className="flex space-x-3">
+              <a href="#" className="w-8 h-8 bg-gray-300/50 rounded-full flex items-center justify-center hover:bg-orange-400 hover:text-white transition-all duration-300">
+                <Instagram className="w-4 h-4" />
+              </a>
+              <a href="#" className="w-8 h-8 bg-gray-300/50 rounded-full flex items-center justify-center hover:bg-blue-500 hover:text-white transition-all duration-300">
+                <Facebook className="w-4 h-4" />
+              </a>
+              <a href="#" className="w-8 h-8 bg-gray-300/50 rounded-full flex items-center justify-center hover:bg-blue-400 hover:text-white transition-all duration-300">
+                <Twitter className="w-4 h-4" />
+              </a>
+            </div>
+          </div>
+        </div>
+
+        {/* Bottom Bar */}
+        <div className="border-t border-gray-400 pt-6 text-center">
+          <p className="text-gray-600 flex items-center justify-center space-x-2 text-sm font-lora">
+            <span>Made with</span>
+            <Heart className="w-4 h-4 text-red-500 fill-current animate-pulse" />
+            <span>by Healthy Kitchen © 2024. All rights reserved.</span>
+          </p>
         </div>
       </div>
     </footer>

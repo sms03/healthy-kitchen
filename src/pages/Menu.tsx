@@ -1,8 +1,9 @@
+
 import { useState } from "react";
 import { DishCard } from "@/components/DishCard";
 import { useCategories } from "@/hooks/useCategories";
 import { useRecipes } from "@/hooks/useRecipes";
-import { Loader2, ChefHat } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { Navigation } from "@/components/Navigation";
 import { Footer } from "@/components/Footer";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
@@ -15,11 +16,11 @@ const Menu = () => {
 
   if (categoriesLoading || recipesLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-white via-slate-50 to-blue-50/30">
+      <div className="min-h-screen bg-gradient-to-br from-orange-50 via-red-50 to-pink-50">
         <Navigation />
-        <div className="container mx-auto px-6 lg:px-8 pt-32">
+        <div className="container mx-auto px-4 pt-32">
           <div className="flex items-center justify-center min-h-[400px]">
-            <Loader2 className="w-8 h-8 animate-spin text-slate-600" />
+            <Loader2 className="w-8 h-8 animate-spin text-orange-600" />
           </div>
         </div>
         <Footer />
@@ -27,17 +28,7 @@ const Menu = () => {
     );
   }
 
-  const dishChefNotes = {
-    'Egg Bhurji': 'Our signature scrambled eggs, delicately spiced with hand-ground masalas and finished with fresh herbs from our garden.',
-    'Egg Masala': 'Farm-fresh eggs simmered in our aromatic tomato-onion gravy, a perfect harmony of spices that has been our family recipe for generations.',
-    'Chicken Masala': 'Tender chicken pieces slow-cooked in our signature blend of roasted spices, creating layers of flavor that dance on your palate.',
-    'Chicken Handi': 'Traditional clay pot cooking method that infuses the chicken with smoky flavors and keeps it incredibly tender. A true culinary masterpiece.',
-    'Mutton Masala': 'Premium mutton cuts braised to perfection in our special masala blend, a dish that represents the pinnacle of Indian non-vegetarian cuisine.',
-    'Mutton Handi': 'Slow-cooked in traditional clay pots, this mutton preparation is our chef\'s pride - succulent, aromatic, and deeply satisfying.',
-    'Fish Curry': 'Fresh catch of the day prepared in our traditional coastal-style curry, with coconut and spices that transport you to seaside kitchens.',
-    'Fish Fry': 'Expertly marinated fresh fish, pan-fried to golden perfection with our secret spice coating that creates the perfect crispy exterior.'
-  };
-
+  // Define the specific dishes we want to show including fish dishes
   const targetDishes = [
     'Egg Bhurji', 'Egg Masala', 
     'Chicken Masala', 'Chicken Handi', 
@@ -45,23 +36,24 @@ const Menu = () => {
     'Fish Curry', 'Fish Fry'
   ];
 
+  // Add static fish dishes if they don't exist in database
   const staticFishDishes = [
     {
       id: 'fish-curry-static',
       name: 'Fish Curry',
-      description: 'Fresh catch prepared in traditional coastal spices',
-      detailed_description: 'Our daily selection of the finest fish, gently simmered in a rich coconut-based curry with aromatic spices. Each preparation celebrates the natural flavors of the sea.',
+      description: 'Traditional fish curry with aromatic spices',
+      detailed_description: 'Fresh fish cooked in rich coconut-based curry with traditional spices. Choice of fish type affects pricing.',
       price: 280,
       category_id: null,
       image_url: null,
-      ingredients: ['Fresh Fish', 'Coconut Milk', 'Traditional Spices', 'Curry Leaves', 'Tomatoes'],
+      ingredients: ['Fish', 'Coconut', 'Spices', 'Onions', 'Tomatoes'],
       preparation_time: 30,
       is_available: true,
-      is_featured: true,
+      is_featured: false,
       image_gallery: [],
       spice_level: 2,
-      cooking_method: 'Traditional Simmering',
-      chef_notes: dishChefNotes['Fish Curry'],
+      cooking_method: null,
+      chef_notes: 'Best served with steamed rice. Fish selection depends on daily availability.',
       nutritional_info: {},
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString()
@@ -69,27 +61,29 @@ const Menu = () => {
     {
       id: 'fish-fry-static',
       name: 'Fish Fry',
-      description: 'Perfectly seasoned and pan-fried to golden perfection',
-      detailed_description: 'Premium fish selection, marinated in our signature spice blend and pan-fried to achieve the perfect balance of crispy exterior and tender, flaky interior.',
+      description: 'Crispy fried fish with spice coating',
+      detailed_description: 'Fresh fish marinated in spices and shallow fried to perfection. Crispy outside, tender inside.',
       price: 320,
       category_id: null,
       image_url: null,
-      ingredients: ['Fresh Fish', 'Signature Spices', 'Premium Oil', 'Fresh Lemon', 'Herbs'],
+      ingredients: ['Fish', 'Spices', 'Oil', 'Lemon', 'Onions'],
       preparation_time: 25,
       is_available: true,
-      is_featured: true,
+      is_featured: false,
       image_gallery: [],
       spice_level: 2,
-      cooking_method: 'Pan-Seared',
-      chef_notes: dishChefNotes['Fish Fry'],
+      cooking_method: null,
+      chef_notes: 'Served with lemon wedges and onions. Fish type selection available.',
       nutritional_info: {},
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString()
     }
   ];
 
+  // Combine database recipes with static fish dishes
   const allRecipes = [...(recipes || [])];
   
+  // Add static fish dishes if not found in database
   staticFishDishes.forEach(staticDish => {
     const exists = recipes?.some(recipe => 
       recipe.name.toLowerCase() === staticDish.name.toLowerCase()
@@ -99,44 +93,50 @@ const Menu = () => {
     }
   });
 
+  // Filter to show the specific dishes plus any fish dishes
   const filteredRecipes = allRecipes.filter(recipe => 
     (targetDishes.includes(recipe.name) || recipe.name.toLowerCase().includes('fish')) &&
     (activeCategory === "all" || recipe.category_id === activeCategory)
   );
 
+  // Create categories with emojis for display
   const categoryOptions = [
-    { id: "all", name: "All Dishes" },
+    { id: "all", name: "All Items", emoji: "🍽️" },
     ...(categories?.map(cat => ({
       id: cat.id,
       name: cat.name,
+      emoji: cat.name === "Egg Dishes" ? "🥚" : 
+             cat.name === "Chicken Dishes" ? "🍗" : 
+             cat.name === "Mutton Dishes" ? "🍖" :
+             cat.name === "Fish Dishes" ? "🐟" : "🍽️"
     })) || [])
   ];
 
+  // Convert recipe to dish format for compatibility with existing DishCard
   const convertRecipeToDish = (recipe: any) => {
+    // Create a hash from the UUID string to get a consistent numeric ID
     const stringToHash = (str: string) => {
       let hash = 0;
       for (let i = 0; i < str.length; i++) {
         const char = str.charCodeAt(i);
         hash = ((hash << 5) - hash) + char;
-        hash = hash & hash;
+        hash = hash & hash; // Convert to 32-bit integer
       }
       return Math.abs(hash);
     };
 
     const numericId = stringToHash(recipe.id);
     
+    // Adjust spice level for Chicken/Mutton Handi to medium (2)
     let adjustedSpiceLevel = recipe.spice_level;
     if (recipe.name?.includes("Chicken Handi") || recipe.name?.includes("Mutton Handi")) {
       adjustedSpiceLevel = 2;
     }
-
-    const chefNotes = recipe.chef_notes || dishChefNotes[recipe.name] || 
-      "Prepared with passion using traditional techniques and the finest ingredients, this dish represents our commitment to culinary excellence.";
     
     return {
       id: numericId,
-      originalId: recipe.id,
-      name: recipe.name || "Signature Dish",
+      originalId: recipe.id, // Keep original UUID for database operations
+      name: recipe.name || "Unknown Item",
       description: recipe.description || "",
       detailedDescription: recipe.detailed_description,
       price: typeof recipe.price === 'string' ? parseFloat(recipe.price) : (recipe.price || 0),
@@ -148,73 +148,62 @@ const Menu = () => {
              recipe.name?.includes("Mutton Handi") ? "🥩" :
              recipe.name?.includes("Fish") ? "🐟" : "🍽️",
       imageGallery: recipe.image_gallery || [],
+      rating: 4.5 + Math.random() * 0.4,
       spiceLevel: adjustedSpiceLevel,
-      cookingMethod: recipe.cooking_method,
-      chefNotes: chefNotes,
+      cookingMethod: recipe.name?.includes("Fish") ? null : recipe.cooking_method,
+      chefNotes: recipe.chef_notes,
       nutritionalInfo: recipe.nutritional_info
     };
-  };  return (
-    <div className="min-h-screen bg-gradient-to-br from-white via-slate-50 to-blue-50/30">
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-red-50 to-pink-50">
       <Navigation />
-        <main className="pt-32 pb-16">        {/* Hero Section */}
-        <section className="relative overflow-hidden">
-          <div className="relative container mx-auto px-6 lg:px-8 py-10">
-            <div className="text-center max-w-3xl mx-auto">
-              <div className="inline-flex items-center space-x-2 bg-white/60 backdrop-blur-sm px-4 py-2 rounded-full shadow-sm border border-white/30 mb-6">
-                <ChefHat className="w-4 h-4 text-indigo-600" />
-                <span className="text-sm font-medium text-slate-700">Signature Collection</span>
-              </div>
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-slate-900 mb-6 tracking-tight">
-                Our 
-                <span className="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent"> Menu</span>
+      
+      <main className="pt-32 pb-16">
+        <section className="py-20 bg-gradient-to-br from-gray-50 to-orange-50">
+          <div className="container mx-auto px-4">
+            <div className="text-center mb-12">
+              <h1 className="text-4xl font-bold text-gray-800 mb-4">
+                Our <span className="text-gradient bg-gradient-to-r from-orange-500 to-red-600 bg-clip-text text-transparent">Signature</span> Menu
               </h1>
-              <p className="text-lg md:text-xl text-slate-600 leading-relaxed max-w-2xl mx-auto">
-                Each dish is a masterpiece, crafted with passion and precision using time-honored techniques and the finest ingredients.
+              <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+                Carefully crafted dishes with authentic flavors, made fresh daily for your enjoyment
               </p>
             </div>
-          </div>
-        </section>
 
-        {/* Menu Section */}
-        <section className="py-12">
-          <div className="container mx-auto px-6 lg:px-8">
-            {/* Category Filter */}
-            <Tabs value={activeCategory} onValueChange={setActiveCategory} className="w-full mb-8">
-              <div className="flex justify-center mb-6">
-                <TabsList className="grid grid-cols-2 lg:grid-cols-4 h-auto p-2 bg-white/70 backdrop-blur-md border border-white/20 shadow-lg rounded-xl">
-                  {categoryOptions.map((category) => (
-                    <TabsTrigger
-                      key={category.id}
-                      value={category.id}
-                      className="py-3 px-5 text-sm font-medium data-[state=active]:bg-gradient-to-r data-[state=active]:from-indigo-600 data-[state=active]:to-purple-600 data-[state=active]:text-white data-[state=active]:shadow-lg rounded-lg transition-all duration-300"
-                    >
-                      {category.name}
-                    </TabsTrigger>
-                  ))}
-                </TabsList>
-              </div>
+            {/* Category Filter using Tabs */}
+            <Tabs value={activeCategory} onValueChange={setActiveCategory} className="w-full mb-12">
+              <TabsList className="grid w-full grid-cols-2 lg:grid-cols-4 h-auto p-2 bg-white/80 backdrop-blur-sm border border-orange-100 rounded-2xl">
+                {categoryOptions.map((category) => (
+                  <TabsTrigger
+                    key={category.id}
+                    value={category.id}
+                    className="px-6 py-3 rounded-xl text-base font-medium transition-all duration-300 data-[state=active]:bg-gradient-to-r data-[state=active]:from-orange-500 data-[state=active]:to-red-600 data-[state=active]:text-white data-[state=active]:shadow-lg hover:bg-orange-50 text-gray-700"
+                  >
+                    <span className="mr-2">{category.emoji}</span>
+                    {category.name}
+                  </TabsTrigger>
+                ))}
+              </TabsList>
 
-              <TabsContent value={activeCategory} className="mt-6">
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {/* Menu Grid */}
+              <TabsContent value={activeCategory} className="mt-8">
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                   {filteredRecipes.map((recipe) => {
                     const dish = convertRecipeToDish(recipe);
                     return (
-                      <div key={`recipe-${recipe.id}`} className="transform hover:scale-105 transition-all duration-300">
-                        <DishCard dish={dish} />
-                      </div>
+                      <DishCard 
+                        key={`recipe-${recipe.id}`}
+                        dish={dish}
+                      />
                     );
                   })}
                 </div>
 
                 {filteredRecipes.length === 0 && (
-                  <div className="text-center py-16">
-                    <div className="modern-card p-12 max-w-md mx-auto">
-                      <ChefHat className="w-16 h-16 text-slate-400 mx-auto mb-4" />
-                      <h3 className="text-xl font-bold text-slate-900 mb-3">No dishes found</h3>
-                      <p className="text-slate-600 leading-relaxed">
-                        No dishes found in this category. Please try another category to explore our delicious offerings.
-                      </p>
-                    </div>
+                  <div className="text-center py-12">
+                    <p className="text-gray-500 text-lg">No items found in this category.</p>
                   </div>
                 )}
               </TabsContent>
