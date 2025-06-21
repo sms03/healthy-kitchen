@@ -15,9 +15,9 @@ const Menu = () => {
 
   if (categoriesLoading || recipesLoading) {
     return (
-      <div className="min-h-screen professional-gradient">
+      <div className="min-h-screen bg-gradient-to-br from-white via-slate-50 to-blue-50/30">
         <Navigation />
-        <div className="container mx-auto px-6 lg:px-8 pt-24">
+        <div className="container mx-auto px-6 lg:px-8 pt-32">
           <div className="flex items-center justify-center min-h-[400px]">
             <Loader2 className="w-8 h-8 animate-spin text-slate-600" />
           </div>
@@ -153,58 +153,68 @@ const Menu = () => {
       chefNotes: chefNotes,
       nutritionalInfo: recipe.nutritional_info
     };
-  };
-
-  return (
-    <div className="min-h-screen professional-gradient">
+  };  return (
+    <div className="min-h-screen bg-gradient-to-br from-white via-slate-50 to-blue-50/30">
       <Navigation />
-      
-      <main className="pt-24 pb-16">
-        <section className="section-spacing">
-          <div className="container mx-auto container-padding">
-            {/* Header */}
-            <div className="text-center mb-16 max-w-3xl mx-auto">
-              <div className="flex items-center justify-center mb-6">
-                <ChefHat className="w-8 h-8 text-slate-600" />
+        <main className="pt-32 pb-16">
+        {/* Hero Section */}
+        <section className="relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50"></div>
+          <div className="relative container mx-auto px-6 lg:px-8 py-10">
+            <div className="text-center max-w-3xl mx-auto">              <div className="inline-flex items-center space-x-2 bg-white/80 backdrop-blur-sm px-4 py-2 rounded-full shadow-sm border border-white/20 mb-6">
+                <ChefHat className="w-4 h-4 text-indigo-600" />
+                <span className="text-sm font-medium text-slate-700">Signature Collection</span>
               </div>
-              <h1 className="text-4xl lg:text-5xl font-bold text-slate-900 mb-6 tracking-tight text-balance">
-                Our Menu
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-slate-900 mb-6 tracking-tight">
+                Our 
+                <span className="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent"> Menu</span>
               </h1>
-              <p className="text-xl text-slate-600 leading-relaxed">
-                Each dish is crafted with passion and precision using time-honored techniques and the finest ingredients.
+              <p className="text-lg md:text-xl text-slate-600 leading-relaxed max-w-2xl mx-auto">
+                Each dish is a masterpiece, crafted with passion and precision using time-honored techniques and the finest ingredients.
               </p>
             </div>
+          </div>
+        </section>
 
+        {/* Menu Section */}
+        <section className="py-12">
+          <div className="container mx-auto px-6 lg:px-8">
             {/* Category Filter */}
-            <Tabs value={activeCategory} onValueChange={setActiveCategory} className="w-full mb-16">
-              <TabsList className="grid w-full max-w-2xl mx-auto grid-cols-2 lg:grid-cols-4 h-auto p-2 bg-white border border-slate-200">
-                {categoryOptions.map((category) => (
-                  <TabsTrigger
-                    key={category.id}
-                    value={category.id}
-                    className="py-3 px-4 text-sm font-medium data-[state=active]:bg-slate-900 data-[state=active]:text-white rounded-md"
-                  >
-                    {category.name}
-                  </TabsTrigger>
-                ))}
-              </TabsList>
+            <Tabs value={activeCategory} onValueChange={setActiveCategory} className="w-full mb-8">
+              <div className="flex justify-center mb-6">
+                <TabsList className="grid grid-cols-2 lg:grid-cols-4 h-auto p-2 bg-white/70 backdrop-blur-md border border-white/20 shadow-lg rounded-xl">
+                  {categoryOptions.map((category) => (
+                    <TabsTrigger
+                      key={category.id}
+                      value={category.id}
+                      className="py-3 px-5 text-sm font-medium data-[state=active]:bg-gradient-to-r data-[state=active]:from-indigo-600 data-[state=active]:to-purple-600 data-[state=active]:text-white data-[state=active]:shadow-lg rounded-lg transition-all duration-300"
+                    >
+                      {category.name}
+                    </TabsTrigger>
+                  ))}
+                </TabsList>
+              </div>
 
-              <TabsContent value={activeCategory} className="mt-12">
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+              <TabsContent value={activeCategory} className="mt-6">
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                   {filteredRecipes.map((recipe) => {
                     const dish = convertRecipeToDish(recipe);
                     return (
-                      <DishCard key={`recipe-${recipe.id}`} dish={dish} />
+                      <div key={`recipe-${recipe.id}`} className="transform hover:scale-105 transition-all duration-300">
+                        <DishCard dish={dish} />
+                      </div>
                     );
                   })}
                 </div>
 
                 {filteredRecipes.length === 0 && (
                   <div className="text-center py-16">
-                    <div className="minimal-card p-12 max-w-md mx-auto">
+                    <div className="modern-card p-12 max-w-md mx-auto">
                       <ChefHat className="w-16 h-16 text-slate-400 mx-auto mb-4" />
-                      <p className="text-slate-600 text-lg">No dishes found in this category.</p>
-                      <p className="text-sm text-slate-500 mt-2">Please try another category.</p>
+                      <h3 className="text-xl font-bold text-slate-900 mb-3">No dishes found</h3>
+                      <p className="text-slate-600 leading-relaxed">
+                        No dishes found in this category. Please try another category to explore our delicious offerings.
+                      </p>
                     </div>
                   </div>
                 )}
