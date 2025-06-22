@@ -11,8 +11,7 @@ export const Navigation = () => {
   const { user, loading, signingOut } = useAuth();  const navItems = [
     { path: "/", label: "Home" },
     { path: "/menu", label: "Menu" },
-    { path: "/recipes", label: "Recipes" },
-    { path: "/contact", label: "Contact" },
+    { path: "/recipes", label: "Recipes" }
   ];
   useEffect(() => {
     const handleScroll = () => {
