@@ -8,22 +8,24 @@ export const Navigation = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const location = useLocation();
-  const { user, loading, signingOut } = useAuth();
-  const navItems = [
+  const { user, loading, signingOut } = useAuth();  const navItems = [
     { path: "/", label: "Home" },
     { path: "/menu", label: "Menu" },
     { path: "/recipes", label: "Recipes" },
+    { path: "/contact", label: "Contact" },
   ];
-
   useEffect(() => {
     const handleScroll = () => {
       const scrollTop = window.scrollY;
       setIsScrolled(scrollTop > 50);
     };
 
+    // Close mobile menu when location changes
+    setIsMobileMenuOpen(false);
+
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [location.pathname]);
 
   return (
     <nav className={`fixed top-0 left-1/2 transform -translate-x-1/2 z-50 font-roboto transition-all duration-300 ${
