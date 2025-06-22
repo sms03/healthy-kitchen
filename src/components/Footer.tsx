@@ -22,7 +22,8 @@ export const Footer = () => {
               <div>
                 <h3 className="text-xl font-bold bg-gradient-to-r from-orange-500 to-red-600 bg-clip-text text-transparent font-roboto">
                   Healthy Kitchen
-                </h3>                <p className="text-gray-600 text-xs font-roboto">Delicious & Nutritious</p>
+                </h3>
+                <p className="text-gray-600 text-xs font-roboto">Delicious & Nutritious</p>
               </div>
             </div>
             <p className="text-gray-600 text-sm leading-relaxed font-roboto">
@@ -89,7 +90,7 @@ export const Footer = () => {
                 <div className="w-6 h-6 bg-orange-200 rounded-lg flex items-center justify-center">
                   <Mail className="w-3 h-3 text-orange-600" />
                 </div>
-                <span className="font-roboto">hello@healthykitchen.com</span>
+                <span className="font-roboto">sharvari@healthykitchen.com</span>
               </div>
             </div>
               {/* Social Media Links */}
