@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -23,9 +22,7 @@ interface DishCardProps {
     spiceLevel?: number;
     cookingMethod?: string;
     chefNotes?: string;
-    nutritionalInfo?: any;
-  };
-  onAddToCart?: (dish: any) => void; // Keep for compatibility but won't use
+    nutritionalInfo?: any;  };
 }
 
 export const DishCard = ({ dish }: DishCardProps) => {

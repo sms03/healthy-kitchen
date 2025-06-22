@@ -35,7 +35,7 @@
 ## ✨ Features
 
 - 🥗 **Recipe Discovery** - Browse curated healthy recipes
-- 🛒 **Shopping Cart** - Easy meal planning and ingredient management  
+- � **Pre-Order System** - Contact-based ordering for fresh meals
 - 👤 **Personal Recipes** - Create and save your own recipes
 - 🔍 **Smart Search** - Filter by ingredients, diet, and preferences
 - 📱 **Responsive Design** - Works on all devices
