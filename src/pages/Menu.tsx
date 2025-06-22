@@ -28,7 +28,7 @@ const Menu = () => {
     );
   }
 
-  // Define the specific dishes we want to show including fish dishes
+  // Define the specific dishes we want to show
   const targetDishes = [
     'Egg Bhurji', 'Egg Masala', 
     'Chicken Masala', 'Chicken Handi', 
@@ -36,82 +36,16 @@ const Menu = () => {
     'Fish Curry', 'Fish Fry'
   ];
 
-  // Add static fish dishes if they don't exist in database
-  const staticFishDishes = [
-    {
-      id: 'fish-curry-static',
-      name: 'Fish Curry',
-      description: 'Traditional fish curry with aromatic spices',
-      detailed_description: 'Fresh fish cooked in rich coconut-based curry with traditional spices. Choice of fish type affects pricing.',
-      price: 280,
-      category_id: null,
-      image_url: null,
-      ingredients: ['Fish', 'Coconut', 'Spices', 'Onions', 'Tomatoes'],
-      preparation_time: 30,
-      is_available: true,
-      is_featured: false,
-      image_gallery: [],
-      spice_level: 2,
-      cooking_method: null,
-      chef_notes: 'Best served with steamed rice. Fish selection depends on daily availability.',
-      nutritional_info: {},
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString()
-    },
-    {
-      id: 'fish-fry-static',
-      name: 'Fish Fry',
-      description: 'Crispy fried fish with spice coating',
-      detailed_description: 'Fresh fish marinated in spices and shallow fried to perfection. Crispy outside, tender inside.',
-      price: 320,
-      category_id: null,
-      image_url: null,
-      ingredients: ['Fish', 'Spices', 'Oil', 'Lemon', 'Onions'],
-      preparation_time: 25,
-      is_available: true,
-      is_featured: false,
-      image_gallery: [],
-      spice_level: 2,
-      cooking_method: null,
-      chef_notes: 'Served with lemon wedges and onions. Fish type selection available.',
-      nutritional_info: {},
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString()
-    }
-  ];
-
-  // Combine database recipes with static fish dishes
-  const allRecipes = [...(recipes || [])];
-    // Add static fish dishes if they don't exist in database
-  staticFishDishes.forEach(staticDish => {
-    const exists = recipes?.some(recipe => 
-      recipe.name.toLowerCase() === staticDish.name.toLowerCase()
-    );
-    if (!exists) {
-      allRecipes.push(staticDish);
-    }
-  });
-
-  // Create a special "fish" category ID for filtering
-  const FISH_CATEGORY_ID = 'fish-dishes';
-  
-  // Assign fish category to fish dishes
-  allRecipes.forEach(recipe => {
-    if (recipe.name.toLowerCase().includes('fish')) {
-      recipe.category_id = FISH_CATEGORY_ID;
-    }
-  });
-
-  // Filter to show the specific dishes plus any fish dishes
-  const filteredRecipes = allRecipes.filter(recipe => {
+  // Filter to show the specific dishes
+  const filteredRecipes = recipes?.filter(recipe => {
     if (activeCategory === "all") {
-      return targetDishes.includes(recipe.name) || recipe.name.toLowerCase().includes('fish');
-    } else if (activeCategory === FISH_CATEGORY_ID) {
-      return recipe.name.toLowerCase().includes('fish');
+      return targetDishes.includes(recipe.name);
     } else {
       return targetDishes.includes(recipe.name) && recipe.category_id === activeCategory;
     }
-  });  // Create categories with emojis for display
+  }) || [];
+
+  // Create categories with emojis for display
   const categoryOptions = [
     { id: "all", name: "All Items", emoji: "🍽️" },
     ...(categories?.map(cat => ({
@@ -121,8 +55,7 @@ const Menu = () => {
              cat.name === "Chicken Dishes" ? "🍗" : 
              cat.name === "Mutton Dishes" ? "🍖" :
              cat.name === "Fish Dishes" ? "🐟" : "🍽️"
-    })) || []),
-    { id: FISH_CATEGORY_ID, name: "Fish Dishes", emoji: "🐟" }
+    })) || [])
   ];
 
   // Convert recipe to dish format for compatibility with existing DishCard
@@ -183,7 +116,9 @@ const Menu = () => {
               <p className="text-xl text-gray-600 max-w-2xl mx-auto">
                 Carefully crafted dishes with authentic flavors, made fresh daily for your enjoyment
               </p>
-            </div>            {/* Category Filter using Tabs */}
+            </div>
+
+            {/* Category Filter using Tabs */}
             <Tabs value={activeCategory} onValueChange={setActiveCategory} className="w-full mb-12">
               <TabsList className="grid w-full grid-cols-2 md:grid-cols-3 lg:grid-cols-5 h-auto p-2 bg-white/80 backdrop-blur-sm border border-orange-100 rounded-2xl">
                 {categoryOptions.map((category) => (
@@ -229,4 +164,3 @@ const Menu = () => {
 };
 
 export default Menu;
-

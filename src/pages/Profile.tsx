@@ -1,166 +1,168 @@
+
 import { useState, useEffect } from "react";
+import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Navigation } from "@/components/Navigation";
 import { Footer } from "@/components/Footer";
-import { useAuth } from "@/contexts/AuthContext";
-import { supabase } from "@/integrations/supabase/client";
+import { Loader2, User, Mail, Phone, Edit, Save, X, Heart, ChefHat, Calendar, MessageCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { Camera, User, ShoppingBag, CreditCard, Loader2 } from "lucide-react";
-import { useNavigate } from "react-router-dom";
-
-interface Profile {
-  id: string;
-  full_name: string;
-  username: string;
-  profile_image_url: string;
-  subscription_tier: string;
-  subscription_start_date: string;
-  subscription_end_date: string;
-}
 
 const Profile = () => {
-  const [profile, setProfile] = useState<Profile | null>(null);
-  const [fullName, setFullName] = useState("");
-  const [username, setUsername] = useState("");
-  const [uploading, setUploading] = useState(false);
-  const [loading, setLoading] = useState(false);
-  
-  const { user, updateProfile, signOut, loading: authLoading, signingOut } = useAuth();
+  const { user, signOut } = useAuth();
   const { toast } = useToast();
-  const navigate = useNavigate();
-
-  // Redirect to auth page if user is not authenticated
-  useEffect(() => {
-    if (!authLoading && !user && !signingOut) {
-      navigate('/auth');
-    }
-  }, [user, authLoading, signingOut, navigate]);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [editing, setEditing] = useState(false);
+  const [profile, setProfile] = useState<any>(null);
+  const [inquiries, setInquiries] = useState<any[]>([]);
+  const [formData, setFormData] = useState({
+    full_name: "",
+    username: "",
+    phone: "",
+  });
 
   useEffect(() => {
     if (user) {
       fetchProfile();
+      fetchInquiries();
     }
   }, [user]);
 
   const fetchProfile = async () => {
-    if (!user) return;
+    try {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', user?.id)
+        .single();
 
-    const { data, error } = await supabase
-      .from('profiles')
-      .select('*')
-      .eq('id', user.id)
-      .single();
+      if (error && error.code !== 'PGRST116') {
+        throw error;
+      }
 
-    if (error) {
+      if (data) {
+        setProfile(data);
+        setFormData({
+          full_name: data.full_name || "",
+          username: data.username || "",
+          phone: data.phone || "",
+        });
+      }
+    } catch (error) {
+      console.error('Error fetching profile:', error);
       toast({
         title: "Error",
         description: "Failed to load profile",
-        variant: "destructive"
-      });
-    } else {
-      setProfile(data);
-      setFullName(data.full_name || "");
-      setUsername(data.username || "");
-    }
-  };
-
-  const handleUpdateProfile = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-
-    const { error } = await updateProfile({
-      full_name: fullName,
-      username: username
-    });
-
-    if (!error) {
-      fetchProfile();
-    }
-
-    setLoading(false);
-  };
-
-  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    try {
-      setUploading(true);
-
-      if (!event.target.files || event.target.files.length === 0) {
-        throw new Error('You must select an image to upload.');
-      }
-
-      const file = event.target.files[0];
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${user?.id}/${Math.random()}.${fileExt}`;
-
-      const { error: uploadError } = await supabase.storage
-        .from('profile-images')
-        .upload(fileName, file);
-
-      if (uploadError) {
-        throw uploadError;
-      }
-
-      const { data: { publicUrl } } = supabase.storage
-        .from('profile-images')
-        .getPublicUrl(fileName);
-
-      const { error: updateError } = await updateProfile({
-        profile_image_url: publicUrl
-      });
-
-      if (updateError) {
-        throw updateError;
-      }
-
-      fetchProfile();
-    } catch (error: any) {
-      toast({
-        title: "Upload Error",
-        description: error.message,
-        variant: "destructive"
+        variant: "destructive",
       });
     } finally {
-      setUploading(false);
+      setLoading(false);
     }
   };
 
-  const getInitials = (name: string) => {
-    return name
-      .split(' ')
-      .map(n => n[0])
-      .join('')
-      .toUpperCase();
-  };
+  const fetchInquiries = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('contact_inquiries')
+        .select('*')
+        .eq('user_id', user?.id)
+        .order('created_at', { ascending: false });
 
-  const getSubscriptionBadgeColor = (tier: string) => {
-    switch (tier) {
-      case 'pro': return 'bg-blue-500';
-      case 'pro_plus': return 'bg-purple-500';
-      default: return 'bg-gray-500';
+      if (error) throw error;
+      setInquiries(data || []);
+    } catch (error) {
+      console.error('Error fetching inquiries:', error);
     }
   };
 
-  // Show loading spinner while checking authentication
-  if (authLoading) {
+  const handleSave = async () => {
+    setSaving(true);
+    try {
+      const { error } = await supabase
+        .from('profiles')
+        .upsert({
+          id: user?.id,
+          ...formData,
+          updated_at: new Date().toISOString(),
+        });
+
+      if (error) throw error;
+
+      setProfile({ ...profile, ...formData });
+      setEditing(false);
+      toast({
+        title: "Success",
+        description: "Profile updated successfully",
+      });
+    } catch (error) {
+      console.error('Error updating profile:', error);
+      toast({
+        title: "Error",
+        description: "Failed to update profile",
+        variant: "destructive",
+      });
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleCancel = () => {
+    setFormData({
+      full_name: profile?.full_name || "",
+      username: profile?.username || "",
+      phone: profile?.phone || "",
+    });
+    setEditing(false);
+  };
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'pending':
+        return 'bg-yellow-100 text-yellow-800';
+      case 'contacted':
+        return 'bg-blue-100 text-blue-800';
+      case 'confirmed':
+        return 'bg-green-100 text-green-800';
+      case 'cancelled':
+        return 'bg-red-100 text-red-800';
+      default:
+        return 'bg-gray-100 text-gray-800';
+    }
+  };
+
+  if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-orange-50 via-red-50 to-pink-50 flex items-center justify-center">
-        <div className="flex items-center space-x-2">
-          <Loader2 className="w-6 h-6 animate-spin text-orange-500" />
-          <span className="text-gray-600">Loading...</span>
+      <div className="min-h-screen bg-gradient-to-br from-orange-50 via-red-50 to-pink-50">
+        <Navigation />
+        <div className="container mx-auto px-4 pt-32">
+          <div className="flex items-center justify-center min-h-[400px]">
+            <Loader2 className="w-8 h-8 animate-spin text-orange-600" />
+          </div>
         </div>
+        <Footer />
       </div>
     );
   }
 
-  // Don't render anything if user is not authenticated (will redirect)
   if (!user) {
-    return null;
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-orange-50 via-red-50 to-pink-50">
+        <Navigation />
+        <div className="container mx-auto px-4 pt-32">
+          <div className="text-center py-12">
+            <h1 className="text-2xl font-bold text-gray-800 mb-4">Please sign in to view your profile</h1>
+          </div>
+        </div>
+        <Footer />
+      </div>
+    );
   }
 
   return (
@@ -169,154 +171,199 @@ const Profile = () => {
       
       <main className="pt-32 pb-16">
         <div className="container mx-auto px-4 max-w-4xl">
-          <div className="grid gap-6">
-            {/* Profile Header */}
-            <Card className="bg-white/80 backdrop-blur-md shadow-xl border border-white/20">
-              <CardHeader className="text-center">
-                <div className="flex flex-col items-center space-y-4">
-                  <div className="relative">
-                    <Avatar className="w-24 h-24">
-                      <AvatarImage src={profile?.profile_image_url} />
-                      <AvatarFallback className="text-xl">
-                        {profile?.full_name ? getInitials(profile.full_name) : <User />}
-                      </AvatarFallback>
-                    </Avatar>
-                    <label className="absolute bottom-0 right-0 bg-orange-500 text-white p-2 rounded-full cursor-pointer hover:bg-orange-600 transition-colors">
-                      <Camera className="w-4 h-4" />
-                      <input
-                        type="file"
-                        accept="image/*"
-                        onChange={handleImageUpload}
-                        disabled={uploading}
-                        className="hidden"
-                      />
-                    </label>
-                  </div>
-                  <div>
-                    <h1 className="text-2xl font-bold text-gray-800">
-                      {profile?.full_name || "Loading..."}
-                    </h1>
-                    <p className="text-gray-600">@{profile?.username}</p>
-                    {profile?.subscription_tier && (
-                      <Badge className={`mt-2 ${getSubscriptionBadgeColor(profile.subscription_tier)} text-white`}>
-                        {profile.subscription_tier.replace('_', ' ').toUpperCase()}
-                      </Badge>
-                    )}
+          {/* Profile Header */}
+          <Card className="mb-8 bg-white/80 backdrop-blur-sm border-orange-100 shadow-xl">
+            <CardHeader className="bg-gradient-to-r from-orange-500 to-red-600 text-white rounded-t-lg">
+              <div className="flex items-center space-x-6">
+                <Avatar className="w-20 h-20 border-4 border-white shadow-lg">
+                  <AvatarImage src={profile?.profile_image_url} />
+                  <AvatarFallback className="bg-white text-orange-600 text-2xl font-bold">
+                    {profile?.full_name?.charAt(0) || user?.email?.charAt(0) || 'U'}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="flex-1">
+                  <h1 className="text-3xl font-bold mb-2">
+                    {profile?.full_name || 'Welcome'}
+                  </h1>
+                  <p className="text-orange-100 text-lg">
+                    @{profile?.username || 'user'}
+                  </p>
+                  <div className="flex items-center mt-2 space-x-4">
+                    <div className="flex items-center space-x-2">
+                      <Calendar className="w-4 h-4" />
+                      <span className="text-sm text-orange-100">
+                        Member since {new Date(profile?.created_at || '').toLocaleDateString()}
+                      </span>
+                    </div>
                   </div>
                 </div>
-              </CardHeader>
-            </Card>
+                <div className="flex space-x-2">
+                  {!editing ? (
+                    <Button
+                      onClick={() => setEditing(true)}
+                      variant="secondary"
+                      size="sm"
+                      className="bg-white/20 hover:bg-white/30 text-white border-white/30"
+                    >
+                      <Edit className="w-4 h-4 mr-2" />
+                      Edit
+                    </Button>
+                  ) : (
+                    <>
+                      <Button
+                        onClick={handleSave}
+                        disabled={saving}
+                        size="sm"
+                        className="bg-green-600 hover:bg-green-700 text-white"
+                      >
+                        {saving ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Save className="w-4 h-4 mr-2" />}
+                        Save
+                      </Button>
+                      <Button
+                        onClick={handleCancel}
+                        variant="secondary"
+                        size="sm"
+                        className="bg-white/20 hover:bg-white/30 text-white border-white/30"
+                      >
+                        <X className="w-4 h-4 mr-2" />
+                        Cancel
+                      </Button>
+                    </>
+                  )}
+                </div>
+              </div>
+            </CardHeader>
+          </Card>
 
-            {/* Profile Management */}
-            <Tabs defaultValue="profile" className="w-full">
-              <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="profile" className="flex items-center gap-2">
-                  <User className="w-4 h-4" />
-                  Profile
-                </TabsTrigger>
-                <TabsTrigger value="subscription" className="flex items-center gap-2">
-                  <CreditCard className="w-4 h-4" />
-                  Subscription
-                </TabsTrigger>
-              </TabsList>
+          <Tabs defaultValue="profile" className="space-y-6">
+            <TabsList className="grid w-full grid-cols-2 bg-white/80 backdrop-blur-sm border border-orange-100">
+              <TabsTrigger value="profile" className="data-[state=active]:bg-orange-500 data-[state=active]:text-white">
+                <User className="w-4 h-4 mr-2" />
+                Profile Details
+              </TabsTrigger>
+              <TabsTrigger value="orders" className="data-[state=active]:bg-orange-500 data-[state=active]:text-white">
+                <ChefHat className="w-4 h-4 mr-2" />
+                My Inquiries
+              </TabsTrigger>
+            </TabsList>
 
-              <TabsContent value="profile">
-                <Card className="bg-white/80 backdrop-blur-md shadow-xl border border-white/20">
-                  <CardHeader>
-                    <CardTitle>Edit Profile</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <form onSubmit={handleUpdateProfile} className="space-y-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="fullname">Full Name</Label>
-                        <Input
-                          id="fullname"
-                          value={fullName}
-                          onChange={(e) => setFullName(e.target.value)}
-                          placeholder="Enter your full name"
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="username">Username</Label>
-                        <Input
-                          id="username"
-                          value={username}
-                          onChange={(e) => setUsername(e.target.value)}
-                          placeholder="Enter your username"
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="email">Email</Label>
-                        <Input
-                          id="email"
-                          value={user.email || ""}
-                          disabled
-                          className="bg-gray-100"
-                        />
-                        <p className="text-sm text-gray-500">
-                          Email changes are not currently supported
-                        </p>
-                      </div>
-                      <div className="flex gap-4">
-                        <Button 
-                          type="submit" 
-                          disabled={loading}
-                          className="bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700"
-                        >
-                          {loading ? "Updating..." : "Update Profile"}
-                        </Button>
-                        <Button 
-                          type="button" 
-                          variant="outline"
-                          onClick={signOut}
-                          disabled={signingOut}
-                        >
-                          {signingOut ? (
-                            <>
-                              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                              Signing Out...
-                            </>
-                          ) : (
-                            "Sign Out"
-                          )}
-                        </Button>
-                      </div>
-                    </form>
-                  </CardContent>
-                </Card>
-              </TabsContent>
-
-              <TabsContent value="subscription">
-                <Card className="bg-white/80 backdrop-blur-md shadow-xl border border-white/20">
-                  <CardHeader>
-                    <CardTitle>Subscription Details</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      <div>
-                        <Label>Current Plan</Label>
-                        <p className="text-lg font-semibold">
-                          {profile?.subscription_tier?.replace('_', ' ').toUpperCase() || 'FREE'}
-                        </p>
-                      </div>
-                      {profile?.subscription_start_date && (
-                        <div>
-                          <Label>Subscription Started</Label>
-                          <p>{new Date(profile.subscription_start_date).toLocaleDateString()}</p>
-                        </div>
-                      )}
-                      {profile?.subscription_end_date && (
-                        <div>
-                          <Label>Subscription Ends</Label>
-                          <p>{new Date(profile.subscription_end_date).toLocaleDateString()}</p>
-                        </div>
-                      )}
+            <TabsContent value="profile">
+              <Card className="bg-white/80 backdrop-blur-sm border-orange-100 shadow-lg">
+                <CardHeader>
+                  <CardTitle className="text-2xl text-gray-800 flex items-center">
+                    <User className="w-6 h-6 mr-2 text-orange-600" />
+                    Personal Information
+                  </CardTitle>
+                  <CardDescription>
+                    Manage your account details and preferences
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <Label htmlFor="full_name" className="text-gray-700 font-medium">Full Name</Label>
+                      <Input
+                        id="full_name"
+                        value={formData.full_name}
+                        onChange={(e) => setFormData({ ...formData, full_name: e.target.value })}
+                        disabled={!editing}
+                        className="border-orange-200 focus:border-orange-500"
+                      />
                     </div>
-                  </CardContent>
-                </Card>
-              </TabsContent>
-            </Tabs>
-          </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="username" className="text-gray-700 font-medium">Username</Label>
+                      <Input
+                        id="username"
+                        value={formData.username}
+                        onChange={(e) => setFormData({ ...formData, username: e.target.value })}
+                        disabled={!editing}
+                        className="border-orange-200 focus:border-orange-500"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="email" className="text-gray-700 font-medium">Email</Label>
+                      <Input
+                        id="email"
+                        value={user?.email || ""}
+                        disabled
+                        className="bg-gray-50 border-gray-200"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="phone" className="text-gray-700 font-medium">Phone</Label>
+                      <Input
+                        id="phone"
+                        value={formData.phone}
+                        onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                        disabled={!editing}
+                        className="border-orange-200 focus:border-orange-500"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="pt-6 border-t border-orange-100">
+                    <Button
+                      onClick={signOut}
+                      variant="outline"
+                      className="border-red-200 text-red-600 hover:bg-red-50"
+                    >
+                      Sign Out
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="orders">
+              <Card className="bg-white/80 backdrop-blur-sm border-orange-100 shadow-lg">
+                <CardHeader>
+                  <CardTitle className="text-2xl text-gray-800 flex items-center">
+                    <MessageCircle className="w-6 h-6 mr-2 text-orange-600" />
+                    My Pre-Order Inquiries
+                  </CardTitle>
+                  <CardDescription>
+                    Track your dish inquiries and pre-orders
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {inquiries.length === 0 ? (
+                    <div className="text-center py-12">
+                      <ChefHat className="w-16 h-16 mx-auto text-gray-300 mb-4" />
+                      <h3 className="text-lg font-medium text-gray-600 mb-2">No inquiries yet</h3>
+                      <p className="text-gray-500">Start exploring our menu and place your first inquiry!</p>
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      {inquiries.map((inquiry) => (
+                        <div key={inquiry.id} className="border border-orange-100 rounded-lg p-4 bg-gradient-to-r from-orange-25 to-red-25">
+                          <div className="flex items-start justify-between mb-3">
+                            <div>
+                              <h3 className="font-semibold text-lg text-gray-800">{inquiry.dish_name}</h3>
+                              <p className="text-gray-600">Quantity: {inquiry.quantity} | Serving: {inquiry.serving_size || 'Standard'}</p>
+                            </div>
+                            <Badge className={getStatusColor(inquiry.status)}>
+                              {inquiry.status}
+                            </Badge>
+                          </div>
+                          {inquiry.special_requests && (
+                            <div className="mb-3">
+                              <p className="text-sm text-gray-600">
+                                <strong>Special Requests:</strong> {inquiry.special_requests}
+                              </p>
+                            </div>
+                          )}
+                          <div className="flex items-center justify-between text-sm text-gray-500">
+                            <span>Submitted on {new Date(inquiry.created_at).toLocaleDateString()}</span>
+                            <span>Type: {inquiry.inquiry_type}</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            </TabsContent>
+          </Tabs>
         </div>
       </main>
       
@@ -326,4 +373,3 @@ const Profile = () => {
 };
 
 export default Profile;
-
