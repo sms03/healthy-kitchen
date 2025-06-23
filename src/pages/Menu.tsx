@@ -26,8 +26,7 @@ const Menu = () => {
       </div>
     );
   }
-
-  // Define the specific dishes we want to show
+  // Define the specific dishes we want to show in order
   const targetDishes = [
     'Egg Bhurji', 'Egg Masala', 
     'Chicken Masala', 'Chicken Handi', 
@@ -35,19 +34,56 @@ const Menu = () => {
     'Fish Curry', 'Fish Fry'
   ];
 
-  // Filter to show the specific dishes
+  // Define category order: Egg=1, Chicken=2, Mutton=3, Fish=4
+  const categoryOrder = {
+    1: 1, // Egg Dishes
+    2: 2, // Chicken Dishes  
+    3: 3, // Mutton Dishes
+    4: 4  // Fish Dishes
+  };
+
+  // Define dish order within each category
+  const dishOrder = {
+    'Egg Bhurji': 1,
+    'Egg Masala': 2,
+    'Chicken Masala': 1,
+    'Chicken Handi': 2,
+    'Mutton Masala': 1,
+    'Mutton Handi': 2,
+    'Fish Curry': 1,
+    'Fish Fry': 2
+  };
+
+  // Filter and sort the recipes
   const filteredRecipes = recipes?.filter(recipe => {
     if (activeCategory === "all") {
       return targetDishes.includes(recipe.name);
     } else {
       return targetDishes.includes(recipe.name) && recipe.category_id === activeCategory;
     }
+  }).sort((a, b) => {
+    // First sort by category order
+    const categoryA = categoryOrder[a.category_id] || 999;
+    const categoryB = categoryOrder[b.category_id] || 999;
+    
+    if (categoryA !== categoryB) {
+      return categoryA - categoryB;
+    }
+    
+    // Then sort by dish order within the category
+    const dishOrderA = dishOrder[a.name] || 999;
+    const dishOrderB = dishOrder[b.name] || 999;
+    
+    return dishOrderA - dishOrderB;
   }) || [];
-
-  // Create categories with emojis for display
+  // Create categories with emojis for display, sorted by category order
   const categoryOptions = [
     { id: "all", name: "All Items", emoji: "🍽️" },
-    ...(categories?.map(cat => ({
+    ...(categories?.sort((a, b) => {
+      const orderA = categoryOrder[a.id] || 999;
+      const orderB = categoryOrder[b.id] || 999;
+      return orderA - orderB;
+    }).map(cat => ({
       id: cat.id,
       name: cat.name,
       emoji: cat.name === "Egg Dishes" ? "🥚" : 
