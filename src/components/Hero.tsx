@@ -118,7 +118,6 @@ export const Hero = () => {
                   <p className="text-gray-600 font-roboto">Rich, aromatic spices with tender chicken</p>
                   <div className="mt-3 flex items-center text-sm text-orange-600">
                     <span className="font-semibold">₹299</span>
-                    <span className="ml-2 text-gray-500">• 30 mins</span>
                   </div>
                 </div>
               </div>
