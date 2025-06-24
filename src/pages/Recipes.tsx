@@ -49,7 +49,7 @@ const Recipes = () => {
                   <CardContent className="p-6">
                     {/* Channel Thumbnail */}
                     <div className={`relative h-48 bg-gradient-to-br ${channel.bgGradient} flex items-center justify-center mb-4 rounded-xl group-hover:scale-105 transition-transform duration-300`}>
-                      <Monitor className="w-16 h-16 text-white" />
+                      <Tv className="w-16 h-16 text-white" />
                       <div className="absolute top-4 right-4 bg-white/20 backdrop-blur-sm rounded-full px-3 py-1">
                         <span className="text-white text-sm font-medium">{channel.language}</span>
                       </div>
@@ -96,7 +96,7 @@ const Recipes = () => {
                           rel="noopener noreferrer"
                           className="flex items-center justify-center gap-2"
                         >
-                          <Monitor className="w-4 h-4 mr-2" />
+                          <Tv className="w-4 h-4 mr-2" />
                           Visit Channel
                           <ExternalLink className="w-4 h-4" />
                         </a>
