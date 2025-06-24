@@ -43,7 +43,7 @@ const Recipes = () => {
             </div>
 
             {/* Channels Grid */}
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-24 px-16">
               {channelLinks.map((channel, index) => (
                 <Card key={index} className="group hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 bg-white/80 backdrop-blur-sm border-orange-100">
                   <CardContent className="p-6">
