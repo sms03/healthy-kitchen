@@ -108,16 +108,16 @@ export const Hero = () => {
           {/* Right Content - Food Images */}
           <div className="relative">
             <div className="grid grid-cols-2 gap-4">
-              {/* Main Featured Dish - Chicken Special */}
+              {/* Main Featured Dish - Chicken Masala */}
               <div className="col-span-2 relative group">
                 <div className="bg-white rounded-2xl p-6 shadow-2xl hover:shadow-3xl transition-all duration-500 transform hover:-translate-y-2 hover:scale-105">
                   <div className="w-full h-64 bg-gradient-to-br from-yellow-200 to-orange-200 rounded-xl mb-4 flex items-center justify-center">
                     <span className="text-4xl">🍗</span>
                   </div>
-                  <h3 className="text-xl font-semibold text-gray-800 mb-2 font-roboto">Signature Chicken Masala</h3>
-                  <p className="text-gray-600 font-roboto">Rich, aromatic spices with tender chicken</p>
+                  <h3 className="text-xl font-semibold text-gray-800 mb-2 font-roboto">Chicken Masala</h3>
+                  <p className="text-gray-600 font-roboto">Rich, aromatic spices with tender chicken pieces</p>
                   <div className="mt-3 flex items-center text-sm text-orange-600">
-                    <span className="font-semibold">₹299</span>
+                    <span className="font-semibold">₹280</span>
                   </div>
                 </div>
               </div>
@@ -125,20 +125,20 @@ export const Hero = () => {
               {/* Secondary Dishes */}
               <div className="bg-white rounded-xl p-4 shadow-lg hover:shadow-xl transition-all duration-500 transform hover:-translate-y-1 hover:scale-105">
                 <div className="w-full h-32 bg-gradient-to-br from-red-200 to-pink-200 rounded-lg mb-3 flex items-center justify-center">
-                  <span className="text-2xl">🍖</span>
+                  <span className="text-2xl">🥩</span>
                 </div>
                 <h4 className="font-medium text-gray-800 font-roboto">Mutton Handi</h4>
-                <p className="text-xs text-gray-600 mt-1">Slow-cooked perfection</p>
-                <div className="mt-2 text-sm text-orange-600 font-semibold">₹399</div>
+                <p className="text-xs text-gray-600 mt-1">Slow-cooked perfection in traditional style</p>
+                <div className="mt-2 text-sm text-orange-600 font-semibold">₹350</div>
               </div>
 
               <div className="bg-white rounded-xl p-4 shadow-lg hover:shadow-xl transition-all duration-500 transform hover:-translate-y-1 hover:scale-105">
-                <div className="w-full h-32 bg-gradient-to-br from-green-200 to-teal-200 rounded-lg mb-3 flex items-center justify-center">
+                <div className="w-full h-32 bg-gradient-to-br from-blue-200 to-teal-200 rounded-lg mb-3 flex items-center justify-center">
                   <span className="text-2xl">🐟</span>
                 </div>
-                <h4 className="font-medium text-gray-800 font-roboto">Fish Specials</h4>
-                <p className="text-xs text-gray-600 mt-1">Nutritious & delicious</p>
-                <div className="mt-2 text-sm text-orange-600 font-semibold">₹480</div>
+                <h4 className="font-medium text-gray-800 font-roboto">Fish Curry</h4>
+                <p className="text-xs text-gray-600 mt-1">Fresh catch in authentic spices</p>
+                <div className="mt-2 text-sm text-orange-600 font-semibold">₹320</div>
               </div>
             </div>
 
