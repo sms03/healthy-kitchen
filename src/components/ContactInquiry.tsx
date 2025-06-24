@@ -26,8 +26,7 @@ interface ContactInquiryProps {
 
 export const ContactInquiry = ({ isOpen, onClose, dish, servingSize }: ContactInquiryProps) => {
   const { user } = useAuth();
-  const { toast } = useToast();
-  const [formData, setFormData] = useState({
+  const { toast } = useToast();  const [formData, setFormData] = useState({
     name: "",
     email: "",
     phone: "",
@@ -35,7 +34,7 @@ export const ContactInquiry = ({ isOpen, onClose, dish, servingSize }: ContactIn
     spiceLevel: "medium",
     fishType: "",
     specialRequests: "",
-    contactMethod: "form",
+    contactMethod: "whatsapp",
     hasSpecialRequests: false
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -154,7 +153,7 @@ Email: ${formData.email}`;
         spiceLevel: "medium",
         fishType: "",
         specialRequests: "",
-        contactMethod: "form",
+        contactMethod: "whatsapp",
         hasSpecialRequests: false
       });
     } catch (error: any) {
@@ -212,19 +211,17 @@ Email: ${formData.email}`;
               <p>• Remaining 50% on delivery</p>
               <p>• We'll contact you within 24 hours</p>
             </div>
-          </div>
-
-          {/* Contact Method Selection */}
+          </div>          {/* Contact Method Selection */}
           <div className="space-y-2 sm:space-y-3">
             <Label className="text-sm font-medium">How would you like to place your order?</Label>
             <RadioGroup value={formData.contactMethod} onValueChange={(value) => setFormData({ ...formData, contactMethod: value })}>
               <div className="flex items-center space-x-2">
-                <RadioGroupItem value="form" id="form" />
-                <Label htmlFor="form" className="text-sm">Submit form inquiry</Label>
+                <RadioGroupItem value="whatsapp" id="whatsapp" />
+                <Label htmlFor="whatsapp" className="text-sm">Chat via WhatsApp (Recommended)</Label>
               </div>
               <div className="flex items-center space-x-2">
-                <RadioGroupItem value="whatsapp" id="whatsapp" />
-                <Label htmlFor="whatsapp" className="text-sm">Chat via WhatsApp</Label>
+                <RadioGroupItem value="form" id="form" />
+                <Label htmlFor="form" className="text-sm">Submit form inquiry</Label>
               </div>
             </RadioGroup>
           </div>
@@ -237,31 +234,32 @@ Email: ${formData.email}`;
                   id="name"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  placeholder="e.g., Name Surname"
                   required
                   className="mt-1 text-sm"
                 />
               </div>
-
               <div>
-                <Label htmlFor="email" className="text-sm font-medium">Email Address</Label>
+                <Label htmlFor="email" className="text-sm font-medium">Email Address (for invoice mailing)</Label>
                 <Input
                   id="email"
                   type="email"
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  placeholder="e.g., emailid@gmail.com"
                   required
                   className="mt-1 text-sm"
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <Label htmlFor="phone" className="text-sm font-medium">Phone Number</Label>
+              <div className="grid grid-cols-2 gap-3">                <div>
+                  <Label htmlFor="phone" className="text-sm font-medium">Phone Number (for contacting)</Label>
                   <Input
                     id="phone"
                     type="tel"
                     value={formData.phone}
                     onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                    placeholder="e.g., +91 1234567890"
                     required
                     className="mt-1 text-sm"
                   />
