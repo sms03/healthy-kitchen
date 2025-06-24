@@ -2,7 +2,7 @@ import { Navigation } from "@/components/Navigation";
 import { Footer } from "@/components/Footer";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ExternalLink, Users, Video, Play } from "lucide-react";
+import { ExternalLink, Users, Video, Play, Youtube } from "lucide-react";
 
 const channelLinks = [
   {
@@ -49,9 +49,7 @@ const Recipes = () => {
                   <CardContent className="p-6">
                     {/* Channel Thumbnail */}
                     <div className={`relative h-48 bg-gradient-to-br ${channel.bgGradient} flex items-center justify-center mb-4 rounded-xl group-hover:scale-105 transition-transform duration-300`}>
-                      <div className="bg-red-600 rounded-lg px-4 py-2 shadow-lg">
-                        <span className="text-white font-bold text-3xl">YT</span>
-                      </div>
+                      <Youtube className="w-16 h-16 text-white" />
                       <div className="absolute top-4 right-4 bg-white/20 backdrop-blur-sm rounded-full px-3 py-1">
                         <span className="text-white text-sm font-medium">{channel.language}</span>
                       </div>
@@ -98,9 +96,7 @@ const Recipes = () => {
                           rel="noopener noreferrer"
                           className="flex items-center justify-center gap-2"
                         >
-                          <div className="bg-red-600 rounded px-1.5 py-0.5 mr-2">
-                            <span className="text-white font-bold text-xs">YT</span>
-                          </div>
+                          <Youtube className="w-4 h-4 mr-2" />
                           Visit Channel
                           <ExternalLink className="w-4 h-4" />
                         </a>
