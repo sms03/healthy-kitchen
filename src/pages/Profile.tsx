@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -203,7 +202,7 @@ const Profile = () => {
                       onClick={() => setEditing(true)}
                       variant="secondary"
                       size="sm"
-                      className="bg-white/20 hover:bg-white/30 text-white border-white/30"
+                      className="bg-white/20 hover:bg-white/30 text-white border-white/30 rounded-full"
                     >
                       <Edit className="w-4 h-4 mr-2" />
                       Edit
@@ -214,7 +213,7 @@ const Profile = () => {
                         onClick={handleSave}
                         disabled={saving}
                         size="sm"
-                        className="bg-green-600 hover:bg-green-700 text-white"
+                        className="bg-green-600 hover:bg-green-700 text-white rounded-full"
                       >
                         {saving ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Save className="w-4 h-4 mr-2" />}
                         Save
@@ -223,7 +222,7 @@ const Profile = () => {
                         onClick={handleCancel}
                         variant="secondary"
                         size="sm"
-                        className="bg-white/20 hover:bg-white/30 text-white border-white/30"
+                        className="bg-white/20 hover:bg-white/30 text-white border-white/30 rounded-full"
                       >
                         <X className="w-4 h-4 mr-2" />
                         Cancel
@@ -236,12 +235,12 @@ const Profile = () => {
           </Card>
 
           <Tabs defaultValue="profile" className="space-y-6">
-            <TabsList className="grid w-full grid-cols-2 bg-white/80 backdrop-blur-sm border border-orange-100">
-              <TabsTrigger value="profile" className="data-[state=active]:bg-orange-500 data-[state=active]:text-white">
+            <TabsList className="grid w-full grid-cols-2 bg-white/80 backdrop-blur-sm border border-orange-100 rounded-full">
+              <TabsTrigger value="profile" className="data-[state=active]:bg-orange-500 data-[state=active]:text-white rounded-full">
                 <User className="w-4 h-4 mr-2" />
                 Profile Details
               </TabsTrigger>
-              <TabsTrigger value="orders" className="data-[state=active]:bg-orange-500 data-[state=active]:text-white">
+              <TabsTrigger value="orders" className="data-[state=active]:bg-orange-500 data-[state=active]:text-white rounded-full">
                 <ChefHat className="w-4 h-4 mr-2" />
                 My Inquiries
               </TabsTrigger>
@@ -305,7 +304,7 @@ const Profile = () => {
                     <Button
                       onClick={signOut}
                       variant="outline"
-                      className="border-red-200 text-red-600 hover:bg-red-50"
+                      className="border-red-200 text-red-600 hover:bg-red-50 rounded-full"
                     >
                       Sign Out
                     </Button>
