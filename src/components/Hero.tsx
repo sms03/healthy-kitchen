@@ -30,7 +30,7 @@ export const Hero = () => {
               <Link to="/menu">
                 <Button 
                   size="lg" 
-                  className="bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white px-10 py-7 text-lg font-roboto font-medium transition-all duration-300 hover:scale-105"
+                  className="bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white px-10 py-7 text-lg font-roboto font-medium transition-all duration-300 hover:scale-105 rounded-full"
                 >
                   Order Now
                   <ArrowDown className="ml-2 w-5 h-5" />
@@ -41,7 +41,7 @@ export const Hero = () => {
                 <Button 
                   variant="outline" 
                   size="lg"
-                  className="border-orange-300 text-orange-600 hover:bg-orange-50 px-10 py-7 text-lg font-roboto font-medium transition-all duration-300 hover:scale-105"
+                  className="border-orange-300 text-orange-600 hover:bg-orange-50 px-10 py-7 text-lg font-roboto font-medium transition-all duration-300 hover:scale-105 rounded-full"
                 >
                   <Play className="mr-2 w-5 h-5" />
                   Watch Recipes
