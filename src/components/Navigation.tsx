@@ -139,7 +139,7 @@ export const Navigation = () => {
                   key={item.path}
                   to={item.path}
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className={`text-left py-3 sm:py-3.5 px-4 sm:px-5 transition-all duration-300 font-roboto rounded-xl border-2 text-base sm:text-base ${
+                  className={`text-left py-3 sm:py-3.5 px-4 sm:px-5 transition-all duration-300 font-roboto rounded-full border-2 text-base sm:text-base ${
                     location.pathname === item.path 
                       ? 'text-white bg-gradient-to-r from-orange-500 to-red-600 border-orange-500 shadow-md font-semibold' 
                       : 'text-gray-700 hover:text-orange-600 border-gray-200 hover:border-orange-300 hover:bg-orange-50'
@@ -152,7 +152,7 @@ export const Navigation = () => {
                 <Link 
                   to="/auth"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="text-left py-3 sm:py-3.5 px-4 sm:px-5 transition-all duration-300 font-roboto rounded-xl bg-gradient-to-r from-orange-500 to-red-600 text-white font-semibold text-base sm:text-base"
+                  className="text-left py-3 sm:py-3.5 px-4 sm:px-5 transition-all duration-300 font-roboto rounded-full bg-gradient-to-r from-orange-500 to-red-600 text-white font-semibold text-base sm:text-base"
                 >
                   Sign In
                 </Link>
@@ -161,7 +161,7 @@ export const Navigation = () => {
                 <Link 
                   to="/profile"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className={`text-left py-3 sm:py-3.5 px-4 sm:px-5 transition-all duration-300 font-roboto rounded-xl border-2 text-base sm:text-base ${
+                  className={`text-left py-3 sm:py-3.5 px-4 sm:px-5 transition-all duration-300 font-roboto rounded-full border-2 text-base sm:text-base ${
                     location.pathname === '/profile'
                       ? 'text-white bg-gradient-to-r from-orange-500 to-red-600 border-orange-500 shadow-md font-semibold' 
                       : 'text-gray-700 hover:text-orange-600 border-gray-200 hover:border-orange-300 hover:bg-orange-50'
