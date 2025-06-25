@@ -356,7 +356,7 @@ Email: ${formData.email}`;
                 type="button"
                 variant="outline"
                 onClick={onClose}
-                className="flex-1 text-sm"
+                className="flex-1 text-sm rounded-full"
               >
                 Cancel
               </Button>
@@ -364,7 +364,7 @@ Email: ${formData.email}`;
                 <Button
                   type="button"
                   onClick={handleWhatsAppOrder}
-                  className="flex-1 bg-green-600 hover:bg-green-700 text-sm"
+                  className="flex-1 bg-green-600 hover:bg-green-700 text-sm rounded-full"
                   disabled={!formData.name || !formData.phone}
                 >
                   <MessageCircle className="w-4 h-4 mr-1" />
@@ -374,7 +374,7 @@ Email: ${formData.email}`;
                 <Button
                   type="submit"
                   disabled={isSubmitting}
-                  className="flex-1 bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-sm"
+                  className="flex-1 bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-sm rounded-full"
                 >
                   {isSubmitting ? "Submitting..." : "Send Inquiry"}
                 </Button>
