@@ -155,12 +155,12 @@ const Menu = () => {
 
             {/* Category Filter using Tabs */}
             <Tabs value={activeCategory} onValueChange={setActiveCategory} className="w-full mb-12">
-              <TabsList className="grid w-full grid-cols-2 md:grid-cols-3 lg:grid-cols-5 h-auto p-2 bg-white/80 backdrop-blur-sm border border-orange-100 rounded-2xl">
+              <TabsList className="grid w-full grid-cols-2 md:grid-cols-3 lg:grid-cols-5 h-auto p-2 bg-white/80 backdrop-blur-sm border border-orange-100 rounded-full">
                 {categoryOptions.map((category) => (
                   <TabsTrigger
                     key={category.id}
                     value={category.id}
-                    className="px-6 py-3 rounded-xl text-base font-medium transition-all duration-300 data-[state=active]:bg-gradient-to-r data-[state=active]:from-orange-500 data-[state=active]:to-red-600 data-[state=active]:text-white data-[state=active]:shadow-lg hover:bg-orange-50 text-gray-700"
+                    className="px-6 py-3 rounded-full text-base font-medium transition-all duration-300 data-[state=active]:bg-gradient-to-r data-[state=active]:from-orange-500 data-[state=active]:to-red-600 data-[state=active]:text-white data-[state=active]:shadow-lg hover:bg-orange-50 text-gray-700"
                   >
                     <span className="mr-2">{category.emoji}</span>
                     {category.name}
