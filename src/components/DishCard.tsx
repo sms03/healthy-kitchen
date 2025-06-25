@@ -146,12 +146,12 @@ export const DishCard = ({ dish }: DishCardProps) => {
             {/* Serving Size Tabs */}
             {servings && servings.length > 1 && (
               <Tabs value={selectedServing} onValueChange={setSelectedServing} className="w-full">
-                <TabsList className="grid w-full grid-cols-2 h-9">
+                <TabsList className="grid w-full grid-cols-2 h-9 rounded-full">
                   {servings.map((serving) => (
                     <TabsTrigger 
                       key={serving.id} 
                       value={serving.id}
-                      className="text-xs data-[state=active]:bg-orange-500 data-[state=active]:text-white"
+                      className="text-xs data-[state=active]:bg-orange-500 data-[state=active]:text-white rounded-full"
                     >
                       {serving.serving_name}
                     </TabsTrigger>
@@ -172,7 +172,7 @@ export const DishCard = ({ dish }: DishCardProps) => {
             <Button
               onClick={handleContactUs}
               disabled={!currentServing}
-              className="w-full bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white py-3 rounded-lg transition-all duration-300 transform hover:scale-105"
+              className="w-full bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white py-3 rounded-full transition-all duration-300 transform hover:scale-105"
             >
               <MessageCircle className="w-4 h-4 mr-2" />
               Contact for Pre-Order
