@@ -173,21 +173,21 @@ const Profile = () => {
           {/* Profile Header */}
           <Card className="mb-8 bg-white/80 backdrop-blur-sm border-orange-100 shadow-xl">
             <CardHeader className="bg-gradient-to-r from-orange-500 to-red-600 text-white rounded-t-lg">
-              <div className="flex items-center space-x-6">
-                <Avatar className="w-20 h-20 border-4 border-white shadow-lg">
+              <div className="flex flex-col lg:flex-row lg:items-center space-y-4 lg:space-y-0 lg:space-x-6">
+                <Avatar className="w-20 h-20 border-4 border-white shadow-lg mx-auto lg:mx-0">
                   <AvatarImage src={profile?.profile_image_url} />
                   <AvatarFallback className="bg-white text-orange-600 text-2xl font-bold">
                     {profile?.full_name?.charAt(0) || user?.email?.charAt(0) || 'U'}
                   </AvatarFallback>
                 </Avatar>
-                <div className="flex-1">
-                  <h1 className="text-3xl font-bold mb-2">
+                <div className="flex-1 text-center lg:text-left">
+                  <h1 className="text-2xl lg:text-3xl font-bold mb-2">
                     {profile?.full_name || 'Welcome'}
                   </h1>
-                  <p className="text-orange-100 text-lg">
+                  <p className="text-orange-100 text-base lg:text-lg">
                     @{profile?.username || 'user'}
                   </p>
-                  <div className="flex items-center mt-2 space-x-4">
+                  <div className="flex items-center justify-center lg:justify-start mt-2 space-x-4">
                     <div className="flex items-center space-x-2">
                       <Calendar className="w-4 h-4" />
                       <span className="text-sm text-orange-100">
@@ -196,16 +196,16 @@ const Profile = () => {
                     </div>
                   </div>
                 </div>
-                <div className="flex space-x-2">
+                <div className="flex flex-col sm:flex-row gap-2 justify-center lg:justify-end w-full lg:w-auto">
                   {!editing ? (
                     <Button
                       onClick={() => setEditing(true)}
                       variant="secondary"
                       size="sm"
-                      className="bg-white/20 hover:bg-white/30 text-white border-white/30 rounded-full"
+                      className="bg-white/20 hover:bg-white/30 text-white border-white/30 rounded-full w-full sm:w-auto"
                     >
                       <Edit className="w-4 h-4 mr-2" />
-                      Edit
+                      Edit Profile
                     </Button>
                   ) : (
                     <>
@@ -213,7 +213,7 @@ const Profile = () => {
                         onClick={handleSave}
                         disabled={saving}
                         size="sm"
-                        className="bg-green-600 hover:bg-green-700 text-white rounded-full"
+                        className="bg-green-600 hover:bg-green-700 text-white rounded-full w-full sm:w-auto"
                       >
                         {saving ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Save className="w-4 h-4 mr-2" />}
                         Save
@@ -222,7 +222,7 @@ const Profile = () => {
                         onClick={handleCancel}
                         variant="secondary"
                         size="sm"
-                        className="bg-white/20 hover:bg-white/30 text-white border-white/30 rounded-full"
+                        className="bg-white/20 hover:bg-white/30 text-white border-white/30 rounded-full w-full sm:w-auto"
                       >
                         <X className="w-4 h-4 mr-2" />
                         Cancel
