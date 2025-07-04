@@ -155,18 +155,27 @@ const Menu = () => {
 
             {/* Category Filter using Tabs */}
             <Tabs value={activeCategory} onValueChange={setActiveCategory} className="w-full mb-12">
-              <TabsList className="grid w-full grid-cols-2 md:grid-cols-3 lg:grid-cols-5 h-auto p-2 bg-white/80 backdrop-blur-sm border border-orange-100 rounded-full">
-                {categoryOptions.map((category) => (
-                  <TabsTrigger
-                    key={category.id}
-                    value={category.id}
-                    className="px-6 py-3 rounded-full text-base font-medium transition-all duration-300 data-[state=active]:bg-gradient-to-r data-[state=active]:from-orange-500 data-[state=active]:to-red-600 data-[state=active]:text-white data-[state=active]:shadow-lg hover:bg-orange-50 text-gray-700"
-                  >
-                    <span className="mr-2">{category.emoji}</span>
-                    {category.name}
-                  </TabsTrigger>
-                ))}
-              </TabsList>
+              <div className="overflow-x-auto pb-2">
+                <TabsList className="flex w-max min-w-full lg:grid lg:grid-cols-5 h-auto p-2 bg-white/80 backdrop-blur-sm border border-orange-100 rounded-full gap-2 lg:gap-0">
+                  {categoryOptions.map((category) => (
+                    <TabsTrigger
+                      key={category.id}
+                      value={category.id}
+                      className="px-4 py-3 rounded-full text-sm md:text-base font-medium transition-all duration-300 data-[state=active]:bg-gradient-to-r data-[state=active]:from-orange-500 data-[state=active]:to-red-600 data-[state=active]:text-white data-[state=active]:shadow-lg hover:bg-orange-50 text-gray-700 whitespace-nowrap flex-shrink-0"
+                    >
+                      <span className="mr-1 md:mr-2">{category.emoji}</span>
+                      <span className="hidden sm:inline">{category.name}</span>
+                      <span className="sm:hidden">
+                        {category.name === "All Items" ? "All" :
+                         category.name === "Egg Dishes" ? "Egg" :
+                         category.name === "Chicken Dishes" ? "Chicken" :
+                         category.name === "Mutton Dishes" ? "Mutton" :
+                         category.name === "Fish Dishes" ? "Fish" : category.name}
+                      </span>
+                    </TabsTrigger>
+                  ))}
+                </TabsList>
+              </div>
 
               {/* Menu Grid */}
               <TabsContent value={activeCategory} className="mt-8">
