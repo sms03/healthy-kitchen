@@ -91,7 +91,7 @@ const Menu = () => {
             {/* Category Filter using Tabs */}
             <Tabs value={activeCategory} onValueChange={setActiveCategory} className="w-full mb-12">
               <div className="overflow-x-auto pb-2">
-                <TabsList className="flex w-max min-w-full lg:grid lg:grid-cols-4 h-auto p-2 bg-white/80 backdrop-blur-sm border border-orange-100 rounded-full gap-2 lg:gap-0">
+                <TabsList className={`flex w-max min-w-full h-auto p-2 bg-white/80 backdrop-blur-sm border border-orange-100 rounded-full gap-2 ${categoryOptions.length <= 4 ? `lg:grid lg:grid-cols-${categoryOptions.length}` : ''} lg:gap-0`}>
                   {categoryOptions.map((category) => (
                     <TabsTrigger
                       key={category.id}
