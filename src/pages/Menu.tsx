@@ -26,16 +26,20 @@ const Menu = () => {
       </div>
     );
   }
-  // Show all available dishes from database
-  const targetDishes = recipes?.map(recipe => recipe.name) || [];
+  // Define the specific dishes we want to show in order
+  const targetDishes = [
+    'Egg Bhurji', 'Egg Masala', 
+    'Chicken Masala', 'Chicken Handi', 
+    'Mutton Masala', 'Mutton Handi',
+    'Fish Curry', 'Fish Fry'
+  ];
 
-  // Define category order: Veg=1, Egg=2, Chicken=3, Mutton=4, Fish=5
-  const categoryOrder: Record<string, number> = {
-    '5': 1, // Vegetarian Dishes  
-    '1': 2, // Egg Dishes
-    '2': 3, // Chicken Dishes  
-    '3': 4, // Mutton Dishes
-    '4': 5  // Fish Dishes
+  // Define category order: Egg=1, Chicken=2, Mutton=3, Fish=4
+  const categoryOrder = {
+    1: 1, // Egg Dishes
+    2: 2, // Chicken Dishes  
+    3: 3, // Mutton Dishes
+    4: 4  // Fish Dishes
   };
 
   // Define dish order within each category
@@ -53,34 +57,36 @@ const Menu = () => {
   // Filter and sort the recipes
   const filteredRecipes = recipes?.filter(recipe => {
     if (activeCategory === "all") {
-      return true;
+      return targetDishes.includes(recipe.name);
     } else {
-      return recipe.category_id?.toString() === activeCategory;
+      return targetDishes.includes(recipe.name) && recipe.category_id === activeCategory;
     }
   }).sort((a, b) => {
     // First sort by category order
-    const categoryA = categoryOrder[a.category_id?.toString() || ''] || 999;
-    const categoryB = categoryOrder[b.category_id?.toString() || ''] || 999;
+    const categoryA = categoryOrder[a.category_id] || 999;
+    const categoryB = categoryOrder[b.category_id] || 999;
     
     if (categoryA !== categoryB) {
       return categoryA - categoryB;
     }
     
-    // Then sort by name within the category
-    return a.name.localeCompare(b.name);
+    // Then sort by dish order within the category
+    const dishOrderA = dishOrder[a.name] || 999;
+    const dishOrderB = dishOrder[b.name] || 999;
+    
+    return dishOrderA - dishOrderB;
   }) || [];
   // Create categories with emojis for display, sorted by category order
   const categoryOptions = [
     { id: "all", name: "All Items", emoji: "🍽️" },
     ...(categories?.sort((a, b) => {
-      const orderA = categoryOrder[a.id.toString()] || 999;
-      const orderB = categoryOrder[b.id.toString()] || 999;
+      const orderA = categoryOrder[a.id] || 999;
+      const orderB = categoryOrder[b.id] || 999;
       return orderA - orderB;
     }).map(cat => ({
-      id: cat.id.toString(),
+      id: cat.id,
       name: cat.name,
-      emoji: cat.name === "Vegetarian Dishes" ? "🥬" :
-             cat.name === "Egg Dishes" ? "🥚" : 
+      emoji: cat.name === "Egg Dishes" ? "🥚" : 
              cat.name === "Chicken Dishes" ? "🍗" : 
              cat.name === "Mutton Dishes" ? "🍖" :
              cat.name === "Fish Dishes" ? "🐟" : "🍽️"
@@ -110,41 +116,25 @@ const Menu = () => {
     
     return {
       id: numericId,
-      originalId: recipe.id,
+      originalId: recipe.id, // Keep original UUID for database operations
       name: recipe.name || "Unknown Item",
       description: recipe.description || "",
       detailedDescription: recipe.detailed_description,
       price: typeof recipe.price === 'string' ? parseFloat(recipe.price) : (recipe.price || 0),
-      image: getRecipeEmoji(recipe.name),
+      image: recipe.name?.includes("Egg Bhurji") ? "🍳" :
+             recipe.name?.includes("Egg Masala") ? "🥚" :
+             recipe.name?.includes("Chicken Masala") ? "🍛" :
+             recipe.name?.includes("Chicken Handi") ? "🍗" :
+             recipe.name?.includes("Mutton Masala") ? "🍖" :
+             recipe.name?.includes("Mutton Handi") ? "🥩" :
+             recipe.name?.includes("Fish") ? "🐟" : "🍽️",
       imageGallery: recipe.image_gallery || [],
       rating: 4.5 + Math.random() * 0.4,
       spiceLevel: adjustedSpiceLevel,
-      cookingMethod: recipe.cooking_method,
+      cookingMethod: recipe.name?.includes("Fish") ? null : recipe.cooking_method,
       chefNotes: recipe.chef_notes,
-      nutritionalInfo: recipe.nutritional_info,
-      // Add availability fields
-      availability_type: recipe.availability_type,
-      available_days: recipe.available_days,
-      preorder_opens_on: recipe.preorder_opens_on,
-      requires_preorder: recipe.requires_preorder,
-      special_order_surcharge: recipe.special_order_surcharge
+      nutritionalInfo: recipe.nutritional_info
     };
-  };
-
-  const getRecipeEmoji = (name: string) => {
-    if (name?.includes("Chana Masala")) return "🫘";
-    if (name?.includes("Chole")) return "🫘";
-    if (name?.includes("Aloo Gobi")) return "🥔";
-    if (name?.includes("Palak Paneer")) return "🟢";
-    if (name?.includes("Rajma")) return "🫘";
-    if (name?.includes("Egg Bhurji")) return "🍳";
-    if (name?.includes("Egg Masala")) return "🥚";
-    if (name?.includes("Chicken Masala")) return "🍛";
-    if (name?.includes("Chicken Handi")) return "🍗";
-    if (name?.includes("Mutton Masala")) return "🍖";
-    if (name?.includes("Mutton Handi")) return "🥩";
-    if (name?.includes("Fish")) return "🐟";
-    return "🍽️";
   };
 
   return (
@@ -175,14 +165,13 @@ const Menu = () => {
                     >
                       <span className="mr-1 md:mr-2">{category.emoji}</span>
                       <span className="hidden sm:inline">{category.name}</span>
-                       <span className="sm:hidden">
-                         {category.name === "All Items" ? "All" :
-                          category.name === "Vegetarian Dishes" ? "Veg" :
-                          category.name === "Egg Dishes" ? "Egg" :
-                          category.name === "Chicken Dishes" ? "Chicken" :
-                          category.name === "Mutton Dishes" ? "Mutton" :
-                          category.name === "Fish Dishes" ? "Fish" : category.name}
-                       </span>
+                      <span className="sm:hidden">
+                        {category.name === "All Items" ? "All" :
+                         category.name === "Egg Dishes" ? "Egg" :
+                         category.name === "Chicken Dishes" ? "Chicken" :
+                         category.name === "Mutton Dishes" ? "Mutton" :
+                         category.name === "Fish Dishes" ? "Fish" : category.name}
+                      </span>
                     </TabsTrigger>
                   ))}
                 </TabsList>

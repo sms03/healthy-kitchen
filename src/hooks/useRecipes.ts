@@ -17,7 +17,7 @@ export const useRecipes = () => {
         throw error;
       }
       
-      return data;
+      return data as Recipe[];
     },
   });
 };

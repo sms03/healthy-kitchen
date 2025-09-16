@@ -36,20 +36,19 @@ export const MenuSection = () => {
   const categoryOptions = [
     { id: "all", name: "All Items", emoji: "🍽️" },
     ...(categories?.map(cat => ({
-      id: cat.id.toString(),
+      id: cat.id,
       name: cat.name,
       emoji: cat.name === "Egg Dishes" ? "🥚" : 
              cat.name === "Chicken Dishes" ? "🍗" : 
              cat.name === "Mutton Dishes" ? "🍖" :
-             cat.name === "Fish Dishes" ? "🐟" : 
-             cat.name === "Vegetarian Dishes" ? "🥬" : "🍽️"
+             cat.name === "Fish Dishes" ? "🐟" : "🍽️"
     })) || [])
   ];
 
   // Filter to show the specific dishes
   const filteredRecipes = recipes?.filter(recipe => 
     targetDishes.includes(recipe.name) &&
-    (activeCategory === "all" || recipe.category_id?.toString() === activeCategory)
+    (activeCategory === "all" || recipe.category_id === activeCategory)
   ) || [];
 
   // Convert recipe to dish format for compatibility with existing DishCard

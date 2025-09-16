@@ -1,18 +1,17 @@
 import { useState, useEffect } from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ImageCarousel } from "@/components/ImageCarousel";
-import { ContactInquiry } from "@/components/ContactInquiry";
+import { Card, CardContent } from "@/components/ui/card";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { Badge } from "@/components/ui/badge";
+import { MessageCircle, Flame, ChefHat, Info } from "lucide-react";
 import { useRecipeServings } from "@/hooks/useRecipeServings";
-import { useAvailability, getAvailabilityBadgeProps } from "@/hooks/useAvailability";
-import { Loader2, Flame, ChefHat } from "lucide-react";
+import { ContactInquiry } from "@/components/ContactInquiry";
+import { ImageCarousel } from "@/components/ImageCarousel";
 
 interface DishCardProps {
   dish: {
     id: number;
-    originalId?: string | number;
+    originalId?: string;
     name: string;
     description: string;
     detailedDescription?: string;
@@ -23,37 +22,44 @@ interface DishCardProps {
     spiceLevel?: number;
     cookingMethod?: string;
     chefNotes?: string;
-    nutritionalInfo?: any;
-    // Availability fields
-    availability_type?: string;
-    available_days?: string[];
-    preorder_opens_on?: string;
-    requires_preorder?: boolean;
-    special_order_surcharge?: number;
-  };
+    nutritionalInfo?: any;  };
 }
 
 export const DishCard = ({ dish }: DishCardProps) => {
-  const [selectedServing, setSelectedServing] = useState<string>("single");
+  const [selectedServing, setSelectedServing] = useState<string>("");
   const [isContactOpen, setIsContactOpen] = useState(false);
-  const { data: servings, isLoading: servingsLoading } = useRecipeServings(dish.originalId);
-  const availability = useAvailability(dish);
-  const badgeProps = getAvailabilityBadgeProps(availability.status);
-
-  // Calculate final price based on selected serving and availability
-  const selectedServingData = servings?.find(s => 
-    (selectedServing === "single" && s.serving_name === "Single Portion") ||
-    (selectedServing === "family" && s.serving_name === "Family Pack")
-  );
   
-  let basePrice = selectedServingData 
-    ? (dish.price * selectedServingData.price_multiplier) + (selectedServingData.additional_price || 0)
+  // Fetch serving options for this dish
+  const { data: servings, isLoading: servingsLoading } = useRecipeServings(dish.originalId);
+  
+  // Set default serving when servings are loaded
+  useEffect(() => {
+    if (servings && servings.length > 0 && !selectedServing) {
+      setSelectedServing(servings[0].id);
+    }
+  }, [servings, selectedServing]);
+
+  // Find the current serving option
+  const currentServing = servings?.find(s => s.id === selectedServing) || servings?.[0];
+  
+  // Calculate the price based on selected serving
+  const finalPrice = currentServing 
+    ? Math.round(dish.price * currentServing.price_multiplier + (currentServing.additional_price || 0))
     : dish.price;
 
-  // Add special order surcharge if applicable
-  const finalPrice = availability.status === 'special_order' && availability.priceWithSurcharge
-    ? availability.priceWithSurcharge + (selectedServingData?.additional_price || 0)
-    : basePrice;
+  const handleContactUs = () => {
+    const dishWithServing = {
+      ...dish,
+      price: finalPrice,
+    };
+    setIsContactOpen(true);
+  };
+
+  // Prepare image gallery - combine main image with gallery
+  const allImages = [
+    dish.image,
+    ...(dish.imageGallery || [])
+  ].filter(Boolean);
 
   // Get spice level display
   const getSpiceLevel = (level?: number) => {
@@ -69,12 +75,6 @@ export const DishCard = ({ dish }: DishCardProps) => {
   };
 
   const spiceInfo = getSpiceLevel(dish.spiceLevel);
-
-  // Prepare image gallery - combine main image with gallery
-  const allImages = [
-    dish.image,
-    ...(dish.imageGallery || [])
-  ].filter(Boolean);
 
   if (servingsLoading) {
     return (
@@ -101,29 +101,15 @@ export const DishCard = ({ dish }: DishCardProps) => {
             className="w-full h-48 mb-4 group-hover:scale-105 transition-transform duration-300"
           />
 
-          <div className="space-y-4">
+          {/* Dish Info */}
+          <div className="space-y-3">
             <div className="flex items-start justify-between">
-              <div className="flex-1">
-                <div className="flex items-center gap-2 mb-2">
-                  <h3 className="text-xl font-bold text-gray-800">{dish.name}</h3>
-                  <Badge {...badgeProps}>
-                    <span className="mr-1">{badgeProps.icon}</span>
-                    {availability.status === 'available' ? 'Available' :
-                     availability.status === 'preorder' ? 'Preorder' :
-                     availability.status === 'special_order' ? 'Special Order' :
-                     'Unavailable'}
-                  </Badge>
-                </div>
-                <div className="flex items-center gap-2">
-                  <p className="text-2xl font-bold text-orange-600">₹{finalPrice}</p>
-                  {availability.status === 'special_order' && dish.special_order_surcharge && dish.special_order_surcharge > 0 && (
-                    <Badge variant="outline" className="text-xs bg-orange-50 text-orange-700">
-                      +₹{dish.special_order_surcharge} surcharge
-                    </Badge>
-                  )}
-                </div>
-                <p className="text-sm text-gray-600 mt-1">{availability.message}</p>
-              </div>
+              <h3 className="text-xl font-semibold text-gray-800 group-hover:text-orange-600 transition-colors">
+                {dish.name}
+              </h3>
+              <span className="text-2xl font-bold text-orange-600">
+                ₹{finalPrice}
+              </span>
             </div>
 
             {/* Spice Level and Cooking Method */}
@@ -161,56 +147,52 @@ export const DishCard = ({ dish }: DishCardProps) => {
             {servings && servings.length > 1 && (
               <Tabs value={selectedServing} onValueChange={setSelectedServing} className="w-full">
                 <TabsList className="grid w-full grid-cols-2 h-9 rounded-full">
-                  <TabsTrigger 
-                    value="single"
-                    className="text-xs data-[state=active]:bg-orange-500 data-[state=active]:text-white rounded-full"
-                  >
-                    Single Portion
-                  </TabsTrigger>
-                  <TabsTrigger 
-                    value="family"
-                    className="text-xs data-[state=active]:bg-orange-500 data-[state=active]:text-white rounded-full"
-                  >
-                    Family Pack
-                  </TabsTrigger>
+                  {servings.map((serving) => (
+                    <TabsTrigger 
+                      key={serving.id} 
+                      value={serving.id}
+                      className="text-xs data-[state=active]:bg-orange-500 data-[state=active]:text-white rounded-full"
+                    >
+                      {serving.serving_name}
+                    </TabsTrigger>
+                  ))}
                 </TabsList>
                 
-                <TabsContent value="single" className="mt-2">
-                  <div className="text-xs text-gray-500 text-center">
-                    {servings.find(s => s.serving_name === "Single Portion")?.serving_description || "Perfect for one person"}
-                  </div>
-                </TabsContent>
-                <TabsContent value="family" className="mt-2">
-                  <div className="text-xs text-gray-500 text-center">
-                    {servings.find(s => s.serving_name === "Family Pack")?.serving_description || "Serves 3-4 people"}
-                  </div>
-                </TabsContent>
+                {servings.map((serving) => (
+                  <TabsContent key={serving.id} value={serving.id} className="mt-2">
+                    <div className="text-xs text-gray-500 text-center">
+                      {serving.serving_description}
+                    </div>
+                  </TabsContent>
+                ))}
               </Tabs>
             )}
 
-            <Button 
-              onClick={() => setIsContactOpen(true)}
-              disabled={!availability.canOrder}
-              className="w-full bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white font-semibold py-3 rounded-full transition-all duration-300 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+            {/* Contact Us Button */}
+            <Button
+              onClick={handleContactUs}
+              disabled={!currentServing}
+              className="w-full bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white py-3 rounded-full transition-all duration-300 transform hover:scale-105"
             >
-              {availability.status === 'available' ? 'Order Now' :
-               availability.status === 'preorder' ? 'Preorder for Sunday' :
-               availability.status === 'special_order' ? 'Special Order' :
-               'Contact for Pre-Order'}
+              <MessageCircle className="w-4 h-4 mr-2" />
+              Contact for Pre-Order
             </Button>
+
+            {/* Pre-order Info */}
+            <div className="text-xs text-center text-gray-500 bg-gray-50 p-2 rounded">
+              💡 Limited orders only • 50% advance • Remaining on delivery
+            </div>
           </div>
         </CardContent>
       </Card>
 
-        <ContactInquiry 
-          isOpen={isContactOpen}
-          onClose={() => setIsContactOpen(false)}
-          dishName={dish.name}
-          dishId={dish.id}
-          servingSize={selectedServing === "single" ? "Single Portion" : "Family Pack"}
-          availabilityInfo={availability}
-          finalPrice={finalPrice}
-        />
+      <ContactInquiry
+        isOpen={isContactOpen}
+        onClose={() => setIsContactOpen(false)}
+        dish={dish}
+        servingSize={currentServing?.serving_name}
+      />
     </>
   );
 };
+

@@ -7,11 +7,6 @@ export type Json =
   | Json[]
 
 export type Database = {
-  // Allows to automatically instantiate createClient with right options
-  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
-  __InternalSupabase: {
-    PostgrestVersion: "13.0.4"
-  }
   public: {
     Tables: {
       addresses: {
@@ -57,7 +52,7 @@ export type Database = {
         Row: {
           created_at: string
           description: string | null
-          id: number
+          id: string
           image_url: string | null
           name: string
           sort_order: number | null
@@ -66,7 +61,7 @@ export type Database = {
         Insert: {
           created_at?: string
           description?: string | null
-          id?: number
+          id?: string
           image_url?: string | null
           name: string
           sort_order?: number | null
@@ -75,7 +70,7 @@ export type Database = {
         Update: {
           created_at?: string
           description?: string | null
-          id?: number
+          id?: string
           image_url?: string | null
           name?: string
           sort_order?: number | null
@@ -86,7 +81,7 @@ export type Database = {
       contact_inquiries: {
         Row: {
           created_at: string
-          dish_id: number | null
+          dish_id: string | null
           dish_name: string
           id: string
           inquiry_type: string | null
@@ -102,7 +97,7 @@ export type Database = {
         }
         Insert: {
           created_at?: string
-          dish_id?: number | null
+          dish_id?: string | null
           dish_name: string
           id?: string
           inquiry_type?: string | null
@@ -118,7 +113,7 @@ export type Database = {
         }
         Update: {
           created_at?: string
-          dish_id?: number | null
+          dish_id?: string | null
           dish_name?: string
           id?: string
           inquiry_type?: string | null
@@ -148,7 +143,7 @@ export type Database = {
           id: string
           order_id: string
           quantity: number
-          recipe_id: number | null
+          recipe_id: string
           total_price: number
           unit_price: number
         }
@@ -157,7 +152,7 @@ export type Database = {
           id?: string
           order_id: string
           quantity: number
-          recipe_id?: number | null
+          recipe_id: string
           total_price: number
           unit_price: number
         }
@@ -166,7 +161,7 @@ export type Database = {
           id?: string
           order_id?: string
           quantity?: number
-          recipe_id?: number | null
+          recipe_id?: string
           total_price?: number
           unit_price?: number
         }
@@ -237,6 +232,57 @@ export type Database = {
           },
         ]
       }
+      personal_recipes: {
+        Row: {
+          category: string | null
+          cook_time: number | null
+          created_at: string
+          description: string | null
+          difficulty: string | null
+          id: string
+          image_url: string | null
+          ingredients: string[]
+          instructions: string
+          is_secret: boolean | null
+          prep_time: number | null
+          servings: number | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          category?: string | null
+          cook_time?: number | null
+          created_at?: string
+          description?: string | null
+          difficulty?: string | null
+          id?: string
+          image_url?: string | null
+          ingredients: string[]
+          instructions: string
+          is_secret?: boolean | null
+          prep_time?: number | null
+          servings?: number | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string | null
+          cook_time?: number | null
+          created_at?: string
+          description?: string | null
+          difficulty?: string | null
+          id?: string
+          image_url?: string | null
+          ingredients?: string[]
+          instructions?: string
+          is_secret?: boolean | null
+          prep_time?: number | null
+          servings?: number | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
@@ -286,27 +332,27 @@ export type Database = {
         Row: {
           additional_price: number | null
           created_at: string
-          id: number
+          id: string
           price_multiplier: number
-          recipe_id: number | null
+          recipe_id: string
           serving_description: string | null
           serving_name: string
         }
         Insert: {
           additional_price?: number | null
           created_at?: string
-          id?: number
+          id?: string
           price_multiplier?: number
-          recipe_id?: number | null
+          recipe_id: string
           serving_description?: string | null
           serving_name: string
         }
         Update: {
           additional_price?: number | null
           created_at?: string
-          id?: number
+          id?: string
           price_multiplier?: number
-          recipe_id?: number | null
+          recipe_id?: string
           serving_description?: string | null
           serving_name?: string
         }
@@ -322,15 +368,13 @@ export type Database = {
       }
       recipes: {
         Row: {
-          availability_type: string | null
-          available_days: string[] | null
-          category_id: number | null
+          category_id: string | null
           chef_notes: string | null
           cooking_method: string | null
           created_at: string
           description: string | null
           detailed_description: string | null
-          id: number
+          id: string
           image_gallery: string[] | null
           image_url: string | null
           ingredients: string[] | null
@@ -338,24 +382,19 @@ export type Database = {
           is_featured: boolean | null
           name: string
           nutritional_info: Json | null
-          preorder_opens_on: string | null
           preparation_time: number | null
           price: number
-          requires_preorder: boolean | null
-          special_order_surcharge: number | null
           spice_level: number | null
           updated_at: string
         }
         Insert: {
-          availability_type?: string | null
-          available_days?: string[] | null
-          category_id?: number | null
+          category_id?: string | null
           chef_notes?: string | null
           cooking_method?: string | null
           created_at?: string
           description?: string | null
           detailed_description?: string | null
-          id?: number
+          id?: string
           image_gallery?: string[] | null
           image_url?: string | null
           ingredients?: string[] | null
@@ -363,24 +402,19 @@ export type Database = {
           is_featured?: boolean | null
           name: string
           nutritional_info?: Json | null
-          preorder_opens_on?: string | null
           preparation_time?: number | null
           price: number
-          requires_preorder?: boolean | null
-          special_order_surcharge?: number | null
           spice_level?: number | null
           updated_at?: string
         }
         Update: {
-          availability_type?: string | null
-          available_days?: string[] | null
-          category_id?: number | null
+          category_id?: string | null
           chef_notes?: string | null
           cooking_method?: string | null
           created_at?: string
           description?: string | null
           detailed_description?: string | null
-          id?: number
+          id?: string
           image_gallery?: string[] | null
           image_url?: string | null
           ingredients?: string[] | null
@@ -388,11 +422,8 @@ export type Database = {
           is_featured?: boolean | null
           name?: string
           nutritional_info?: Json | null
-          preorder_opens_on?: string | null
           preparation_time?: number | null
           price?: number
-          requires_preorder?: boolean | null
-          special_order_surcharge?: number | null
           spice_level?: number | null
           updated_at?: string
         }
@@ -405,6 +436,33 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      subscription_history: {
+        Row: {
+          changed_at: string
+          changed_by: string | null
+          id: string
+          new_tier: Database["public"]["Enums"]["subscription_tier"]
+          old_tier: Database["public"]["Enums"]["subscription_tier"] | null
+          user_id: string
+        }
+        Insert: {
+          changed_at?: string
+          changed_by?: string | null
+          id?: string
+          new_tier: Database["public"]["Enums"]["subscription_tier"]
+          old_tier?: Database["public"]["Enums"]["subscription_tier"] | null
+          user_id: string
+        }
+        Update: {
+          changed_at?: string
+          changed_by?: string | null
+          id?: string
+          new_tier?: Database["public"]["Enums"]["subscription_tier"]
+          old_tier?: Database["public"]["Enums"]["subscription_tier"] | null
+          user_id?: string
+        }
+        Relationships: []
       }
     }
     Views: {
@@ -430,25 +488,21 @@ export type Database = {
   }
 }
 
-type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">
-
-type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, "public">]
+type DefaultSchema = Database[Extract<keyof Database, "public">]
 
 export type Tables<
   DefaultSchemaTableNameOrOptions extends
     | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
-    | { schema: keyof DatabaseWithoutInternals },
+    | { schema: keyof Database },
   TableName extends DefaultSchemaTableNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
+    schema: keyof Database
   }
-    ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
-        DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
+    ? keyof (Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+        Database[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
     : never = never,
-> = DefaultSchemaTableNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
-}
-  ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
-      DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
+> = DefaultSchemaTableNameOrOptions extends { schema: keyof Database }
+  ? (Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+      Database[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
       Row: infer R
     }
     ? R
@@ -466,16 +520,14 @@ export type Tables<
 export type TablesInsert<
   DefaultSchemaTableNameOrOptions extends
     | keyof DefaultSchema["Tables"]
-    | { schema: keyof DatabaseWithoutInternals },
+    | { schema: keyof Database },
   TableName extends DefaultSchemaTableNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
+    schema: keyof Database
   }
-    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    ? keyof Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
     : never = never,
-> = DefaultSchemaTableNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
-}
-  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+> = DefaultSchemaTableNameOrOptions extends { schema: keyof Database }
+  ? Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
       Insert: infer I
     }
     ? I
@@ -491,16 +543,14 @@ export type TablesInsert<
 export type TablesUpdate<
   DefaultSchemaTableNameOrOptions extends
     | keyof DefaultSchema["Tables"]
-    | { schema: keyof DatabaseWithoutInternals },
+    | { schema: keyof Database },
   TableName extends DefaultSchemaTableNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
+    schema: keyof Database
   }
-    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    ? keyof Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
     : never = never,
-> = DefaultSchemaTableNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
-}
-  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+> = DefaultSchemaTableNameOrOptions extends { schema: keyof Database }
+  ? Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
       Update: infer U
     }
     ? U
@@ -516,16 +566,14 @@ export type TablesUpdate<
 export type Enums<
   DefaultSchemaEnumNameOrOptions extends
     | keyof DefaultSchema["Enums"]
-    | { schema: keyof DatabaseWithoutInternals },
+    | { schema: keyof Database },
   EnumName extends DefaultSchemaEnumNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
+    schema: keyof Database
   }
-    ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
+    ? keyof Database[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
     : never = never,
-> = DefaultSchemaEnumNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
-}
-  ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
+> = DefaultSchemaEnumNameOrOptions extends { schema: keyof Database }
+  ? Database[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
   : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
     ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
     : never
@@ -533,16 +581,14 @@ export type Enums<
 export type CompositeTypes<
   PublicCompositeTypeNameOrOptions extends
     | keyof DefaultSchema["CompositeTypes"]
-    | { schema: keyof DatabaseWithoutInternals },
+    | { schema: keyof Database },
   CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
+    schema: keyof Database
   }
-    ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
+    ? keyof Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
     : never = never,
-> = PublicCompositeTypeNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
-}
-  ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
+> = PublicCompositeTypeNameOrOptions extends { schema: keyof Database }
+  ? Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
   : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
     ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
     : never

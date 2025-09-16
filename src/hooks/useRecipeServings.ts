@@ -3,8 +3,8 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 
 export interface RecipeServing {
-  id: number;
-  recipe_id: number;
+  id: string;
+  recipe_id: string;
   serving_name: string;
   serving_description: string | null;
   price_multiplier: number;
@@ -12,7 +12,7 @@ export interface RecipeServing {
   created_at: string;
 }
 
-export const useRecipeServings = (recipeId?: string | number) => {
+export const useRecipeServings = (recipeId?: string) => {
   return useQuery({
     queryKey: ['recipe-servings', recipeId],
     queryFn: async () => {
@@ -22,7 +22,7 @@ export const useRecipeServings = (recipeId?: string | number) => {
         .order('price_multiplier');
       
       if (recipeId) {
-        query = query.eq('recipe_id', typeof recipeId === 'string' ? parseInt(recipeId) : recipeId);
+        query = query.eq('recipe_id', recipeId);
       }
       
       const { data, error } = await query;
@@ -31,7 +31,7 @@ export const useRecipeServings = (recipeId?: string | number) => {
         throw error;
       }
       
-      return data;
+      return data as RecipeServing[];
     },
     enabled: !!recipeId,
   });

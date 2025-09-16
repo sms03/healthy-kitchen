@@ -1,91 +1,161 @@
 import { useState } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Badge } from "@/components/ui/badge";
-import { useToast } from "@/hooks/use-toast";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
+import { X, Phone, Mail, MessageCircle } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
-import { AvailabilityInfo } from "@/hooks/useAvailability";
+import { useToast } from "@/hooks/use-toast";
 
 interface ContactInquiryProps {
   isOpen: boolean;
   onClose: () => void;
-  dishName: string;
-  dishId: number;
+  dish?: {
+    id: number;
+    originalId?: string;
+    name: string;
+    price: number;
+  };
   servingSize?: string;
-  availabilityInfo: AvailabilityInfo;
-  finalPrice: number;
 }
 
-export const ContactInquiry = ({ isOpen, onClose, dishName, dishId, servingSize, availabilityInfo, finalPrice }: ContactInquiryProps) => {
-  const { toast } = useToast();
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [formData, setFormData] = useState({
+export const ContactInquiry = ({ isOpen, onClose, dish, servingSize }: ContactInquiryProps) => {
+  const { user } = useAuth();
+  const { toast } = useToast();  const [formData, setFormData] = useState({
     name: "",
     email: "",
     phone: "",
     quantity: 1,
-    specialRequests: ""
+    spiceLevel: "medium",
+    fishType: "",
+    specialRequests: "",
+    contactMethod: "whatsapp",
+    hasSpecialRequests: false
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const spiceLevels = [
+    { value: "mild", label: "Mild", price: 0 },
+    { value: "medium", label: "Medium", price: 0 },
+    { value: "spicy", label: "Spicy", price: 0 }
+  ];
+
+  const fishTypes = [
+    { value: "pomfret", label: "Pomfret", priceMultiplier: 1.5 },
+    { value: "surmai", label: "Surmai", priceMultiplier: 1.3 },
+    { value: "bangda", label: "Bangda", priceMultiplier: 1.0 },
+    { value: "other", label: "Other (Specify in special requests)", priceMultiplier: 1.2 }
+  ];
+
+  const calculatePrice = () => {
+    if (!dish) return 0;
+    let basePrice = dish.price;
+    
+    // Apply fish type multiplier for fish dishes
+    if (dish.name.toLowerCase().includes('fish') && formData.fishType) {
+      const fishType = fishTypes.find(f => f.value === formData.fishType);
+      if (fishType) basePrice *= fishType.priceMultiplier;
+    }
+    
+    // Add charge for special requests (₹50 if there are any special requests)
+    if (formData.hasSpecialRequests && formData.specialRequests.trim()) {
+      basePrice += 50;
+    }
+    
+    return Math.round(basePrice * formData.quantity);
+  };
 
   const handleWhatsAppOrder = () => {
-    const orderType = availabilityInfo.status === 'available' ? 'Order' :
-                     availabilityInfo.status === 'preorder' ? 'Preorder for Sunday' :
-                     availabilityInfo.status === 'special_order' ? 'Special Order Request' :
-                     'Inquiry';
+    const message = `Hi! I'd like to place a pre-order:
+    
+Dish: ${dish?.name}
+Serving: ${servingSize || 'Regular'}
+Quantity: ${formData.quantity}
+Spice Level: ${formData.spiceLevel}
+${dish?.name.toLowerCase().includes('fish') && formData.fishType ? `Fish Type: ${formData.fishType}` : ''}
+${formData.hasSpecialRequests && formData.specialRequests ? `Special Requests: ${formData.specialRequests}` : ''}
+Total Price: ₹${calculatePrice()}
 
-    const message = `Hi! I'd like to place a ${orderType}:
-
-🍽️ Dish: ${dishName}
-📏 Serving: ${servingSize || 'Regular'}
-🔢 Quantity: ${formData.quantity}
-💰 Total Price: ₹${finalPrice * formData.quantity}
-📊 Status: ${availabilityInfo.message}
-
-👤 Name: ${formData.name}
-📞 Phone: ${formData.phone}
-📧 Email: ${formData.email}
-${formData.specialRequests ? `\n📝 Special Requests: ${formData.specialRequests}` : ''}
-
-Please confirm availability and payment details. Thank you!`;
+Name: ${formData.name}
+Phone: ${formData.phone}
+Email: ${formData.email}`;
 
     const whatsappUrl = `https://wa.me/919822042638?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
     onClose();
   };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!user) {
+      toast({
+        title: "Sign In Required",
+        description: "Please sign in to place a pre-order inquiry",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (!dish) {
+      toast({
+        title: "Error",
+        description: "No dish selected",
+        variant: "destructive"
+      });
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
+      const finalPrice = calculatePrice();
+      const specialRequestsText = [
+        formData.hasSpecialRequests ? formData.specialRequests : '',
+        `Spice Level: ${formData.spiceLevel}`,
+        dish.name.toLowerCase().includes('fish') && formData.fishType ? `Fish Type: ${formData.fishType}` : ''
+      ].filter(Boolean).join('; ');
+
       const { error } = await supabase
         .from('contact_inquiries')
         .insert({
+          user_id: user.id,
           user_name: formData.name,
           user_email: formData.email,
           user_phone: formData.phone,
-          dish_name: dishName,
-          dish_id: dishId,
+          dish_name: dish.name,
+          dish_id: dish.originalId,
           serving_size: servingSize || 'Regular',
           quantity: formData.quantity,
-          special_requests: formData.specialRequests,
-          inquiry_type: availabilityInfo.status === 'preorder' ? 'preorder' : 
-                       availabilityInfo.status === 'special_order' ? 'special_order' : 'order',
-          status: 'pending'
+          special_requests: specialRequestsText,
+          inquiry_type: 'pre_order',
+          estimated_price: finalPrice,
+          has_special_requests: formData.hasSpecialRequests
         });
 
       if (error) throw error;
 
       toast({
-        title: "Inquiry Sent Successfully!",
+        title: "Pre-Order Inquiry Sent!",
         description: "We'll contact you within 24 hours to confirm your order and payment details.",
       });
 
       onClose();
-      setFormData({ name: "", email: "", phone: "", quantity: 1, specialRequests: "" });
+      setFormData({ 
+        name: "", 
+        email: "", 
+        phone: "", 
+        quantity: 1, 
+        spiceLevel: "medium",
+        fishType: "",
+        specialRequests: "",
+        contactMethod: "whatsapp",
+        hasSpecialRequests: false
+      });
     } catch (error: any) {
       console.error('Error submitting inquiry:', error);
       toast({
@@ -99,136 +169,227 @@ Please confirm availability and payment details. Thank you!`;
   };
 
   if (!isOpen) return null;
-
+  
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md">
-        <DialogHeader>
-          <DialogTitle className="text-2xl font-bold text-gray-800">
-            {availabilityInfo.status === 'available' ? 'Order Now' :
-             availabilityInfo.status === 'preorder' ? 'Preorder for Sunday' :
-             availabilityInfo.status === 'special_order' ? 'Special Order Request' :
-             'Contact for Pre-Order'}
-          </DialogTitle>
-          <div className="space-y-2">
-            <p className="text-gray-600">
-              {availabilityInfo.status === 'available' ? 'Place your order for' :
-               availabilityInfo.status === 'preorder' ? 'Preorder for Sunday delivery:' :
-               availabilityInfo.status === 'special_order' ? 'Request special order for' :
-               'Get in touch with us to place your pre-order for'} <span className="font-semibold text-orange-600">{dishName}</span>
-              {servingSize && ` (${servingSize})`}
-            </p>
-            <div className="flex items-center gap-2">
-              <Badge variant="outline" className="bg-orange-50 text-orange-700">
-                ₹{finalPrice}
-              </Badge>
-              <Badge variant="secondary" className="text-sm">
-                {availabilityInfo.message}
-              </Badge>
-            </div>
-          </div>
-        </DialogHeader>
-
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <Label htmlFor="name">Full Name</Label>
-              <Input
-                id="name"
-                value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                placeholder="Your full name"
-                required
-                className="border-gray-300 focus:border-orange-500 focus:ring-orange-500"
-              />
-            </div>
-            <div>
-              <Label htmlFor="phone">Phone Number</Label>
-              <Input
-                id="phone"
-                type="tel"
-                value={formData.phone}
-                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                placeholder="+91 1234567890"
-                required
-                className="border-gray-300 focus:border-orange-500 focus:ring-orange-500"
-              />
-            </div>
-          </div>
-
-          <div>
-            <Label htmlFor="email">Email Address</Label>
-            <Input
-              id="email"
-              type="email"
-              value={formData.email}
-              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-              placeholder="your.email@example.com"
-              required
-              className="border-gray-300 focus:border-orange-500 focus:ring-orange-500"
-            />
-          </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="quantity">Quantity</Label>
-                <Input
-                  id="quantity"
-                  type="number"
-                  min="1"
-                  value={formData.quantity}
-                  onChange={(e) => setFormData({ ...formData, quantity: parseInt(e.target.value) || 1 })}
-                  className="border-gray-300 focus:border-orange-500 focus:ring-orange-500"
-                />
-              </div>
-              <div>
-                <Label>Total Price</Label>
-                <Input
-                  value={`₹${finalPrice * formData.quantity}`}
-                  disabled
-                  className="bg-gray-50 font-semibold text-orange-600"
-                />
-              </div>
-            </div>
-
-            <div>
-              <Label htmlFor="specialRequests">
-                {availabilityInfo.status === 'preorder' ? 'Special Requests for Sunday Delivery (Optional)' :
-                 availabilityInfo.status === 'special_order' ? 'Special Order Details & Requirements' :
-                 'Special Requests (Optional)'}
-              </Label>
-              <Textarea
-                id="specialRequests"
-                placeholder={
-                  availabilityInfo.status === 'preorder' ? 'Any special requests for your Sunday preorder?' :
-                  availabilityInfo.status === 'special_order' ? 'Please specify your special order requirements and preferred delivery date...' :
-                  'Any special requests or dietary requirements?'
-                }
-                value={formData.specialRequests}
-                onChange={(e) => setFormData({ ...formData, specialRequests: e.target.value })}
-                className="border-gray-300 focus:border-orange-500 focus:ring-orange-500"
-                rows={3}
-              />
-            </div>
-
-          <div className="flex gap-3 pt-4">
-            <Button type="button" variant="outline" onClick={onClose} className="flex-1">
-              Cancel
-            </Button>
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-2 sm:p-4">
+      <Card className="w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl max-h-[95vh] bg-white shadow-2xl flex flex-col overflow-hidden">
+        <CardHeader className="pb-3 sm:pb-4 flex-shrink-0">
+          <div className="flex items-center justify-between">
+            <CardTitle className="text-lg sm:text-xl font-semibold text-gray-800">
+              Pre-Order Inquiry
+            </CardTitle>
             <Button
-              type="button"
-              onClick={handleWhatsAppOrder}
-              disabled={!formData.name || !formData.phone || !formData.email}
-              className="w-full bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white font-semibold py-3 rounded-full transition-all duration-300"
+              variant="ghost"
+              size="sm"
+              onClick={onClose}
+              className="h-8 w-8 p-0"
             >
-              {availabilityInfo.status === 'available' ? 'Send Order via WhatsApp' :
-               availabilityInfo.status === 'preorder' ? 'Send Preorder via WhatsApp' :
-               availabilityInfo.status === 'special_order' ? 'Request Special Order' :
-               'Send WhatsApp Message'}
+              <X className="h-4 w-4" />
             </Button>
           </div>
-        </form>
-      </DialogContent>
-    </Dialog>
+          {dish && (
+            <div className="bg-orange-50 p-2 sm:p-3 rounded-lg">
+              <p className="font-medium text-orange-800 text-sm sm:text-base">{dish.name}</p>
+              {servingSize && (
+                <p className="text-xs sm:text-sm text-orange-600">Serving: {servingSize}</p>
+              )}
+              <p className="text-xs sm:text-sm text-orange-600">Total Price: ₹{calculatePrice()}</p>
+              {dish.name.toLowerCase().includes('fish') && (
+                <p className="text-xs text-blue-600 mt-1">
+                  🐟 Fish dishes are subject to availability and pricing may vary based on fish type
+                </p>
+              )}
+            </div>
+          )}
+        </CardHeader>
+
+        <CardContent className="space-y-3 sm:space-y-4 flex-1 overflow-y-auto scrollbar-thin px-4 sm:px-6 pb-4 sm:pb-6">
+          <div className="bg-blue-50 p-2 sm:p-3 rounded-lg text-xs sm:text-sm text-blue-800">
+            <p className="font-medium mb-1">📋 Pre-Order Process:</p>
+            <div className="space-y-1">
+              <p>• Pay 50% advance to confirm order</p>
+              <p>• Remaining 50% on delivery</p>
+              <p>• We'll contact you within 24 hours</p>
+            </div>
+          </div>          {/* Contact Method Selection */}
+          <div className="space-y-2 sm:space-y-3">
+            <Label className="text-sm font-medium">How would you like to place your order?</Label>
+            <RadioGroup value={formData.contactMethod} onValueChange={(value) => setFormData({ ...formData, contactMethod: value })}>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="whatsapp" id="whatsapp" />
+                <Label htmlFor="whatsapp" className="text-sm">Chat via WhatsApp (Recommended)</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="form" id="form" />
+                <Label htmlFor="form" className="text-sm">Submit form inquiry</Label>
+              </div>
+            </RadioGroup>
+          </div>
+
+          <form onSubmit={handleSubmit} className="space-y-3">
+            <div className="grid grid-cols-1 gap-3">
+              <div>
+                <Label htmlFor="name" className="text-sm font-medium">Full Name</Label>
+                <Input
+                  id="name"
+                  value={formData.name}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  placeholder="e.g., Name Surname"
+                  required
+                  className="mt-1 text-sm"
+                />
+              </div>
+              <div>
+                <Label htmlFor="email" className="text-sm font-medium">Email Address (for invoice mailing)</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  value={formData.email}
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  placeholder="e.g., emailid@gmail.com"
+                  required
+                  className="mt-1 text-sm"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">                <div>
+                  <Label htmlFor="phone" className="text-sm font-medium">Phone Number (for contacting)</Label>
+                  <Input
+                    id="phone"
+                    type="tel"
+                    value={formData.phone}
+                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                    placeholder="e.g., +91 1234567890"
+                    required
+                    className="mt-1 text-sm"
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="quantity" className="text-sm font-medium">Quantity</Label>
+                  <Input
+                    id="quantity"
+                    type="number"
+                    min="1"
+                    value={formData.quantity}
+                    onChange={(e) => setFormData({ ...formData, quantity: parseInt(e.target.value) || 1 })}
+                    className="mt-1 text-sm"
+                  />
+                </div>
+              </div>
+
+              {/* Spice Level Selection */}
+              <div>
+                <Label className="text-sm font-medium">Spice Level (No extra charge)</Label>
+                <Select value={formData.spiceLevel} onValueChange={(value) => setFormData({ ...formData, spiceLevel: value })}>
+                  <SelectTrigger className="mt-1">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {spiceLevels.map((level) => (
+                      <SelectItem key={level.value} value={level.value}>
+                        {level.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Fish Type Selection for Fish Dishes */}
+              {dish?.name.toLowerCase().includes('fish') && (
+                <div>
+                  <Label className="text-sm font-medium">Fish Type</Label>
+                  <Select value={formData.fishType} onValueChange={(value) => setFormData({ ...formData, fishType: value })}>
+                    <SelectTrigger className="mt-1">
+                      <SelectValue placeholder="Select fish type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {fishTypes.map((fish) => (
+                        <SelectItem key={fish.value} value={fish.value}>
+                          {fish.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <p className="text-xs text-gray-500 mt-1">
+                    *Pricing varies based on fish availability and type
+                  </p>
+                </div>
+              )}
+
+              {/* Special Requests Toggle */}
+              <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                <div>
+                  <Label className="text-sm font-medium">Special Requests</Label>
+                  <p className="text-xs text-gray-500">Add ₹50 for customizations</p>
+                </div>
+                <Switch
+                  checked={formData.hasSpecialRequests}
+                  onCheckedChange={(checked) => setFormData({ 
+                    ...formData, 
+                    hasSpecialRequests: checked,
+                    specialRequests: checked ? formData.specialRequests : ""
+                  })}
+                />
+              </div>
+
+              {formData.hasSpecialRequests && (
+                <div>
+                  <Label htmlFor="requests" className="text-sm font-medium">Special Requests (+₹50)</Label>
+                  <Textarea
+                    id="requests"
+                    value={formData.specialRequests}
+                    onChange={(e) => setFormData({ ...formData, specialRequests: e.target.value })}
+                    className="mt-1 text-sm"
+                    rows={2}
+                    placeholder="Any special dietary requirements, extra ingredients, or preferences..."
+                  />
+                  <p className="text-xs text-gray-500 mt-1">
+                    *Special requests incur ₹50 additional charge
+                  </p>
+                </div>
+              )}
+            </div>
+
+            <div className="flex gap-2 pt-3 border-t">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={onClose}
+                className="flex-1 text-sm rounded-full"
+              >
+                Cancel
+              </Button>
+              {formData.contactMethod === "whatsapp" ? (
+                <Button
+                  type="button"
+                  onClick={handleWhatsAppOrder}
+                  className="flex-1 bg-green-600 hover:bg-green-700 text-sm rounded-full"
+                  disabled={!formData.name || !formData.phone}
+                >
+                  <MessageCircle className="w-4 h-4 mr-1" />
+                  WhatsApp
+                </Button>
+              ) : (
+                <Button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="flex-1 bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-sm rounded-full"
+                >
+                  {isSubmitting ? "Submitting..." : "Send Inquiry"}
+                </Button>
+              )}
+            </div>
+          </form>
+
+          <div className="flex items-center justify-center pt-2 border-t">
+            <div className="flex items-center text-xs sm:text-sm text-gray-600">
+              <Phone className="w-4 h-4 mr-1" />
+              <span>+91 9822042638</span>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
   );
 };
