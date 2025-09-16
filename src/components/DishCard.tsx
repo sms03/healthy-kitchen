@@ -22,7 +22,8 @@ interface DishCardProps {
     spiceLevel?: number;
     cookingMethod?: string;
     chefNotes?: string;
-    nutritionalInfo?: any;  };
+    nutritionalInfo?: any;
+  };
 }
 
 export const DishCard = ({ dish }: DishCardProps) => {
@@ -35,12 +36,12 @@ export const DishCard = ({ dish }: DishCardProps) => {
   // Set default serving when servings are loaded
   useEffect(() => {
     if (servings && servings.length > 0 && !selectedServing) {
-      setSelectedServing(servings[0].id);
+      setSelectedServing(servings[0].id.toString());
     }
   }, [servings, selectedServing]);
 
   // Find the current serving option
-  const currentServing = servings?.find(s => s.id === selectedServing) || servings?.[0];
+  const currentServing = servings?.find(s => s.id.toString() === selectedServing) || servings?.[0];
   
   // Calculate the price based on selected serving
   const finalPrice = currentServing 
@@ -150,7 +151,7 @@ export const DishCard = ({ dish }: DishCardProps) => {
                   {servings.map((serving) => (
                     <TabsTrigger 
                       key={serving.id} 
-                      value={serving.id}
+                      value={serving.id.toString()}
                       className="text-xs data-[state=active]:bg-orange-500 data-[state=active]:text-white rounded-full"
                     >
                       {serving.serving_name}
@@ -159,7 +160,7 @@ export const DishCard = ({ dish }: DishCardProps) => {
                 </TabsList>
                 
                 {servings.map((serving) => (
-                  <TabsContent key={serving.id} value={serving.id} className="mt-2">
+                  <TabsContent key={serving.id} value={serving.id.toString()} className="mt-2">
                     <div className="text-xs text-gray-500 text-center">
                       {serving.serving_description}
                     </div>

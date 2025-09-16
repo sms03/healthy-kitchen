@@ -3,8 +3,8 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 
 export interface RecipeServing {
-  id: string;
-  recipe_id: string;
+  id: number;
+  recipe_id: number;
   serving_name: string;
   serving_description: string | null;
   price_multiplier: number;
@@ -12,20 +12,17 @@ export interface RecipeServing {
   created_at: string;
 }
 
-export const useRecipeServings = (recipeId?: string) => {
+export const useRecipeServings = (recipeId?: number | string) => {
   return useQuery({
     queryKey: ['recipe-servings', recipeId],
     queryFn: async () => {
-      let query = supabase
+      if (!recipeId) return [];
+      
+      const { data, error } = await supabase
         .from('recipe_servings')
         .select('*')
+        .eq('recipe_id', parseInt(recipeId.toString()))
         .order('price_multiplier');
-      
-      if (recipeId) {
-        query = query.eq('recipe_id', recipeId);
-      }
-      
-      const { data, error } = await query;
       
       if (error) {
         throw error;

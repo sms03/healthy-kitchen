@@ -1,6 +1,6 @@
 
 export interface Category {
-  id: string;
+  id: number;
   name: string;
   description: string | null;
   image_url: string | null;
@@ -10,23 +10,34 @@ export interface Category {
 }
 
 export interface Recipe {
-  id: string;
+  id: number;
   name: string;
   description: string | null;
+  detailed_description: string | null;
   price: number;
-  category_id: string | null;
+  category_id: number | null;
   image_url: string | null;
   ingredients: string[] | null;
   preparation_time: number | null;
   is_available: boolean;
   is_featured: boolean;
+  spice_level: number | null;
+  cooking_method: string | null;
+  chef_notes: string | null;
+  availability_type: string | null;
+  available_days: string[] | null;
+  preorder_opens_on: string | null;
+  special_order_surcharge: number | null;
+  requires_preorder: boolean;
+  nutritional_info: any;
+  image_gallery: string[];
   created_at: string;
   updated_at: string;
 }
 
 export interface RecipeServing {
-  id: string;
-  recipe_id: string;
+  id: number;
+  recipe_id: number;
   serving_name: string;
   serving_description: string | null;
   price_multiplier: number;

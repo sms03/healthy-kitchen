@@ -24,48 +24,26 @@ export const MenuSection = () => {
     );
   }
 
-  // Define the specific dishes we want to show
-  const targetDishes = [
-    'Egg Bhurji', 'Egg Masala', 
-    'Chicken Masala', 'Chicken Handi', 
-    'Mutton Masala', 'Mutton Handi',
-    'Fish Curry', 'Fish Fry'
-  ];
-
   // Create categories with emojis for display
   const categoryOptions = [
     { id: "all", name: "All Items", emoji: "🍽️" },
     ...(categories?.map(cat => ({
-      id: cat.id,
+      id: cat.id.toString(),
       name: cat.name,
-      emoji: cat.name === "Egg Dishes" ? "🥚" : 
-             cat.name === "Chicken Dishes" ? "🍗" : 
-             cat.name === "Mutton Dishes" ? "🍖" :
-             cat.name === "Fish Dishes" ? "🐟" : "🍽️"
+      emoji: cat.name === "Vegetarian" ? "🥬" : 
+             cat.name === "Eggiterian" ? "🥚" : 
+             cat.name === "Non-Vegetarian" ? "🍖" : "🍽️"
     })) || [])
   ];
 
-  // Filter to show the specific dishes
-  const filteredRecipes = recipes?.filter(recipe => 
-    targetDishes.includes(recipe.name) &&
-    (activeCategory === "all" || recipe.category_id === activeCategory)
-  ) || [];
+  // Filter recipes based on selected category
+  const filteredRecipes = recipes?.filter(recipe => {
+    if (activeCategory === "all") return true;
+    return recipe.category_id?.toString() === activeCategory;
+  }) || [];
 
   // Convert recipe to dish format for compatibility with existing DishCard
   const convertRecipeToDish = (recipe: any) => {
-    // Create a hash from the ID string to get a consistent numeric ID
-    const stringToHash = (str: string) => {
-      let hash = 0;
-      for (let i = 0; i < str.length; i++) {
-        const char = str.charCodeAt(i);
-        hash = ((hash << 5) - hash) + char;
-        hash = hash & hash;
-      }
-      return Math.abs(hash);
-    };
-
-    const numericId = stringToHash(recipe.id);
-    
     // Adjust spice level for Chicken/Mutton Handi to medium (2)
     let adjustedSpiceLevel = recipe.spice_level;
     if (recipe.name?.includes("Chicken Handi") || recipe.name?.includes("Mutton Handi")) {
@@ -73,19 +51,21 @@ export const MenuSection = () => {
     }
     
     return {
-      id: numericId,
-      originalId: recipe.id, // Keep original UUID for database operations
+      id: recipe.id,
+      originalId: recipe.id, // Keep original ID for database operations
       name: recipe.name || "Unknown Item",
       description: recipe.description || "",
       detailedDescription: recipe.detailed_description,
       price: typeof recipe.price === 'string' ? parseFloat(recipe.price) : (recipe.price || 0),
-      image: recipe.name?.includes("Egg Bhurji") ? "🍳" :
-             recipe.name?.includes("Egg Masala") ? "🥚" :
-             recipe.name?.includes("Chicken Masala") ? "🍛" :
-             recipe.name?.includes("Chicken Handi") ? "🍗" :
-             recipe.name?.includes("Mutton Masala") ? "🍖" :
-             recipe.name?.includes("Mutton Handi") ? "🥩" :
-             recipe.name?.includes("Fish") ? "🐟" : "🍽️",
+      image: recipe.name?.includes("Egg") ? "🥚" :
+             recipe.name?.includes("Chicken") ? "🍗" :
+             recipe.name?.includes("Mutton") ? "🍖" :
+             recipe.name?.includes("Fish") ? "🐟" :
+             recipe.name?.includes("Chana") || recipe.name?.includes("Chole") ? "🫘" :
+             recipe.name?.includes("Paneer") ? "🧀" :
+             recipe.name?.includes("Aloo") ? "🥔" :
+             recipe.name?.includes("Palak") ? "🥬" :
+             recipe.name?.includes("Dal") ? "🍛" : "🥘",
       imageGallery: recipe.image_gallery || [],
       rating: 4.5 + Math.random() * 0.4, // Random rating between 4.5-4.9
       spiceLevel: adjustedSpiceLevel,

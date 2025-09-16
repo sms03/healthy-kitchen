@@ -123,18 +123,16 @@ Email: ${formData.email}`;
       const { error } = await supabase
         .from('contact_inquiries')
         .insert({
-          user_id: user.id,
           user_name: formData.name,
           user_email: formData.email,
           user_phone: formData.phone,
           dish_name: dish.name,
-          dish_id: dish.originalId,
-          serving_size: servingSize || 'Regular',
+          dish_id: parseInt(dish.originalId?.toString() || dish.id.toString()),
           quantity: formData.quantity,
+          serving_size: servingSize || 'Regular',
           special_requests: specialRequestsText,
           inquiry_type: 'pre_order',
-          estimated_price: finalPrice,
-          has_special_requests: formData.hasSpecialRequests
+          status: 'pending'
         });
 
       if (error) throw error;
