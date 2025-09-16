@@ -1,9 +1,7 @@
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Clock, Users, ChefHat, Lock, Loader2 } from "lucide-react";
+import { Clock, Users, ChefHat, Lock } from "lucide-react";
 
 interface PersonalRecipe {
   id: string;
@@ -24,21 +22,10 @@ interface PersonalRecipe {
 export const PersonalRecipes = () => {
   const [activeFilter, setActiveFilter] = useState("all");
 
-  const { data: recipes, isLoading } = useQuery({
-    queryKey: ['personalRecipes'],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from('personal_recipes')
-        .select('*')
-        .order('created_at', { ascending: false });
-      
-      if (error) {
-        throw error;
-      }
-      
-      return data as PersonalRecipe[];
-    },
-  });
+  // Personal recipes functionality is not implemented yet
+  // Using empty array for now to avoid database errors
+  const recipes: PersonalRecipe[] = [];
+  const isLoading = false;
 
   const filterOptions = [
     { id: "all", name: "All Recipes", emoji: "📚" },
@@ -53,18 +40,6 @@ export const PersonalRecipes = () => {
     if (activeFilter === "secret") return recipe.is_secret;
     return recipe.difficulty?.toLowerCase() === activeFilter;
   }) || [];
-
-  if (isLoading) {
-    return (
-      <section id="recipes" className="py-20 bg-gradient-to-br from-orange-50 to-red-50">
-        <div className="container mx-auto px-4">
-          <div className="flex items-center justify-center min-h-[400px]">
-            <Loader2 className="w-8 h-8 animate-spin text-orange-600" />
-          </div>
-        </div>
-      </section>
-    );
-  }
 
   return (
     <section id="recipes" className="py-20 bg-gradient-to-br from-orange-50 to-red-50">
@@ -166,8 +141,9 @@ export const PersonalRecipes = () => {
 
         {filteredRecipes.length === 0 && (
           <div className="text-center py-12">
-            <p className="text-gray-500 text-lg">No recipes found in this category.</p>
-            <p className="text-gray-400 text-sm mt-2">Check back soon for new recipes!</p>
+            <div className="text-6xl mb-4">👨‍🍳</div>
+            <p className="text-gray-500 text-lg">Personal Recipes Coming Soon!</p>
+            <p className="text-gray-400 text-sm mt-2">This feature will allow you to store and manage your own recipe collection.</p>
           </div>
         )}
       </div>
