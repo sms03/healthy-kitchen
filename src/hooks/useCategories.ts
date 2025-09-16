@@ -16,7 +16,7 @@ export const useCategories = () => {
         throw error;
       }
       
-      return data as Category[];
+      return data;
     },
   });
 };
