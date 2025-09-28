@@ -1,18 +1,20 @@
-
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { User, Session } from '@supabase/supabase-js';
-import { supabase } from "@/integrations/supabase/client";
-import { useToast } from "@/hooks/use-toast";
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
+import { useNavigate } from 'react-router-dom';
+import { signInSchema, signUpSchema, profileUpdateSchema, SignInInput, SignUpInput, ProfileUpdateInput } from '@/lib/validation';
+import { logSecurityEvent, SecurityEvents, getClientIP, getUserAgent, isRateLimited, clearRateLimit } from '@/lib/security';
 
 interface AuthContextType {
   user: User | null;
   session: Session | null;
   loading: boolean;
   signingOut: boolean;
-  signUp: (email: string, password: string, username: string, fullName: string) => Promise<{ error: any }>;
-  signIn: (email: string, password: string) => Promise<{ error: any }>;
+  signUp: (data: SignUpInput) => Promise<{ error: any }>;
+  signIn: (data: SignInInput) => Promise<{ error: any }>;
   signOut: () => Promise<void>;
-  updateProfile: (updates: { full_name?: string; username?: string; profile_image_url?: string }) => Promise<{ error: any }>;
+  updateProfile: (updates: ProfileUpdateInput) => Promise<{ error: any }>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -34,7 +36,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
   const [signingOut, setSigningOut] = useState(false);
-  const { toast } = useToast();
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Set up auth state listener
@@ -61,8 +63,27 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     return () => subscription.unsubscribe();
   }, []);
 
-  const signUp = async (email: string, password: string, username: string, fullName: string) => {
+  const signUp = async (data: SignUpInput) => {
     try {
+      setLoading(true);
+      
+      // Validate input
+      const validationResult = signUpSchema.safeParse(data);
+      if (!validationResult.success) {
+        const firstError = validationResult.error.errors[0];
+        toast.error(firstError.message);
+        return { error: firstError };
+      }
+
+      const { email, password, username, fullName } = validationResult.data;
+      
+      // Rate limiting
+      const rateLimitKey = `signup:${email}`;
+      if (isRateLimited(rateLimitKey, 3, 15 * 60 * 1000)) {
+        toast.error('Too many signup attempts. Please wait 15 minutes before trying again.');
+        return { error: new Error('Rate limited') };
+      }
+      
       const redirectUrl = `${window.location.origin}/`;
       
       const { error } = await supabase.auth.signUp({
@@ -78,143 +99,220 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       });
 
       if (error) {
-        toast({
-          title: "Sign Up Error",
-          description: error.message,
-          variant: "destructive"
+        // Log security event for failed signup
+        await logSecurityEvent({
+          action: SecurityEvents.AUTH_SIGN_UP,
+          resource: 'auth',
+          resourceId: email,
+          ipAddress: await getClientIP(),
+          userAgent: getUserAgent()
         });
-      } else {
-        toast({
-          title: "Success!",
-          description: "Please check your email to confirm your account."
-        });
+
+        if (error.message.includes('User already registered')) {
+          toast.error('An account with this email already exists. Please sign in instead.');
+        } else if (error.message.includes('Invalid email')) {
+          toast.error('Please enter a valid email address.');
+        } else if (error.message.includes('Password')) {
+          toast.error('Password does not meet security requirements.');
+        } else {
+          toast.error(error.message || 'Failed to create account. Please try again.');
+        }
+        return { error };
       }
 
-      return { error };
+      // Clear rate limit on successful signup
+      clearRateLimit(rateLimitKey);
+      
+      // Log successful signup attempt
+      setTimeout(async () => {
+        await logSecurityEvent({
+          action: SecurityEvents.AUTH_SIGN_UP,
+          resource: 'auth',
+          resourceId: email,
+          ipAddress: await getClientIP(),
+          userAgent: getUserAgent()
+        });
+      }, 0);
+
+      toast.success('Account created successfully! Please check your email to verify your account.');
+      return { error: null };
     } catch (error: any) {
-      toast({
-        title: "Sign Up Error",
-        description: error.message,
-        variant: "destructive"
-      });
+      console.error('Error signing up:', error);
+      toast.error('An unexpected error occurred. Please try again.');
       return { error };
+    } finally {
+      setLoading(false);
     }
   };
 
-  const signIn = async (email: string, password: string) => {
+  const signIn = async (data: SignInInput) => {
     try {
+      setLoading(true);
+      
+      // Validate input
+      const validationResult = signInSchema.safeParse(data);
+      if (!validationResult.success) {
+        const firstError = validationResult.error.errors[0];
+        toast.error(firstError.message);
+        return { error: firstError };
+      }
+
+      const { email, password } = validationResult.data;
+      
+      // Rate limiting
+      const rateLimitKey = `signin:${email}`;
+      if (isRateLimited(rateLimitKey, 5, 15 * 60 * 1000)) {
+        toast.error('Too many login attempts. Please wait 15 minutes before trying again.');
+        return { error: new Error('Rate limited') };
+      }
+      
       const { error } = await supabase.auth.signInWithPassword({
         email,
-        password
+        password,
       });
 
       if (error) {
-        toast({
-          title: "Sign In Error",
-          description: error.message,
-          variant: "destructive"
+        // Log security event for failed signin
+        await logSecurityEvent({
+          action: SecurityEvents.AUTH_SIGN_IN,
+          resource: 'auth',
+          resourceId: email,
+          ipAddress: await getClientIP(),
+          userAgent: getUserAgent()
         });
-      } else {
-        toast({
-          title: "Welcome back!",
-          description: "You have successfully signed in."
-        });
+
+        if (error.message.includes('Invalid login credentials')) {
+          toast.error('Invalid email or password. Please try again.');
+        } else if (error.message.includes('Email not confirmed')) {
+          toast.error('Please check your email and click the confirmation link before signing in.');
+        } else if (error.message.includes('Too many requests')) {
+          toast.error('Too many login attempts. Please wait a few minutes before trying again.');
+        } else {
+          toast.error(error.message || 'Failed to sign in. Please try again.');
+        }
+        return { error };
       }
 
-      return { error };
+      // Clear rate limit on successful signin
+      clearRateLimit(rateLimitKey);
+      
+      // Log successful signin
+      setTimeout(async () => {
+        await logSecurityEvent({
+          action: SecurityEvents.AUTH_SIGN_IN,
+          resource: 'auth',
+          resourceId: email,
+          ipAddress: await getClientIP(),
+          userAgent: getUserAgent()
+        });
+      }, 0);
+
+      toast.success('Signed in successfully!');
+      return { error: null };
     } catch (error: any) {
-      toast({
-        title: "Sign In Error",
-        description: error.message,
-        variant: "destructive"
-      });
+      console.error('Error signing in:', error);
+      toast.error('An unexpected error occurred. Please try again.');
       return { error };
+    } finally {
+      setLoading(false);
     }
   };
 
   const signOut = async () => {
     try {
-      console.log('Starting sign out process...');
       setSigningOut(true);
       
-      // Clear local state first
-      setSession(null);
-      setUser(null);
-      
-      // Clear localStorage
-      localStorage.removeItem('supabase.auth.token');
-      
-      // Try to sign out from Supabase - don't throw error if session doesn't exist
-      try {
-        await supabase.auth.signOut();
-        console.log('Supabase signOut completed');
-      } catch (supabaseError) {
-        console.log('Supabase signOut failed (expected if session already expired):', supabaseError);
-        // Don't throw - we still want to complete the local cleanup
+      // Log security event for signout
+      if (user) {
+        setTimeout(async () => {
+          await logSecurityEvent({
+            action: SecurityEvents.AUTH_SIGN_OUT,
+            resource: 'auth',
+            resourceId: user.email || user.id,
+            ipAddress: await getClientIP(),
+            userAgent: getUserAgent()
+          });
+        }, 0);
       }
       
-      toast({
-        title: "Signing Out...",
-        description: "Please wait while we sign you out.",
-      });
+      const { error } = await supabase.auth.signOut();
       
-      console.log('Redirecting to home page...');
-      
-      // Small delay for animation
-      setTimeout(() => {
-        // Force redirect to home page
-        window.location.replace('/');
-      }, 1000);
-      
-    } catch (error: any) {
-      console.error('Sign out error:', error);
-      
-      // Even if there's an error, clear local state and redirect
-      setSession(null);
+      if (error) {
+        console.error('Error signing out:', error);
+        toast.error('Failed to sign out. Please try again.');
+        return;
+      }
+
+      // Clear local state
       setUser(null);
-      localStorage.removeItem('supabase.auth.token');
+      setSession(null);
+      
+      // Clear any stored tokens
+      localStorage.clear();
+      
+      toast.success('Signed out successfully!');
+      
+      // Redirect to home page
+      navigate('/');
+    } catch (error: any) {
+      console.error('Error signing out:', error);
+      toast.error('An unexpected error occurred while signing out.');
+    } finally {
       setSigningOut(false);
-      
-      toast({
-        title: "Signed Out",
-        description: "You have been signed out."
-      });
-      
-      // Still redirect even if there was an error
-      window.location.replace('/');
     }
   };
 
-  const updateProfile = async (updates: { full_name?: string; username?: string; profile_image_url?: string }) => {
+  const updateProfile = async (updates: ProfileUpdateInput) => {
     try {
-      if (!user) throw new Error('No user logged in');
+      if (!user) {
+        return { error: new Error('No user logged in') };
+      }
+
+      setLoading(true);
+
+      // Validate input
+      const validationResult = profileUpdateSchema.safeParse(updates);
+      if (!validationResult.success) {
+        const firstError = validationResult.error.errors[0];
+        toast.error(firstError.message);
+        return { error: firstError };
+      }
+
+      const validatedUpdates = validationResult.data;
 
       const { error } = await supabase
         .from('profiles')
-        .update(updates)
+        .update({
+          ...validatedUpdates,
+          updated_at: new Date().toISOString()
+        })
         .eq('id', user.id);
 
       if (error) {
-        toast({
-          title: "Update Error",
-          description: error.message,
-          variant: "destructive"
-        });
-      } else {
-        toast({
-          title: "Profile Updated",
-          description: "Your profile has been successfully updated."
-        });
+        console.error('Error updating profile:', error);
+        toast.error('Failed to update profile. Please try again.');
+        return { error };
       }
 
-      return { error };
+      // Log security event for profile update
+      setTimeout(async () => {
+        await logSecurityEvent({
+          action: SecurityEvents.PROFILE_UPDATE,
+          resource: 'profile',
+          resourceId: user.id,
+          ipAddress: await getClientIP(),
+          userAgent: getUserAgent()
+        });
+      }, 0);
+
+      toast.success('Profile updated successfully!');
+      return { error: null };
     } catch (error: any) {
-      toast({
-        title: "Update Error",
-        description: error.message,
-        variant: "destructive"
-      });
+      console.error('Error updating profile:', error);
+      toast.error('An unexpected error occurred while updating profile.');
       return { error };
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -233,4 +331,3 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     </AuthContext.Provider>
   );
 };
-

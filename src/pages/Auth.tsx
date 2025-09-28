@@ -32,7 +32,10 @@ const Auth = () => {
     e.preventDefault();
     setLoading(true);
     
-    const { error } = await signIn(signInEmail, signInPassword);
+    const { error } = await signIn({
+      email: signInEmail,
+      password: signInPassword
+    });
     if (!error) {
       navigate("/");
     }
@@ -44,7 +47,12 @@ const Auth = () => {
     e.preventDefault();
     setLoading(true);
     
-    const { error } = await signUp(signUpEmail, signUpPassword, signUpUsername, signUpFullName);
+    const { error } = await signUp({
+      email: signUpEmail,
+      password: signUpPassword,
+      username: signUpUsername,
+      fullName: signUpFullName
+    });
     if (!error) {
       // Stay on auth page to show confirmation message
     }
