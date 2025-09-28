@@ -8,7 +8,7 @@ export const Navigation = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const location = useLocation();
-  const { user, loading, signingOut } = useAuth();  const navItems = [
+  const { user, loading, signingOut, signOut } = useAuth();  const navItems = [
     { path: "/", label: "Home" },
     { path: "/menu", label: "Menu" },
     { path: "/recipes", label: "Recipes" }
@@ -158,17 +158,30 @@ export const Navigation = () => {
                 </Link>
               )}
               {user && !signingOut && (
-                <Link 
-                  to="/profile"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className={`text-left py-3 sm:py-3.5 px-4 sm:px-5 transition-all duration-300 font-roboto rounded-full border-2 text-base sm:text-base ${
-                    location.pathname === '/profile'
-                      ? 'text-white bg-gradient-to-r from-orange-500 to-red-600 border-orange-500 shadow-md font-semibold' 
-                      : 'text-gray-700 hover:text-orange-600 border-gray-200 hover:border-orange-300 hover:bg-orange-50'
-                  }`}
-                >
-                  Profile
-                </Link>
+                <>
+                  <Link 
+                    to="/profile"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className={`text-left py-3 sm:py-3.5 px-4 sm:px-5 transition-all duration-300 font-roboto rounded-full border-2 text-base sm:text-base ${
+                      location.pathname === '/profile'
+                        ? 'text-white bg-gradient-to-r from-orange-500 to-red-600 border-orange-500 shadow-md font-semibold' 
+                        : 'text-gray-700 hover:text-orange-600 border-gray-200 hover:border-orange-300 hover:bg-orange-50'
+                    }`}
+                  >
+                    Profile
+                  </Link>
+                  <Button
+                    onClick={async () => {
+                      setIsMobileMenuOpen(false);
+                      await signOut();
+                      window.location.href = '/';
+                    }}
+                    variant="outline"
+                    className="text-left py-3 sm:py-3.5 px-4 sm:px-5 text-gray-700 hover:text-red-600 border-gray-200 hover:border-red-300 hover:bg-red-50 rounded-full font-roboto text-base sm:text-base"
+                  >
+                    Sign Out
+                  </Button>
+                </>
               )}
             </div>
           </div>

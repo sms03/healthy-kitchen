@@ -36,7 +36,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
   const [signingOut, setSigningOut] = useState(false);
-  const navigate = useNavigate();
 
   useEffect(() => {
     // Set up auth state listener
@@ -252,8 +251,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       
       toast.success('Signed out successfully!');
       
-      // Redirect to home page
-      navigate('/');
+      // Let the calling component handle navigation
+      // Components can use window.location.href = '/' if needed
     } catch (error: any) {
       console.error('Error signing out:', error);
       toast.error('An unexpected error occurred while signing out.');
